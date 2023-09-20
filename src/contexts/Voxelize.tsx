@@ -7,13 +7,16 @@ import {
   type ReactNode,
 } from 'react';
 
+import type { RigidControlsOptions, WorldOptions } from '@voxelize/core';
 import {
   Character,
   Chat,
   ColorText,
+  Debug,
   Events,
   Inputs,
   LightShined,
+  Method,
   Network,
   Peers,
   Perspective,
@@ -23,9 +26,8 @@ import {
   VoxelInteract,
   World,
   artFunctions,
-  type RigidControlsOptions,
-  type WorldOptions,
 } from '@voxelize/core';
+import { GUI } from 'lil-gui';
 import {
   EffectComposer,
   EffectPass,
@@ -56,11 +58,14 @@ export type VoxelizeContextData = {
   rigidControls: RigidControls;
   inputs: Inputs<'menu' | 'in-game' | 'chat'>;
   peers: Peers<Character>;
+  method: Method;
 
   voxelInteract: VoxelInteract;
   shadows: Shadows;
   lightShined: LightShined;
   perspective: Perspective;
+  debug: Debug;
+  gui: GUI;
 
   camera: PerspectiveCamera;
 
@@ -93,10 +98,13 @@ export function VoxelizeProvider({
   const cameraRef = useRef<PerspectiveCamera | null>(null);
   const inputsRef = useRef<Inputs<'menu' | 'in-game' | 'chat'>>();
   const peersRef = useRef<Peers<Character> | null>(null);
+  const methodRef = useRef<Method | null>(null);
   const voxelInteractRef = useRef<VoxelInteract | null>(null);
   const shadowsRef = useRef<Shadows | null>(null);
   const lightShinedRef = useRef<LightShined | null>(null);
   const perspectiveRef = useRef<Perspective | null>(null);
+  const debugRef = useRef<Debug | null>(null);
+  const guiRef = useRef<GUI | null>(null);
   const updateHooksRef = useRef<(() => void)[] | null>(null);
 
   const [isConnecting, setIsConnecting] = useState(true);
@@ -198,6 +206,15 @@ export function VoxelizeProvider({
     breakParticles.system.addRenderer(new MeshRenderer(world, THREE));
 
     network.register(breakParticles);
+
+    /* -------------------------------------------------------------------------- */
+    /*                                SETUP METHOD                                */
+    /* -------------------------------------------------------------------------- */
+    const method = new Method();
+
+    network.register(method);
+
+    methodRef.current = method;
 
     /* -------------------------------------------------------------------------- */
     /*                               SETUP RENDERER                               */
@@ -306,6 +323,63 @@ export function VoxelizeProvider({
     peersRef.current = peers;
 
     /* -------------------------------------------------------------------------- */
+    /*                                 SETUP DEBUG                                */
+    /* -------------------------------------------------------------------------- */
+    const debug = new Debug(document.body, {
+      dataStyles: {
+        top: '10px',
+        left: '10px',
+        position: 'fixed',
+        zIndex: '1000',
+        color: '#fff',
+      },
+    });
+
+    const gui = new GUI();
+    gui.domElement.style.top = '10px';
+
+    debug.registerDisplay('Current voxel', rigidControls, 'voxel');
+    debug.registerDisplay('Current chunk', rigidControls, 'chunk');
+    debug.registerDisplay('Time', () => {
+      return `${Math.floor(
+        (world.time / world.options.timePerDay) * 100,
+      )}% (${world.time.toFixed(2)})`;
+    });
+
+    debug.registerDisplay('Sunlight', () => {
+      return world.getSunlightAt(...rigidControls.voxel);
+    });
+
+    debug.registerDisplay('Voxel Stage', () => {
+      return world.getVoxelStageAt(...rigidControls.voxel);
+    });
+
+    debug.registerDisplay(
+      'Chunks to Request',
+      world.chunks.toRequest,
+      'length',
+    );
+    debug.registerDisplay('Chunks Requested', world.chunks.requested, 'size');
+    debug.registerDisplay(
+      'Chunks to Process',
+      world.chunks.toProcess,
+      'length',
+    );
+    debug.registerDisplay('Chunks Loaded', world.chunks.loaded, 'size');
+
+    ['Red', 'Green', 'Blue'].forEach((color) => {
+      debug.registerDisplay(`${color} Light`, () => {
+        return world.getTorchLightAt(
+          ...rigidControls.voxel,
+          color.toUpperCase() as any,
+        );
+      });
+    });
+
+    debugRef.current = debug;
+    guiRef.current = gui;
+
+    /* -------------------------------------------------------------------------- */
     /*                                  LISTENERS                                 */
     /* -------------------------------------------------------------------------- */
 
@@ -387,6 +461,7 @@ export function VoxelizeProvider({
           perspective.update();
           lightShined.update();
           shadows.update();
+          debug.update();
 
           updateHooks.forEach((hook) => hook());
 
@@ -464,6 +539,12 @@ export function VoxelizeProvider({
         'in-game',
       );
 
+      gui
+        .add({ time: world.time }, 'time', 0, world.options.timePerDay, 0.01)
+        .onFinishChange((time: number) => {
+          method.call('time', { time });
+        });
+
       setIsConnecting(false);
     }
 
@@ -489,10 +570,13 @@ export function VoxelizeProvider({
       inputs: inputsRef.current!,
       updateHooks: updateHooksRef.current!,
       peers: peersRef.current!,
+      method: methodRef.current!,
       voxelInteract: voxelInteractRef.current!,
       shadows: shadowsRef.current!,
       lightShined: lightShinedRef.current!,
       perspective: perspectiveRef.current!,
+      debug: debugRef.current!,
+      gui: guiRef.current!,
     };
   }, [isConnecting, worldName]);
 

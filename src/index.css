@@ -1,7 +1,13 @@
+@font-face {
+  font-family: 'ConnectionSerif-d20X';
+  src: url('./assets/fonts/ConnectionSerif-d20X.otf');
+}
+
 * {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
+  font-family: 'ConnectionSerif-d20X';
 }
 
 html,
