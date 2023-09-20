@@ -39,6 +39,12 @@ import { MeshRenderer } from 'three-nebula';
 import { BreakParticles } from '../core/particles';
 import { makeRegistry } from '../core/registry';
 
+const url = new URL(window.location.href);
+if (url.origin.includes('localhost')) {
+  url.port = '4000';
+}
+const serverUrl = url.toString();
+
 ColorText.SPLITTER = '$';
 
 export type VoxelizeContextData = {
@@ -392,7 +398,7 @@ export function VoxelizeProvider({
 
       animate();
 
-      await network.connect('http://0.0.0.0:4000/', {
+      await network.connect(serverUrl, {
         secret: 'test',
       });
       await network.join(worldName);
