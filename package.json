@@ -11,6 +11,9 @@
     "start:rs": "cd core && cross-env RUST_BACKTRACE=full cargo run --release",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "docker:build": "docker build -t shaoruu.io .",
+    "docker:run": "docker run -p 4000:4000 -d shaoruu.io",
+    "docker:stop": "docker stop $(docker ps -a -q --filter ancestor=shaoruu.io --format=\"{{.ID}}\")",
     "preview": "vite preview"
   },
   "dependencies": {

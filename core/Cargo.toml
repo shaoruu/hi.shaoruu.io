@@ -13,7 +13,7 @@ actix-web = "4.4.0"
 actix-web-actors = "4.0.0"
 hashbrown = {version = "0.14.0", features = ["serde"]}
 log = "0.4.20"
-voxelize = "0.8.38"
+voxelize = "0.8.39"
 
 [profile.release]
 opt-level = 3
