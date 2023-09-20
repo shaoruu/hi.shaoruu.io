@@ -15,7 +15,7 @@ hashbrown = {version = "0.14.0", features = ["serde"]}
 serde = {version = "1.0.188", features = ["derive"]}
 serde_json = "1.0.107"
 log = "0.4.20"
-voxelize = "0.8.42"
+voxelize = "0.8.43"
 
 [profile.release]
 opt-level = 3
