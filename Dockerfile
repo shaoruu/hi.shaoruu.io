@@ -13,6 +13,8 @@ RUN npm install
 # Bundle the app source inside the Docker image
 COPY . .
 
+RUN npm run build
+
 # Get Rust
 RUN curl https://sh.rustup.rs -sSf | bash -s -- -y
 ENV PATH=/root/.cargo/bin:$PATH
