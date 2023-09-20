@@ -1,0 +1,19 @@
+[package]
+name = "core"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+actix = "0.13.1"
+actix-cors = "0.6.4"
+actix-files = "0.6.2"
+actix-web = "4.4.0"
+actix-web-actors = "4.0.0"
+hashbrown = {version = "0.14.0", features = ["serde"]}
+log = "0.4.20"
+voxelize = "0.8.38"
+
+[profile.release]
+opt-level = 3
