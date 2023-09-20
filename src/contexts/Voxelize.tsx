@@ -284,6 +284,8 @@ export function VoxelizeProvider({
       inputs.setNamespace('menu');
     });
 
+    inputs.bind('f', rigidControls.toggleFly, 'in-game');
+
     inputsRef.current = inputs;
 
     /* -------------------------------------------------------------------------- */
@@ -539,6 +541,7 @@ export function VoxelizeProvider({
         'in-game',
       );
 
+      gui.add(world, 'renderRadius', 3, 20, 1);
       gui
         .add({ time: world.time }, 'time', 0, world.options.timePerDay, 0.01)
         .onFinishChange((time: number) => {
