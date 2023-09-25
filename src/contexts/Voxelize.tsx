@@ -285,15 +285,14 @@ export function VoxelizeProvider({
     inputs.bind('f', rigidControls.toggleFly, 'in-game');
     inputs.bind('g', rigidControls.toggleGhostMode, 'in-game');
 
-    inputs.bind(
-      'j',
-      () => {
-        debug.visible = !debug.visible;
-        debug.dataWrapper.style.display = debug.visible ? 'block' : 'none';
-        gui.domElement.style.display = debug.visible ? 'block' : 'none';
-      },
-      'in-game',
-    );
+    const hideDebugUI = () => {
+      debug.visible = !debug.visible;
+      crosshairDom.style.display = debug.visible ? 'flex' : 'none';
+      debug.dataWrapper.style.display = debug.visible ? 'block' : 'none';
+      gui.domElement.style.display = debug.visible ? 'block' : 'none';
+    };
+
+    inputs.bind('j', hideDebugUI, 'in-game');
 
     inputsRef.current = inputs;
 
@@ -343,11 +342,17 @@ export function VoxelizeProvider({
         position: 'fixed',
         zIndex: '1000',
         color: '#fff',
+        backgroundColor: 'var(--color-overlay)',
+        minWidth: '300px',
+        padding: '8px',
+        borderRadius: '10px',
       },
     });
 
     const gui = new GUI();
     gui.domElement.style.top = '10px';
+
+    const crosshairDom = document.getElementById('crosshair') as HTMLDivElement;
 
     debug.registerDisplay('Current voxel', rigidControls, 'voxel');
     debug.registerDisplay('Current chunk', rigidControls, 'chunk');
