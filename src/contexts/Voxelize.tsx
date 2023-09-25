@@ -285,6 +285,16 @@ export function VoxelizeProvider({
     inputs.bind('f', rigidControls.toggleFly, 'in-game');
     inputs.bind('g', rigidControls.toggleGhostMode, 'in-game');
 
+    inputs.bind(
+      'j',
+      () => {
+        debug.visible = !debug.visible;
+        debug.dataWrapper.style.display = debug.visible ? 'block' : 'none';
+        gui.domElement.style.display = debug.visible ? 'block' : 'none';
+      },
+      'in-game',
+    );
+
     inputsRef.current = inputs;
 
     /* -------------------------------------------------------------------------- */
