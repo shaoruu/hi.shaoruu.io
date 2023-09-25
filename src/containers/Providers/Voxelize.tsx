@@ -1,5 +1,4 @@
 import {
-  createContext,
   useLayoutEffect,
   useMemo,
   useRef,
@@ -38,8 +37,13 @@ import * as THREE from 'three';
 import { PerspectiveCamera, WebGLRenderer } from 'three';
 import { MeshRenderer } from 'three-nebula';
 
-import { BreakParticles } from '../core/particles';
-import { makeRegistry } from '../core/registry';
+import { BreakParticles } from '../../core/particles';
+import { makeRegistry } from '../../core/registry';
+
+import {
+  VoxelizeContext,
+  type VoxelizeContextData,
+} from '@/src/contexts/voxelize';
 
 const url = new URL(window.location.href);
 if (url.origin.includes('localhost')) {
@@ -48,31 +52,6 @@ if (url.origin.includes('localhost')) {
 const serverUrl = url.toString();
 
 ColorText.SPLITTER = '$';
-
-export type VoxelizeContextData = {
-  worldName: string;
-  isConnecting: boolean;
-
-  network: Network;
-  world: World;
-  rigidControls: RigidControls;
-  inputs: Inputs<'menu' | 'in-game' | 'chat'>;
-  peers: Peers<Character>;
-  method: Method;
-
-  voxelInteract: VoxelInteract;
-  shadows: Shadows;
-  lightShined: LightShined;
-  perspective: Perspective;
-  debug: Debug;
-  gui: GUI;
-
-  camera: PerspectiveCamera;
-
-  updateHooks: (() => void)[];
-};
-
-const VoxelizeContext = createContext<VoxelizeContextData>({} as any);
 
 type Props = {
   worldName: string;
@@ -105,6 +84,7 @@ export function VoxelizeProvider({
   const perspectiveRef = useRef<Perspective | null>(null);
   const debugRef = useRef<Debug | null>(null);
   const guiRef = useRef<GUI | null>(null);
+  const chatRef = useRef<Chat | null>(null);
   const updateHooksRef = useRef<(() => void)[] | null>(null);
 
   const [isConnecting, setIsConnecting] = useState(true);
@@ -345,7 +325,7 @@ export function VoxelizeProvider({
         backgroundColor: 'var(--color-overlay)',
         minWidth: '300px',
         padding: '8px',
-        borderRadius: '10px',
+        border: '2px solid var(--color-text-primary)',
       },
     });
 
@@ -425,6 +405,8 @@ export function VoxelizeProvider({
 
     network.register(chat);
     network.register(events);
+
+    chatRef.current = chat;
 
     /* -------------------------------------------------------------------------- */
     /*                                   CONNECT                                  */
@@ -600,6 +582,7 @@ export function VoxelizeProvider({
       updateHooks: updateHooksRef.current!,
       peers: peersRef.current!,
       method: methodRef.current!,
+      chat: chatRef.current!,
       voxelInteract: voxelInteractRef.current!,
       shadows: shadowsRef.current!,
       lightShined: lightShinedRef.current!,

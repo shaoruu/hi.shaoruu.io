@@ -806,7 +806,7 @@
     typescript "^4.6.4"
     vitest "^0.10.4"
 
-"@voxelize/transport@*", "@voxelize/transport@^1.0.20":
+"@voxelize/transport@*":
   version "1.0.20"
   resolved "https://registry.yarnpkg.com/@voxelize/transport/-/transport-1.0.20.tgz#eb07fa119b144128a377e6ba982d6cc890226d1f"
   integrity sha512-kubfpVFGhRePonKzJc1elUw4kHsGuf27E6obaxKRxA2eSibgXbAycQR4tzZ/9DHhDFyIO7nA2rxXnymdnpOCww==
@@ -816,6 +816,15 @@
     sockette "^2.0.6"
     websocket "^1.0.34"
     ws "^8.8.0"
+
+"@voxelize/transport@^1.0.21":
+  version "1.0.21"
+  resolved "https://registry.yarnpkg.com/@voxelize/transport/-/transport-1.0.21.tgz#6153e599b4e61dc82508d4b67e5d0bf3b76909b5"
+  integrity sha512-iMpvZRS+mLmN7M/435HFW4v9ufqN3bV+jRCcIyLm87qDTb60Lj7t19eSJ4Igkid+lLwKzREOgGjVV9m65zH5yA==
+  dependencies:
+    fflate "^0.7.3"
+    protobufjs "^7.2.2"
+    websocket "^1.0.34"
 
 abbrev@1:
   version "1.1.1"
@@ -3417,7 +3426,7 @@ prop-types@^15.8.1:
     object-assign "^4.1.1"
     react-is "^16.13.1"
 
-protobufjs@^7.0.0:
+protobufjs@^7.0.0, protobufjs@^7.2.2:
   version "7.2.5"
   resolved "https://registry.yarnpkg.com/protobufjs/-/protobufjs-7.2.5.tgz#45d5c57387a6d29a17aab6846dcc283f9b8e7f2d"
   integrity sha512-gGXRSXvxQ7UiPgfw8gevrfRWcTlSbOFg+p/N+JVJEK5VhueL2miT6qTymqAmjr1Q5WbOCyJbyrk6JfWKwlFn6A==
