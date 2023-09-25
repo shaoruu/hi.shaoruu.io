@@ -1,6 +1,7 @@
-import { useLayoutEffect, useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 
 import { useVoxelize } from '../hooks/useVoxelize';
+import type { ChatItem } from '../types';
 
 const chatMargin = '16px';
 const chatVanishTime = 5000;
@@ -8,6 +9,10 @@ const chatVanishTime = 5000;
 export function Chat() {
   const { chat, inputs, rigidControls } = useVoxelize();
 
+  const chatListDomRef = useRef<HTMLUListElement>(null);
+  const chatInputDomRef = useRef<HTMLInputElement>(null);
+
+  const [chatItems, setChatItems] = useState<ChatItem[]>([]);
   const [shouldShowChat, setShouldShowChat] = useState(false);
 
   useLayoutEffect(() => {
@@ -15,8 +20,8 @@ export function Chat() {
       return;
     }
 
-    chat.onChat = (chat) => {
-      console.log(chat);
+    chat.onChat = (chat: ChatItem) => {
+      setChatItems((prev) => [...prev, chat]);
     };
 
     inputs.bind(
@@ -42,7 +47,18 @@ export function Chat() {
         margin: chatMargin,
       }}
     >
-      <ul className="list-none overflow-auto w-full rounded max-h-[200px] flex flex-col"></ul>
+      <ul
+        className="list-none overflow-auto w-full rounded max-h-[200px] flex flex-col"
+        ref={chatListDomRef}
+      >
+        {chatItems.map((chatItem, index) => (
+          <div key={chatItem.body + index} className="flex items-center gap-1">
+            <p>{chatItem.sender}</p>
+            <p>{chatItem.body}</p>
+          </div>
+        ))}
+      </ul>
+      <input ref={chatInputDomRef} />
     </div>
   );
 }

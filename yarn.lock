@@ -764,10 +764,10 @@
     typescript "^4.6.4"
     vitest "^0.10.4"
 
-"@voxelize/core@0.1.120":
-  version "0.1.120"
-  resolved "https://registry.yarnpkg.com/@voxelize/core/-/core-0.1.120.tgz#a910f393c7bd43c0ecfa2e6e6717bc893a73950d"
-  integrity sha512-qSRxTNf3JIHJSjXL1e4x+m0dmGJ3anRr43ZjuLATXUR7dzCjdZXPrWW0kq+mYVQkmLnDmXBMVH05hTNrpQzW4w==
+"@voxelize/core@0.1.121":
+  version "0.1.121"
+  resolved "https://registry.yarnpkg.com/@voxelize/core/-/core-0.1.121.tgz#0ff1918a66e1039b7fa42ee86cdfcefce4bf146c"
+  integrity sha512-7H6Mpycn12/FL78IKDE9iHLXFEVKJMT5i52VRvmuR1x7KsM0bsqOiY9BjVodjQdh809vwXPX/cq1QQE5ugeHWg==
   dependencies:
     "@tweenjs/tween.js" "^18.6.4"
     "@voxelize/aabb" "*"
