@@ -1,8 +1,7 @@
 import { AABB } from '@voxelize/aabb';
-import { BlockUtils, type NetIntercept, type World } from '@voxelize/core';
+import { BlockUtils, type World } from '@voxelize/core';
 import type { Engine } from '@voxelize/physics-engine';
 import { RigidBody } from '@voxelize/physics-engine';
-import type { MessageProtocol } from '@voxelize/transport';
 import System, {
   Behaviour,
   Body,
@@ -59,34 +58,30 @@ class Rigid extends Behaviour {
   }
 }
 
-export class BreakParticles implements NetIntercept {
+export class BreakParticles {
   public system = new System();
 
   public static PARTICLE_COUNT = 20;
 
-  constructor(public world: World) {}
+  constructor(public world: World) {
+    world.addBlockUpdateListener(({ oldValue, newValue, voxel }) => {
+      const [vx, vy, vz] = voxel;
+      const oldId = BlockUtils.extractID(oldValue as number);
+      const newId = BlockUtils.extractID(newValue as number);
 
-  onMessage = (message: MessageProtocol) => {
-    if (message.type !== 'UPDATE') return;
+      if (oldId === 0 || newId !== 0) return;
 
-    const { updates } = message;
-
-    updates?.forEach(({ vx, vy, vz, voxel }) => {
-      const oldID = this.world.getPreviousValueAt(vx, vy, vz);
-
-      const newID = BlockUtils.extractID(voxel as number);
-
-      if (oldID === 0 || newID !== 0) return;
-
-      const mesh = this.world.makeBlockMesh(oldID);
+      const mesh = this.world.makeBlockMesh(oldId, {
+        material: 'standard',
+      });
 
       const emitter = new Emitter();
       emitter
         .setRate(
           new Rate(
             new Span(
-              updates.length > 5 ? 0 : BreakParticles.PARTICLE_COUNT - 5,
-              updates.length > 5 ? 1 : BreakParticles.PARTICLE_COUNT + 5,
+              BreakParticles.PARTICLE_COUNT - 5,
+              BreakParticles.PARTICLE_COUNT + 5,
             ),
             new Span(0.1, 0.25),
           ),
@@ -110,5 +105,5 @@ export class BreakParticles implements NetIntercept {
 
       this.system.addEmitter(emitter);
     });
-  };
+  }
 }

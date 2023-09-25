@@ -205,8 +205,6 @@ export function VoxelizeProvider({
     const breakParticles = new BreakParticles(world);
     breakParticles.system.addRenderer(new MeshRenderer(world, THREE));
 
-    network.register(breakParticles);
-
     /* -------------------------------------------------------------------------- */
     /*                                SETUP METHOD                                */
     /* -------------------------------------------------------------------------- */
@@ -285,6 +283,7 @@ export function VoxelizeProvider({
     });
 
     inputs.bind('f', rigidControls.toggleFly, 'in-game');
+    inputs.bind('g', rigidControls.toggleGhostMode, 'in-game');
 
     inputsRef.current = inputs;
 
@@ -406,6 +405,9 @@ export function VoxelizeProvider({
     const chat = new Chat();
     const events = new Events();
 
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0);
+    world.add(ambientLight);
+
     network.register(chat);
     network.register(events);
 
@@ -466,6 +468,15 @@ export function VoxelizeProvider({
           debug.update();
 
           updateHooks.forEach((hook) => hook());
+
+          ambientLight.intensity = Math.min(
+            Math.max(world.time / world.options.timePerDay, 0.2),
+            Math.max(
+              world.getSunlightAt(...rigidControls.voxel) /
+                world.options.maxLightLevel,
+              0.2,
+            ) * 2,
+          );
 
           network.flush();
         }
