@@ -3,8 +3,6 @@ use voxelize::{Block, Registry};
 pub fn get_registry() -> Registry {
     let mut registry = Registry::new();
 
-    // Pure color blocks, no textures
-
     registry.register_blocks(&[
         Block::new("Dirt").id(1).build(),
         Block::new("Stone").id(2).build(),
@@ -39,6 +37,29 @@ pub fn get_registry() -> Registry {
         Block::new("Enhydro Agate").id(204).build(),
         Block::new("Sagenite Agate").id(205).build(),
         Block::new("Crazy Lace Agate").id(206).build(),
+    ]);
+
+    registry.register_blocks(&[
+        Block::new("Sapphire").id(300).build(),
+        Block::new("Emerald").id(301).build(),
+        Block::new("Ruby").id(302).build(),
+        Block::new("Turquoise").id(303).build(),
+        Block::new("Amethyst").id(304).build(),
+        Block::new("Jade").id(305).build(),
+        Block::new("Coral").id(306).build(),
+        Block::new("Lapis Lazuli").id(307).build(),
+        Block::new("Malachite").id(308).build(),
+        Block::new("Pyrite").id(309).build(),
+        Block::new("Flint").id(310).build(),
+        Block::new("Moonstone").id(311).build(),
+        Block::new("Aquamarine").id(312).build(),
+        Block::new("Sunstone").id(313).build(),
+        Block::new("Opal").id(314).build(),
+        Block::new("Bloodstone").id(315).build(),
+        Block::new("Rose Quartz").id(316).build(),
+        Block::new("Iolite").id(317).build(),
+        Block::new("Hematite").id(318).build(),
+        Block::new("Azurite").id(319).build(),
     ]);
 
     registry
