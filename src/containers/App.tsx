@@ -1,3 +1,4 @@
+import { AIVoxelizer } from '../components/AIVoxelizer';
 import { Crosshair } from '../components/Crosshair';
 import { IV } from '../components/IV';
 
@@ -11,6 +12,7 @@ export function App() {
       <Crosshair />
       <Chat />
       <IV />
+      <AIVoxelizer />
     </VoxelizeProvider>
   );
 }
