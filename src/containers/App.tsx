@@ -1,4 +1,5 @@
 import { Crosshair } from '../components/Crosshair';
+import { IV } from '../components/IV';
 
 import { Chat } from '@/src/containers/Chat';
 import { VoxelizeProvider } from '@/src/containers/Providers/Voxelize';
@@ -9,6 +10,7 @@ export function App() {
       <canvas id="main" />
       <Crosshair />
       <Chat />
+      <IV />
     </VoxelizeProvider>
   );
 }

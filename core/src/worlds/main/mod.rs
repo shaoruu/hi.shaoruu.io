@@ -14,6 +14,7 @@ pub fn setup_main_world(registry: &Registry) -> World {
         .saving(true)
         .save_dir("data/worlds/main")
         .time_per_day(2400)
+        .max_updates_per_tick(100)
         .build();
 
     let mut world = World::new("main", &config);
@@ -23,7 +24,7 @@ pub fn setup_main_world(registry: &Registry) -> World {
 
         let stone = registry.get_block_by_name("stone");
 
-        pipeline.add_stage(FlatlandStage::new().add_soiling(stone.id, 50))
+        pipeline.add_stage(FlatlandStage::new().add_soiling(stone.id, 10))
     }
 
     world.set_method_handle("time", |world, _, payload| {

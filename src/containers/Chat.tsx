@@ -15,7 +15,7 @@ const chatVanishTime = 5000;
 let removeTimeout: NodeJS.Timeout;
 
 export function Chat() {
-  const { chat, inputs, rigidControls } = useVoxelize();
+  const { chat, inputs, rigidControls, world } = useVoxelize();
 
   const chatListDomRef = useRef<HTMLUListElement>(null);
   const chatInputDomRef = useRef<HTMLInputElement>(null);
@@ -114,15 +114,7 @@ export function Chat() {
       inputs.unbind('t');
       inputs.unbind(chat.commandSymbol);
     };
-  }, [chat, inputs, openChatInput, rigidControls]);
-
-  useLayoutEffect(() => {
-    if (!chat) {
-      return;
-    }
-
-    chat.addCommand('mosaic', (restOfCommand) => {});
-  }, [chat]);
+  }, [chat, inputs, openChatInput, rigidControls, world]);
 
   useEffect(() => {
     chatListDomRef.current?.children[
@@ -132,7 +124,7 @@ export function Chat() {
 
   return (
     <div
-      className="absolute bottom-0 left-1/2 transform translate-x-[-50%] flex flex-col w-[60vw] gap-2"
+      className="absolute bottom-px left-1/2 transform translate-x-[-50%] flex flex-col w-[60vw] gap-2"
       style={{
         width: 'calc(100% - ${chatMargin} * 2)',
         margin: chatMargin,

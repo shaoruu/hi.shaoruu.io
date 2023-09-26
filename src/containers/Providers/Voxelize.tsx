@@ -323,8 +323,8 @@ export function VoxelizeProvider({
         zIndex: '1000',
         color: '#fff',
         backgroundColor: 'var(--color-overlay)',
-        minWidth: '300px',
         padding: '8px',
+        fontSize: '12px',
         border: '2px solid var(--color-text-primary)',
       },
     });
