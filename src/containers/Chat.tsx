@@ -109,7 +109,20 @@ export function Chat() {
       },
       'in-game',
     );
+
+    return () => {
+      inputs.unbind('t');
+      inputs.unbind(chat.commandSymbol);
+    };
   }, [chat, inputs, openChatInput, rigidControls]);
+
+  useLayoutEffect(() => {
+    if (!chat) {
+      return;
+    }
+
+    chat.addCommand('mosaic', (restOfCommand) => {});
+  }, [chat]);
 
   useEffect(() => {
     chatListDomRef.current?.children[
@@ -142,6 +155,7 @@ export function Chat() {
       <input
         ref={chatInputDomRef}
         className="border-none bg-overlay rounded outline-none px-3 py-2 text-background-primary"
+        style={{ visibility: 'hidden' }}
         onKeyDown={(e) => {
           if (e.key === 'Enter') {
             chat?.send({
@@ -150,6 +164,9 @@ export function Chat() {
               body: e.currentTarget.value,
             });
             e.currentTarget.value = '';
+
+            hideInput();
+            rigidControls?.lock();
           }
         }}
       />
