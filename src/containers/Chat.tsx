@@ -137,7 +137,7 @@ export function Chat() {
         {chatItems.map((chatItem, index) => (
           <div
             key={chatItem.body + index}
-            className="flex items-center gap-1 text-background-primary px-3 py-2"
+            className="flex items-center gap-1 text-background-primary px-3 py-2 text-xs"
           >
             {chatItem.sender && <p>{chatItem.sender}: </p>}
             <p>{chatItem.body}</p>
@@ -146,7 +146,7 @@ export function Chat() {
       </ul>
       <input
         ref={chatInputDomRef}
-        className="border-none bg-overlay rounded outline-none px-3 py-2 text-background-primary"
+        className="border-none bg-overlay rounded outline-none px-3 py-2 text-background-primary text-xs"
         style={{ visibility: 'hidden' }}
         onKeyDown={(e) => {
           if (e.key === 'Enter') {
