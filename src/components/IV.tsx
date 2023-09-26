@@ -11,7 +11,7 @@ export const IV = () => {
   useEffect(() => {
     if (!chat || !world || !rigidControls) return;
 
-    chat.addCommand('ai', (rest) => {
+    chat.addCommand('iv', (rest) => {
       const { url, options } = ImageVoxelizer.parse(rest);
 
       ImageVoxelizer.build(

@@ -31,6 +31,7 @@ server.get('/voxelize', async (req, res) => {
     prompt,
     n: 1,
     size: '512x512',
+    response_format: 'b64_json',
   });
   res.json({ result: result.data });
 });

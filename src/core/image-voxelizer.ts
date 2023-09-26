@@ -297,7 +297,9 @@ export class ImageVoxelizer {
         resolve(false);
       };
 
-      original.src = imgURL;
+      original.src = imgURL.startsWith('http')
+        ? imgURL
+        : `data:image/png;base64,${imgURL}`;
     });
 
     if (!Array.isArray(updates)) {

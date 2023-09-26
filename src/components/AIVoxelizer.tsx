@@ -2,14 +2,19 @@ import { useEffect, useState } from 'react';
 
 import axios from 'axios';
 import classNames from 'classnames';
+import ReactLoading from 'react-loading';
+import { Vector3 } from 'three';
 
+import { ImageVoxelizer } from '../core/image-voxelizer';
 import { useVoxelize } from '../hooks/useVoxelize';
 
 export function AIVoxelizer() {
-  const { world, gui } = useVoxelize();
+  const { world, gui, rigidControls } = useVoxelize();
 
   const [prompt, setPrompt] = useState('');
   const [width, setWidth] = useState(64);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const [shouldShowMenu, setShouldShowMenu] = useState(false);
 
@@ -40,7 +45,7 @@ export function AIVoxelizer() {
   }, [world, gui]);
 
   const buttonClassName =
-    'bg-background-primary-light rounded p-2 border-border border-solid border hoverable-overlay relative cursor-pointer';
+    'bg-background-primary-light rounded p-2 border-border border-solid border hoverable-overlay relative cursor-pointer flex items-center justify-center gap-1 align-middle text-sm';
 
   return (
     <>
@@ -73,11 +78,16 @@ export function AIVoxelizer() {
             </div>
             <div className="flex flex-col gap-1 w-full">
               <button
-                className={classNames(buttonClassName)}
+                className={classNames(
+                  buttonClassName,
+                  (!prompt || isLoading) && 'half-disabled',
+                )}
                 onClick={async () => {
-                  if (!world) {
+                  if (!world || !rigidControls) {
                     return;
                   }
+
+                  setIsLoading(true);
 
                   const response = await axios(
                     'http://localhost:8080/voxelize',
@@ -89,11 +99,35 @@ export function AIVoxelizer() {
                   );
 
                   const { data } = response;
-
                   console.log(data);
+                  const { result } = data;
+                  const [{ b64_json }] = result;
+
+                  ImageVoxelizer.build(
+                    b64_json,
+                    world,
+                    new Vector3(...rigidControls.voxel),
+                    {
+                      width,
+                      height: width,
+                      lockedRatio: true,
+                      orientation: 'x',
+                    },
+                  );
+
+                  setIsLoading(false);
+                  setShouldShowMenu(false);
                 }}
               >
-                Voxelize
+                {isLoading && (
+                  <ReactLoading
+                    color="var(--color-gray-text)"
+                    type="spin"
+                    height={12}
+                    width={12}
+                  />
+                )}
+                <p>Voxelize</p>
               </button>
             </div>
           </div>
