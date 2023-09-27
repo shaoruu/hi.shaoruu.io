@@ -43,7 +43,6 @@ export function Inventory() {
     }
 
     const handleCloseInventory = (e: KeyboardEvent) => {
-      console.log(e);
       if (e.key === 'Escape') {
         e.preventDefault();
         e.stopPropagation();
@@ -88,6 +87,8 @@ export function Inventory() {
       verticalCount: rowCount,
       horizontalCount: colCount,
       slotMargin: 0,
+      slotHoverClass: 'inventory-hover',
+      slotFocusClass: 'inventory-focus',
       wrapperStyles: {
         position: 'relative',
         margin: '0px',
@@ -107,7 +108,9 @@ export function Inventory() {
     const inventorySlotsDom = inventorySlots.element;
     wrapperDomRef.current.appendChild(inventorySlotsDom);
 
-    const sortedBlocks = [...blocks].sort((a, b) => a[1].id - b[1].id);
+    const sortedBlocks = [...blocks]
+      .sort((a, b) => a[1].id - b[1].id)
+      .filter(([name]) => name !== 'air');
 
     for (let i = 0; i < sortedBlocks.length; i++) {
       const id = sortedBlocks[i][1].id;
@@ -215,14 +218,20 @@ export function Inventory() {
           'fixed bottom-0 left-0 w-full h-full bg-black opacity-50',
           { hidden: !shouldShowInventory },
         )}
+        onClick={() => {
+          setShouldShowInventory(false);
+          rigidControls?.lock();
+        }}
       />
       <div
         className={classNames(
-          'top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 max-h-[40vh] overflow-auto bg-overlay rounded fixed cursor-pointer gap-1 align-middle text-sm no-scrollbar p-2',
+          'top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 max-h-[40vh] overflow-auto bg-overlay rounded fixed cursor-pointer align-middle text-sm no-scrollbar py-3 px-3 border border-solid border-border gap-2 flex flex-col items-center',
           { hidden: !shouldShowInventory },
         )}
         ref={wrapperDomRef}
-      ></div>
+      >
+        <h3 className="text-base text-background-primary">Inventory</h3>
+      </div>
     </>
   );
 }

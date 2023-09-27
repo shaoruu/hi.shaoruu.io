@@ -47,7 +47,7 @@ import Turquoise from '../assets/images/blocks/turquoise.png';
 export async function makeRegistry(world: World) {
   const all = ['px', 'nx', 'py', 'ny', 'pz', 'nz'];
 
-  await world.applyBlockTextures([
+  const commonBlocks = [
     { idOrName: 'Stone', faceNames: all, source: Stone },
     { idOrName: 'Sand', faceNames: all, source: Sand },
     { idOrName: 'Chalk', faceNames: all, source: Chalk },
@@ -91,5 +91,17 @@ export async function makeRegistry(world: World) {
     { idOrName: 'Iolite', faceNames: all, source: Iolite },
     { idOrName: 'Hematite', faceNames: all, source: Hematite },
     { idOrName: 'Azurite', faceNames: all, source: Azurite },
+  ];
+
+  await world.applyBlockTextures([
+    ...commonBlocks,
+    ...commonBlocks.map((block) => ({
+      ...block,
+      idOrName: `${block.idOrName} Slab Top`,
+    })),
+    ...commonBlocks.map((block) => ({
+      ...block,
+      idOrName: `${block.idOrName} Slab Bottom`,
+    })),
   ]);
 }
