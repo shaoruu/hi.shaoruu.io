@@ -148,8 +148,16 @@ export function Chat() {
         ref={chatInputDomRef}
         className="border-none bg-overlay rounded outline-none px-3 py-2 text-background-primary text-xs"
         style={{ visibility: 'hidden' }}
+        onKeyUp={(e) => {
+          if (e.key === 'Escape') {
+            hideInput();
+            rigidControls?.lock();
+          }
+        }}
         onKeyDown={(e) => {
-          if (e.key === 'Enter') {
+          if (e.key === 'Enter' && e.nativeEvent.isComposing === false) {
+            if (e.currentTarget.value === '') return;
+
             chat?.send({
               type: 'chat',
               sender: 'hi',

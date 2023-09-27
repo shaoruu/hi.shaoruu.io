@@ -861,10 +861,10 @@
     typescript "^4.6.4"
     vitest "^0.10.4"
 
-"@voxelize/core@0.1.122":
-  version "0.1.122"
-  resolved "https://registry.yarnpkg.com/@voxelize/core/-/core-0.1.122.tgz#9f24449a9e5ebe087eabe528e10fd7f2f91c91e6"
-  integrity sha512-8ULo/VpWzLLuCf7BtgZa7Zq5D2cxmIgkjGhTg4ZOqDUH1GGw/PRYwVV9i57TRvzKHrNub0hg0OdB+KTv6F1FVQ==
+"@voxelize/core@0.1.131":
+  version "0.1.131"
+  resolved "https://registry.yarnpkg.com/@voxelize/core/-/core-0.1.131.tgz#ddca0be0c502114739de4ebee718ba3832a3ab48"
+  integrity sha512-6F2j1gZRaSWjk5Sc69Dy+qVx2VR1EFR6ow8WRUFVC0rvt8lNKhbQn7Estsda2vpUFyXkrnsqaCEZhXU6tb1t8A==
   dependencies:
     "@tweenjs/tween.js" "^18.6.4"
     "@voxelize/aabb" "*"
@@ -876,6 +876,7 @@
     events "^3.3.0"
     fflate "^0.7.4"
     gl-vec3 "^1.1.3"
+    jsonfn "^0.31.0"
     ndarray "^1.0.19"
     omggif "^1.0.10"
     regenerator-runtime "^0.13.9"
@@ -3030,6 +3031,11 @@ json5@^2.2.2, json5@^2.2.3:
   version "2.2.3"
   resolved "https://registry.yarnpkg.com/json5/-/json5-2.2.3.tgz#78cd6f1a19bdc12b73db5ad0c61efd66c1e29283"
   integrity sha512-XmOWe7eyHYH14cLdVPoyg+GOH3rYX++KpzrylJwSW98t3Nk+U8XOl8FWKOgwtzdb8lXGf6zYwDUzeHMWfxasyg==
+
+jsonfn@^0.31.0:
+  version "0.31.0"
+  resolved "https://registry.yarnpkg.com/jsonfn/-/jsonfn-0.31.0.tgz#8cd09ee376d46df75c2c0de3c548a95dbb81dc8b"
+  integrity sha512-plmFJ1RIM+FzpeRIRabarGCC39BOCTmrVzcjxqSL5bEAiHKhERSuyD3/yQfYvbTQk0k91yAkcAqwwqafmMzDKQ==
 
 jsonwebtoken@^9.0.0:
   version "9.0.2"

@@ -64,6 +64,10 @@ body,
   box-shadow: inset 0 0 10px 10px var(--color-icon-primary);
 }
 
+.inventory {
+  background: transparent !important;
+}
+
 .hoverable-overlay {
   @apply overflow-hidden;
 

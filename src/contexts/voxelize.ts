@@ -5,6 +5,7 @@ import type {
   Chat,
   Debug,
   Inputs,
+  ItemSlots,
   LightShined,
   Method,
   Network,
@@ -29,6 +30,7 @@ export type VoxelizeContextData = {
   peers?: Peers<Character>;
   method?: Method;
   chat?: Chat;
+  itemSlots?: ItemSlots;
 
   voxelInteract?: VoxelInteract;
   shadows?: Shadows;

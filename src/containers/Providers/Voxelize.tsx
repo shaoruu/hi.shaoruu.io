@@ -14,6 +14,7 @@ import {
   Debug,
   Events,
   Inputs,
+  ItemSlots,
   LightShined,
   Method,
   Network,
@@ -78,6 +79,7 @@ export function VoxelizeProvider({
   const inputsRef = useRef<Inputs<'menu' | 'in-game' | 'chat'>>();
   const peersRef = useRef<Peers<Character> | null>(null);
   const methodRef = useRef<Method | null>(null);
+  const itemSlotsRef = useRef<ItemSlots | null>(null);
   const voxelInteractRef = useRef<VoxelInteract | null>(null);
   const shadowsRef = useRef<Shadows | null>(null);
   const lightShinedRef = useRef<LightShined | null>(null);
@@ -247,6 +249,8 @@ export function VoxelizeProvider({
 
     world.add(voxelInteract);
 
+    voxelInteractRef.current = voxelInteract;
+
     /* -------------------------------------------------------------------------- */
     /*                                SETUP INPUTS                                */
     /* -------------------------------------------------------------------------- */
@@ -281,6 +285,24 @@ export function VoxelizeProvider({
     /* -------------------------------------------------------------------------- */
     const lightShined = new LightShined(world);
     const shadows = new Shadows(world);
+
+    /* -------------------------------------------------------------------------- */
+    /*                               SETUP INVENTORY                              */
+    /* -------------------------------------------------------------------------- */
+    const itemSlots = new ItemSlots({
+      verticalCount: 1,
+      horizontalCount: 10,
+      wrapperStyles: {
+        left: '50%',
+        transform: 'translateX(-50%)',
+      },
+      scrollable: false,
+      activatedByDefault: true,
+    });
+
+    document.body.appendChild(itemSlots.element);
+
+    itemSlotsRef.current = itemSlots;
 
     /* -------------------------------------------------------------------------- */
     /*                                 SETUP PEERS                                */
@@ -509,52 +531,36 @@ export function VoxelizeProvider({
         'in-game',
       );
 
-      inputs.click(
-        'middle',
-        () => {
-          if (!voxelInteract.target) return;
-          const [vx, vy, vz] = voxelInteract.target;
-          const block = world.getBlockAt(vx, vy, vz);
-          console.log(block);
-        },
-        'in-game',
-      );
-
-      inputs.click(
-        'right',
-        () => {
-          if (!voxelInteract.potential) return;
-          const {
-            rotation,
-            yRotation,
-            voxel: [vx, vy, vz],
-          } = voxelInteract.potential;
-
-          const id = 1;
-          if (!id) return;
-
-          const { aabbs } = world.getBlockById(id);
-          if (
-            aabbs.find((aabb) =>
-              aabb
-                .clone()
-                .translate([vx, vy, vz])
-                .intersects(rigidControls.body.aabb),
-            )
-          )
-            return;
-
-          world.updateVoxel(vx, vy, vz, id, rotation, yRotation);
-        },
-        'in-game',
-      );
-
       gui.add(world, 'renderRadius', 3, 20, 1);
       gui
         .add({ time: world.time }, 'time', 0, world.options.timePerDay, 0.01)
         .onFinishChange((time: number) => {
           method.call('time', { time });
         });
+
+      ['1', '2', '3', '4', '5', '6', '7', '8', '9'].forEach((key) => {
+        inputs.bind(
+          key,
+          () => {
+            const index = parseInt(key);
+            itemSlots.setFocused(0, index - 1);
+          },
+          'in-game',
+        );
+      });
+
+      itemSlots.connect(inputs);
+
+      debug.registerDisplay('Holding', () => {
+        const slot = itemSlots.getFocused();
+        if (!slot) return;
+
+        const id = slot.getContent();
+        if (!id) return;
+
+        const block = world.getBlockById(id);
+        return block ? `${block.name} (${block.id})` : '<Empty>';
+      });
 
       setIsConnecting(false);
     }
@@ -589,6 +595,7 @@ export function VoxelizeProvider({
       perspective: perspectiveRef.current!,
       debug: debugRef.current!,
       gui: guiRef.current!,
+      itemSlots: itemSlotsRef.current!,
     };
   }, [isConnecting, worldName]);
 
