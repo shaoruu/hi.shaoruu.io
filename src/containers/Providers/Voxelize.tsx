@@ -562,6 +562,27 @@ export function VoxelizeProvider({
         return block ? `${block.name} (${block.id})` : '<Empty>';
       });
 
+      inputs.bind(
+        'o',
+        () => {
+          const radius = 7;
+          const base = 32;
+          const height = 3;
+
+          const obsidianId = world.getBlockByName('Obsidian')!.id;
+
+          for (let x = -radius; x <= radius; x++) {
+            for (let z = -radius; z <= radius; z++) {
+              for (let y = base; y < base + height; y++) {
+                if (x ** 2 + z ** 2 > radius ** 2) continue;
+                world.updateVoxel(x, y, z, obsidianId);
+              }
+            }
+          }
+        },
+        '*',
+      );
+
       setIsConnecting(false);
     }
 
