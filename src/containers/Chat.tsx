@@ -15,7 +15,7 @@ const chatVanishTime = 5000;
 let removeTimeout: NodeJS.Timeout;
 
 export function Chat() {
-  const { chat, inputs, rigidControls, world } = useVoxelize();
+  const { chat, inputs, rigidControls, world, network } = useVoxelize();
 
   const chatListDomRef = useRef<HTMLUListElement>(null);
   const chatInputDomRef = useRef<HTMLInputElement>(null);
@@ -139,7 +139,9 @@ export function Chat() {
             key={chatItem.body + index}
             className="flex items-center gap-1 text-background-primary px-3 py-2 text-xs"
           >
-            {chatItem.sender && <p>{chatItem.sender}: </p>}
+            {chatItem.sender && (
+              <p className="text-text-tertiary">{chatItem.sender}: </p>
+            )}
             <p>{chatItem.body}</p>
           </div>
         ))}
@@ -160,7 +162,7 @@ export function Chat() {
 
             chat?.send({
               type: 'chat',
-              sender: 'hi',
+              sender: network?.clientInfo.username,
               body: e.currentTarget.value,
             });
             e.currentTarget.value = '';
