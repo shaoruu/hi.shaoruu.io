@@ -565,17 +565,20 @@ export function VoxelizeProvider({
       inputs.bind(
         'o',
         () => {
-          const radius = 7;
-          const base = 32;
-          const height = 3;
+          const radius = 5;
+          const base = 35;
+          const height = 1;
 
-          const obsidianId = world.getBlockByName('Obsidian')!.id;
+          // const obsidianId = world.getBlockByName('Obsidian')!.id;
+          const blockId = world.getBlockByName('Chalk Slab Bottom')!.id;
+          const ringOnly = true;
 
           for (let x = -radius; x <= radius; x++) {
             for (let z = -radius; z <= radius; z++) {
               for (let y = base; y < base + height; y++) {
                 if (x ** 2 + z ** 2 > radius ** 2) continue;
-                world.updateVoxel(x, y, z, obsidianId);
+                if (ringOnly && x ** 2 + z ** 2 < (radius - 1) ** 2) continue;
+                world.updateVoxel(x, y, z, blockId);
               }
             }
           }

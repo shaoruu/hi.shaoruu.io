@@ -32,6 +32,32 @@ pub fn get_registry() -> Registry {
             .build()
     };
 
+    let make_rod = |name: &str, id: u32, width: f32| {
+        Block::new(name)
+            .id(id)
+            .faces(
+                &BlockFaces::six_faces()
+                    .scale_x(width)
+                    .scale_z(width)
+                    .uv_scale_x(width)
+                    .uv_scale_z(width)
+                    .offset_x(0.5 - width / 2.0)
+                    .offset_z(0.5 - width / 2.0)
+                    .uv_offset_x(0.5 - width / 2.0)
+                    .uv_offset_z(0.5 - width / 2.0)
+                    .build(),
+            )
+            .aabbs(&[AABB::new()
+                .scale_x(width)
+                .scale_z(width)
+                .offset_x(0.5 - width / 2.0)
+                .offset_z(0.5 - width / 2.0)
+                .build()])
+            .is_transparent(true)
+            .rotatable(true)
+            .build()
+    };
+
     let mut registry = Registry::new();
 
     registry.register_blocks(&[
@@ -56,14 +82,7 @@ pub fn get_registry() -> Registry {
         // Rare Rocks
         Block::new("Blue Lace Agate").id(200).build(),
         Block::new("Onyx Agate").id(201).build(),
-        Block::new("Moss Agate")
-            .id(202)
-            // .is_light(true)
-            .red_light_level(4)
-            .green_light_level(4)
-            .blue_light_level(4)
-            .is_transparent(true)
-            .build(),
+        Block::new("Moss Agate").id(202).build(),
         Block::new("Condor Agate").id(203).build(),
         Block::new("Enhydro Agate").id(204).build(),
         Block::new("Sagenite Agate").id(205).build(),
@@ -119,6 +138,57 @@ pub fn get_registry() -> Registry {
         make_bottom_slab("Sagenite Agate Slab Bottom", 145),
         make_top_slab("Crazy Lace Agate Slab Top", 146),
         make_bottom_slab("Crazy Lace Agate Slab Bottom", 147),
+    ]);
+
+    registry.register_blocks(&[
+        make_rod("Dirt Rod", 1200, 0.5),
+        make_rod("Stone Rod", 1201, 0.5),
+        make_rod("Sand Rod", 1202, 0.5),
+        make_rod("Chalk Rod", 1203, 0.5),
+        make_rod("Quartzite Rod", 1204, 0.5),
+        make_rod("Limestone Rod", 1205, 0.5),
+        make_rod("Andersite Rod", 1206, 0.5),
+        make_rod("Basalt Rod", 1207, 0.5),
+        make_rod("Diorite Rod", 1208, 0.5),
+        make_rod("Gabbro Rod", 1209, 0.5),
+        make_rod("Tuff Rod", 1210, 0.5),
+        make_rod("Pumice Rod", 1211, 0.5),
+        make_rod("Scoria Rod", 1212, 0.5),
+        make_rod("Obsidian Rod", 1213, 0.5),
+        make_rod("Granite Rod", 1214, 0.5),
+        make_rod("Graphite Rod", 1215, 0.5),
+        make_rod("Marble Rod", 1216, 0.5),
+        make_rod("Blue Lace Agate Rod", 1217, 0.5),
+        make_rod("Onyx Agate Rod", 1218, 0.5),
+        make_rod("Moss Agate Rod", 1219, 0.5),
+        make_rod("Condor Agate Rod", 1220, 0.5),
+        make_rod("Enhydro Agate Rod", 1221, 0.5),
+        make_rod("Sagenite Agate Rod", 1222, 0.5),
+        make_rod("Crazy Lace Agate Rod", 1223, 0.5),
+        make_rod("Dirt Thin Rod", 1224, 0.2),
+        make_rod("Stone Thin Rod", 1225, 0.2),
+        make_rod("Sand Thin Rod", 1226, 0.2),
+        make_rod("Chalk Thin Rod", 1227, 0.2),
+        make_rod("Quartzite Thin Rod", 1228, 0.2),
+        make_rod("Limestone Thin Rod", 1229, 0.2),
+        make_rod("Andersite Thin Rod", 1230, 0.2),
+        make_rod("Basalt Thin Rod", 1231, 0.2),
+        make_rod("Diorite Thin Rod", 1232, 0.2),
+        make_rod("Gabbro Thin Rod", 1233, 0.2),
+        make_rod("Tuff Thin Rod", 1234, 0.2),
+        make_rod("Pumice Thin Rod", 1235, 0.2),
+        make_rod("Scoria Thin Rod", 1236, 0.2),
+        make_rod("Obsidian Thin Rod", 1237, 0.2),
+        make_rod("Granite Thin Rod", 1238, 0.2),
+        make_rod("Graphite Thin Rod", 1239, 0.2),
+        make_rod("Marble Thin Rod", 1240, 0.2),
+        make_rod("Blue Lace Agate Thin Rod", 1241, 0.2),
+        make_rod("Onyx Agate Thin Rod", 1242, 0.2),
+        make_rod("Moss Agate Thin Rod", 1243, 0.2),
+        make_rod("Condor Agate Thin Rod", 1244, 0.2),
+        make_rod("Enhydro Agate Thin Rod", 1245, 0.2),
+        make_rod("Sagenite Agate Thin Rod", 1246, 0.2),
+        make_rod("Crazy Lace Agate Thin Rod", 1247, 0.2),
     ]);
 
     registry.register_blocks(&[
@@ -185,6 +255,49 @@ pub fn get_registry() -> Registry {
         make_bottom_slab("Hematite Slab Bottom", 437),
         make_top_slab("Azurite Slab Top", 438),
         make_bottom_slab("Azurite Slab Bottom", 439),
+    ]);
+
+    registry.register_blocks(&[
+        make_rod("Sapphire Rod", 500, 0.5),
+        make_rod("Emerald Rod", 501, 0.5),
+        make_rod("Ruby Rod", 502, 0.5),
+        make_rod("Turquoise Rod", 503, 0.5),
+        make_rod("Amethyst Rod", 504, 0.5),
+        make_rod("Jade Rod", 505, 0.5),
+        make_rod("Coral Rod", 506, 0.5),
+        make_rod("Lapis Lazuli Rod", 507, 0.5),
+        make_rod("Malachite Rod", 508, 0.5),
+        make_rod("Pyrite Rod", 509, 0.5),
+        make_rod("Flint Rod", 510, 0.5),
+        make_rod("Moonstone Rod", 511, 0.5),
+        make_rod("Aquamarine Rod", 512, 0.5),
+        make_rod("Sunstone Rod", 513, 0.5),
+        make_rod("Opal Rod", 514, 0.5),
+        make_rod("Bloodstone Rod", 515, 0.5),
+        make_rod("Rose Quartz Rod", 516, 0.5),
+        make_rod("Iolite Rod", 517, 0.5),
+        make_rod("Hematite Rod", 518, 0.5),
+        make_rod("Azurite Rod", 519, 0.5),
+        make_rod("Sapphire Thin Rod", 520, 0.2),
+        make_rod("Emerald Thin Rod", 521, 0.2),
+        make_rod("Ruby Thin Rod", 522, 0.2),
+        make_rod("Turquoise Thin Rod", 523, 0.2),
+        make_rod("Amethyst Thin Rod", 524, 0.2),
+        make_rod("Jade Thin Rod", 525, 0.2),
+        make_rod("Coral Thin Rod", 526, 0.2),
+        make_rod("Lapis Lazuli Thin Rod", 527, 0.2),
+        make_rod("Malachite Thin Rod", 528, 0.2),
+        make_rod("Pyrite Thin Rod", 529, 0.2),
+        make_rod("Flint Thin Rod", 530, 0.2),
+        make_rod("Moonstone Thin Rod", 531, 0.2),
+        make_rod("Aquamarine Thin Rod", 532, 0.2),
+        make_rod("Sunstone Thin Rod", 533, 0.2),
+        make_rod("Opal Thin Rod", 534, 0.2),
+        make_rod("Bloodstone Thin Rod", 535, 0.2),
+        make_rod("Rose Quartz Thin Rod", 536, 0.2),
+        make_rod("Iolite Thin Rod", 537, 0.2),
+        make_rod("Hematite Thin Rod", 538, 0.2),
+        make_rod("Azurite Thin Rod", 539, 0.2),
     ]);
 
     registry

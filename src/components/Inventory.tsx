@@ -79,9 +79,12 @@ export function Inventory() {
       return;
     }
 
-    const blocks = Array.from(world.registry.blocksByName);
+    const sortedBlocks = [...Array.from(world.registry.blocksByName)]
+      .sort((a, b) => a[1].id - b[1].id)
+      .filter(([name]) => name !== 'air');
+
     const colCount = itemSlots.options.horizontalCount;
-    const rowCount = Math.ceil(blocks.length / colCount);
+    const rowCount = Math.ceil(sortedBlocks.length / colCount);
 
     const inventorySlots = new ItemSlots({
       verticalCount: rowCount,
@@ -107,10 +110,6 @@ export function Inventory() {
 
     const inventorySlotsDom = inventorySlots.element;
     wrapperDomRef.current.appendChild(inventorySlotsDom);
-
-    const sortedBlocks = [...blocks]
-      .sort((a, b) => a[1].id - b[1].id)
-      .filter(([name]) => name !== 'air');
 
     for (let i = 0; i < sortedBlocks.length; i++) {
       const id = sortedBlocks[i][1].id;
@@ -225,12 +224,12 @@ export function Inventory() {
       />
       <div
         className={classNames(
-          'top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 max-h-[40vh] overflow-auto bg-overlay rounded fixed cursor-pointer align-middle text-sm no-scrollbar py-3 px-3 border border-solid border-border gap-2 flex flex-col items-center',
+          'top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 max-h-[40vh] bg-overlay rounded fixed cursor-pointer align-middle text-sm py-3 px-3 border border-solid border-border gap-2 flex flex-col items-center',
           { hidden: !shouldShowInventory },
         )}
-        ref={wrapperDomRef}
       >
         <h3 className="text-base text-background-primary">Inventory</h3>
+        <div ref={wrapperDomRef} className="no-scrollbar overflow-auto"></div>
       </div>
     </>
   );

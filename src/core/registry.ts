@@ -103,5 +103,13 @@ export async function makeRegistry(world: World) {
       ...block,
       idOrName: `${block.idOrName} Slab Bottom`,
     })),
+    ...commonBlocks.map((block) => ({
+      ...block,
+      idOrName: `${block.idOrName} Rod`,
+    })),
+    ...commonBlocks.map((block) => ({
+      ...block,
+      idOrName: `${block.idOrName} Thin Rod`,
+    })),
   ]);
 }

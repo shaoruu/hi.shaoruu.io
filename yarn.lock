@@ -861,10 +861,10 @@
     typescript "^4.6.4"
     vitest "^0.10.4"
 
-"@voxelize/core@0.1.131":
-  version "0.1.131"
-  resolved "https://registry.yarnpkg.com/@voxelize/core/-/core-0.1.131.tgz#ddca0be0c502114739de4ebee718ba3832a3ab48"
-  integrity sha512-6F2j1gZRaSWjk5Sc69Dy+qVx2VR1EFR6ow8WRUFVC0rvt8lNKhbQn7Estsda2vpUFyXkrnsqaCEZhXU6tb1t8A==
+"@voxelize/core@0.1.132":
+  version "0.1.132"
+  resolved "https://registry.yarnpkg.com/@voxelize/core/-/core-0.1.132.tgz#4aa79444db643a64537873ce1349fab8920d5d0c"
+  integrity sha512-a3y1R7fweBUdhXA2ibeJODXe1CJnYrkpAzkDeBkMXIisHMIUkVeQLI/1AO8eIKVTMFxwmvTrscXcz5Zy+kquIA==
   dependencies:
     "@tweenjs/tween.js" "^18.6.4"
     "@voxelize/aabb" "*"
