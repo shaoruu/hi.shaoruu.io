@@ -105,11 +105,12 @@ export function Inventory() {
 
     // @ts-ignore
     inventorySlotsRef.current = inventorySlots;
-
     inventorySlots.connect(inputs);
 
     const inventorySlotsDom = inventorySlots.element;
     wrapperDomRef.current.appendChild(inventorySlotsDom);
+
+    console.log(world.getBlockByName('Youtube'));
 
     for (let i = 0; i < sortedBlocks.length; i++) {
       const id = sortedBlocks[i][1].id;
@@ -143,37 +144,7 @@ export function Inventory() {
       return;
     }
 
-    const unbind1 = inputs.click(
-      'right',
-      () => {
-        if (!voxelInteract.potential) return;
-        const {
-          rotation,
-          yRotation,
-          voxel: [vx, vy, vz],
-        } = voxelInteract.potential;
-
-        const slot = itemSlots.getFocused();
-        const id = slot.content;
-        if (!id) return;
-
-        const { aabbs } = world.getBlockById(id);
-        if (
-          aabbs.find((aabb) =>
-            aabb
-              .clone()
-              .translate([vx, vy, vz])
-              .intersects(rigidControls.body.aabb),
-          )
-        )
-          return;
-
-        world.updateVoxel(vx, vy, vz, id, rotation, yRotation);
-      },
-      'in-game',
-    );
-
-    const unbind2 = inputs.click(
+    const unbind = inputs.click(
       'middle',
       () => {
         if (!voxelInteract.target) return;
@@ -192,8 +163,7 @@ export function Inventory() {
     );
 
     return () => {
-      unbind1();
-      unbind2();
+      unbind();
     };
   }, [inputs, itemSlots, voxelInteract, world, itemSlotIds, rigidControls]);
 

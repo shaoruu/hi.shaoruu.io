@@ -62,9 +62,24 @@ export class BreakParticles {
   public system = new System();
 
   public static PARTICLE_COUNT = 20;
+  public blockUpdates: {
+    oldValue: number;
+    newValue: number;
+    voxel: [number, number, number];
+  }[] = [];
 
   constructor(public world: World) {
     world.addBlockUpdateListener(({ oldValue, newValue, voxel }) => {
+      this.blockUpdates.push({ oldValue, newValue, voxel });
+    });
+  }
+
+  update() {
+    this.system.update();
+
+    const totalUpdates = this.blockUpdates.length;
+
+    this.blockUpdates.splice(0).forEach(({ oldValue, newValue, voxel }) => {
       const [vx, vy, vz] = voxel;
       const oldId = BlockUtils.extractID(oldValue as number);
       const newId = BlockUtils.extractID(newValue as number);
@@ -80,8 +95,8 @@ export class BreakParticles {
         .setRate(
           new Rate(
             new Span(
-              BreakParticles.PARTICLE_COUNT - 5,
-              BreakParticles.PARTICLE_COUNT + 5,
+              totalUpdates > 1 ? 0 : BreakParticles.PARTICLE_COUNT - 5,
+              totalUpdates > 1 ? 1 : BreakParticles.PARTICLE_COUNT + 5,
             ),
             new Span(0.1, 0.25),
           ),

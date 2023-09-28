@@ -6,6 +6,8 @@ import {
   useState,
 } from 'react';
 
+import type { BlockUpdate } from '@voxelize/core';
+
 import { useVoxelize } from '../hooks/useVoxelize';
 import type { ChatItem } from '../types';
 
@@ -64,6 +66,28 @@ export function Chat() {
     if (!chat || !inputs || !rigidControls) {
       return;
     }
+
+    chat.addCommand('all-blocks', () => {
+      if (!world) return;
+
+      const allBlocks = Array.from(world.registry.blocksById.values()).slice(1);
+      const perRow = 10;
+      const numRows = Math.ceil(allBlocks.length / perRow);
+
+      const updates: BlockUpdate[] = [];
+      const [vx, vy, vz] = rigidControls.voxel;
+
+      for (let i = 0; i < allBlocks.length; i++) {
+        const block = allBlocks[i];
+        const x = i % perRow;
+        const y = 0;
+        const z = Math.floor(i / perRow);
+
+        updates.push({ vx: vx + x, vy: vy + y, vz: vz + z, type: block.id });
+      }
+
+      world.updateVoxels(updates);
+    });
 
     chat.onChat = (chat: ChatItem) => {
       setChatItems((prev) => [...prev, chat]);

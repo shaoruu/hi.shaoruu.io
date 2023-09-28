@@ -1,4 +1,5 @@
 import type { World } from '@voxelize/core';
+import { Color } from 'three';
 
 import Amethyst from '../assets/images/blocks/amethyst.png';
 import Andersite from '../assets/images/blocks/andersite_block.png';
@@ -12,10 +13,12 @@ import CondorAgate from '../assets/images/blocks/condor_agate.png';
 import Coral from '../assets/images/blocks/coral.png';
 import CrazyLaceAgate from '../assets/images/blocks/crazy_lace_agate.png';
 import Diorite from '../assets/images/blocks/diorite_block.png';
+import Dirt from '../assets/images/blocks/dirt.png';
 import Emerald from '../assets/images/blocks/emerald.png';
 import EnhydroAgate from '../assets/images/blocks/enhydro_agate.png';
 import Flint from '../assets/images/blocks/flint.png';
 import Gabbro from '../assets/images/blocks/gabbro_block.png';
+import Github from '../assets/images/blocks/github.png';
 import Granite from '../assets/images/blocks/granite_block.png';
 import Graphite from '../assets/images/blocks/graphite_block.png';
 import Hematite from '../assets/images/blocks/hematite.png';
@@ -23,6 +26,8 @@ import Iolite from '../assets/images/blocks/iolite.png';
 import Jade from '../assets/images/blocks/jade.png';
 import LapisLazuli from '../assets/images/blocks/lapis_lazuli.png';
 import Limestone from '../assets/images/blocks/limestone_block.png';
+import LinkedIn from '../assets/images/blocks/linkedin.png';
+import Mail from '../assets/images/blocks/mail.png';
 import Malachite from '../assets/images/blocks/malachite.png';
 import Marble from '../assets/images/blocks/marble_block.png';
 import Moonstone from '../assets/images/blocks/moonstone.png';
@@ -43,11 +48,14 @@ import Stone from '../assets/images/blocks/stone.png';
 import Sunstone from '../assets/images/blocks/sunstone.png';
 import Tuff from '../assets/images/blocks/tuff_block.png';
 import Turquoise from '../assets/images/blocks/turquoise.png';
+import Twitter from '../assets/images/blocks/twitter.png';
+import Youtube from '../assets/images/blocks/youtube.png';
 
 export async function makeRegistry(world: World) {
   const all = ['px', 'nx', 'py', 'ny', 'pz', 'nz'];
 
   const commonBlocks = [
+    { idOrName: 'Dirt', faceNames: all, source: Dirt },
     { idOrName: 'Stone', faceNames: all, source: Stone },
     { idOrName: 'Sand', faceNames: all, source: Sand },
     { idOrName: 'Chalk', faceNames: all, source: Chalk },
@@ -111,5 +119,42 @@ export async function makeRegistry(world: World) {
       ...block,
       idOrName: `${block.idOrName} Thin Rod`,
     })),
+  ]);
+
+  const allFaces = ['px', 'nx', 'py', 'ny', 'pz', 'nz'];
+
+  await world.applyBlockTexture('Youtube', 'displaypz', Youtube);
+  await world.applyBlockTexture('LinkedIn', 'displaypz', LinkedIn);
+  await world.applyBlockTexture('Github', 'displaypz', Github);
+  await world.applyBlockTexture('Twitter', 'displaypz', Twitter);
+  await world.applyBlockTexture('Mail', 'displaypz', Mail);
+
+  ['Youtube', 'LinkedIn', 'Github', 'Twitter', 'Mail'].forEach(async (name) => {
+    allFaces.forEach(async (face) => {
+      if (face === 'pz') return;
+
+      await world.applyBlockTexture(
+        name,
+        `display${face}`,
+        new Color('#121212'),
+      );
+    });
+
+    allFaces.forEach(async (face) => {
+      await world.applyBlockTexture(name, `stand${face}`, new Color('#272829'));
+    });
+  });
+
+  await world.applyBlockTextures([
+    {
+      idOrName: 'Mushroom',
+      faceNames: all.map((name) => `bottom-${name}-`),
+      source: new Color('#A27B5C'),
+    },
+    {
+      idOrName: 'Mushroom',
+      faceNames: all.map((name) => `top-${name}-`),
+      source: new Color('#E4DCCF'),
+    },
   ]);
 }

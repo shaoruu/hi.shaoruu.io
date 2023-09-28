@@ -6,7 +6,11 @@ import {
   type ReactNode,
 } from 'react';
 
-import type { RigidControlsOptions, WorldOptions } from '@voxelize/core';
+import type {
+  BlockUpdate,
+  RigidControlsOptions,
+  WorldOptions,
+} from '@voxelize/core';
 import {
   Character,
   Chat,
@@ -278,6 +282,110 @@ export function VoxelizeProvider({
 
     inputs.bind('j', hideDebugUI, 'in-game');
 
+    let radius = 1;
+    const maxRadius = 10;
+    const minRadius = 1;
+    const circular = true;
+
+    const bulkDestroy = () => {
+      if (!voxelInteract.target) return;
+
+      const [vx, vy, vz] = voxelInteract.target;
+
+      const updates: BlockUpdate[] = [];
+
+      for (let x = -radius; x <= radius; x++) {
+        for (let y = -radius; y <= radius; y++) {
+          for (let z = -radius; z <= radius; z++) {
+            if (circular && x ** 2 + y ** 2 + z ** 2 > radius ** 2 - 1)
+              continue;
+
+            updates.push({
+              vx: vx + x,
+              vy: vy + y,
+              vz: vz + z,
+              type: 0,
+            });
+          }
+        }
+      }
+
+      if (updates.length) world.updateVoxels(updates);
+    };
+
+    const bulkPlace = () => {
+      if (!voxelInteract.potential) return;
+
+      const {
+        voxel: [vx, vy, vz],
+        rotation,
+        yRotation,
+      } = voxelInteract.potential;
+
+      const updates: BlockUpdate[] = [];
+      const block = world.getBlockById(itemSlots.getFocused().content);
+
+      for (let x = -radius; x <= radius; x++) {
+        for (let y = -radius; y <= radius; y++) {
+          for (let z = -radius; z <= radius; z++) {
+            if (circular && x ** 2 + y ** 2 + z ** 2 > radius ** 2 - 1)
+              continue;
+
+            updates.push({
+              vx: vx + x,
+              vy: vy + y,
+              vz: vz + z,
+              type: block.id,
+              rotation,
+              yRotation,
+            });
+          }
+        }
+      }
+
+      if (updates.length) world.updateVoxels(updates);
+    };
+
+    inputs.scroll(
+      () => (radius = Math.min(maxRadius, radius + 1)),
+      () => (radius = Math.max(minRadius, radius - 1)),
+      'in-game',
+    );
+
+    inputs.click('right', () => {
+      if (!voxelInteract.potential) return;
+      const {
+        voxel: [vx, vy, vz],
+      } = voxelInteract.potential;
+
+      const slot = itemSlots.getFocused();
+      const id = slot.content;
+      if (!id) return;
+
+      const { aabbs } = world.getBlockById(id);
+      if (
+        aabbs.find((aabb) =>
+          aabb
+            .clone()
+            .translate([vx, vy, vz])
+            .intersects(rigidControls.body.aabb),
+        )
+      )
+        return;
+
+      bulkPlace();
+    });
+
+    inputs.click(
+      'left',
+      () => {
+        const { target } = voxelInteract;
+        if (!target) return;
+        bulkDestroy();
+      },
+      'in-game',
+    );
+
     inputsRef.current = inputs;
 
     /* -------------------------------------------------------------------------- */
@@ -384,6 +492,7 @@ export function VoxelizeProvider({
       'length',
     );
     debug.registerDisplay('Chunks Loaded', world.chunks.loaded, 'size');
+    debug.registerDisplay('Edit radius', () => radius);
 
     ['Red', 'Green', 'Blue'].forEach((color) => {
       debug.registerDisplay(`${color} Light`, () => {
@@ -479,7 +588,7 @@ export function VoxelizeProvider({
             camera.getWorldDirection(new THREE.Vector3()),
           );
 
-          breakParticles.system.update();
+          breakParticles.update();
           voxelInteract.update();
           perspective.update();
           lightShined.update();
@@ -520,16 +629,6 @@ export function VoxelizeProvider({
       world.chunks.uniforms.fogNear.value = 2000;
       world.chunks.uniforms.fogFar.value = 3000;
       world.renderRadius = 8;
-
-      inputs.click(
-        'left',
-        () => {
-          const { target } = voxelInteract;
-          if (!target) return;
-          world.updateVoxel(...target, 0);
-        },
-        'in-game',
-      );
 
       gui.add(world, 'renderRadius', 3, 20, 1);
       gui

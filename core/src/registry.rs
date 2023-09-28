@@ -203,9 +203,9 @@ pub fn get_registry() -> Registry {
         Block::new("Malachite").id(308).build(),
         Block::new("Pyrite").id(309).build(),
         Block::new("Flint").id(310).build(),
-        Block::new("Moonstone").id(311).build(),
+        Block::new("Moonstone").id(311).torch_light_level(8).build(),
         Block::new("Aquamarine").id(312).build(),
-        Block::new("Sunstone").id(313).build(),
+        Block::new("Sunstone").id(313).torch_light_level(16).build(),
         Block::new("Opal").id(314).build(),
         Block::new("Bloodstone").id(315).build(),
         Block::new("Rose Quartz").id(316).build(),
@@ -299,6 +299,93 @@ pub fn get_registry() -> Registry {
         make_rod("Hematite Thin Rod", 538, 0.2),
         make_rod("Azurite Thin Rod", 539, 0.2),
     ]);
+
+    // Special Blocks
+
+    let mut link_block = BlockFaces::six_faces().scale_z(0.8).prefix("stand").build();
+
+    let mut display = BlockFaces::six_faces()
+        .scale_z(0.2)
+        .scale_x(0.8)
+        .scale_y(0.8)
+        .offset_x(0.1)
+        .offset_y(0.1)
+        .offset_z(0.8)
+        .prefix("display")
+        .build();
+    // .independent_at(2);
+
+    link_block.append(&mut display);
+
+    let make_link_block = |name: &str, id: u32| {
+        Block::new(name)
+            .id(id)
+            .rotatable(true)
+            .y_rotatable(true)
+            .is_transparent(true)
+            .is_x_transparent(false)
+            .faces(&link_block)
+            .aabbs(&[AABB::from_faces(&link_block)])
+            .torch_light_level(10)
+            .build()
+    };
+
+    registry.register_blocks(&[
+        make_link_block("Youtube", 1500),
+        make_link_block("Twitter", 1501),
+        make_link_block("LinkedIn", 1502),
+        make_link_block("Github", 1503),
+        make_link_block("Mail", 1504),
+    ]);
+
+    registry.register_block(
+        &Block::new("Mushroom")
+            .id(2000)
+            .faces(
+                &BlockFaces::six_faces()
+                    .scale_x(0.3)
+                    .offset_x(0.35)
+                    .scale_z(0.3)
+                    .offset_z(0.35)
+                    .scale_y(0.2)
+                    .prefix("bottom")
+                    .concat("-")
+                    .build()
+                    .join(
+                        BlockFaces::six_faces()
+                            .scale_x(0.4)
+                            .offset_x(0.3)
+                            .scale_z(0.4)
+                            .offset_z(0.3)
+                            .scale_y(0.3)
+                            .offset_y(0.2)
+                            .prefix("top")
+                            .concat("-")
+                            .build(),
+                    ),
+            )
+            .aabbs(&[
+                AABB::new()
+                    .scale_x(0.3)
+                    .offset_x(0.35)
+                    .scale_z(0.3)
+                    .offset_z(0.35)
+                    .scale_y(0.2)
+                    .build(),
+                AABB::new()
+                    .scale_x(0.4)
+                    .offset_x(0.3)
+                    .scale_z(0.4)
+                    .offset_z(0.3)
+                    .scale_y(0.3)
+                    .offset_y(0.2)
+                    .build(),
+            ])
+            .is_transparent(true)
+            .rotatable(true)
+            .torch_light_level(10)
+            .build(),
+    );
 
     registry
 }
