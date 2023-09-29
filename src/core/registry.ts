@@ -125,7 +125,7 @@ export async function makeRegistry(world: World) {
 
   console.log(world.getBlockByName('Trophy').faces);
 
-  allFaces.forEach(async (face) => {
+  for (const face of allFaces) {
     await world.applyBlockTexture(
       'Trophy',
       `stand${face}`,
@@ -151,7 +151,7 @@ export async function makeRegistry(world: World) {
     );
 
     await world.applyBlockTexture('Trophy', `cup${face}`, new Color('#FAC213'));
-  });
+  }
 
   await world.applyBlockTexture('Youtube', 'displaypz', Youtube);
   await world.applyBlockTexture('LinkedIn', 'displaypz', LinkedIn);
@@ -159,21 +159,21 @@ export async function makeRegistry(world: World) {
   await world.applyBlockTexture('Twitter', 'displaypz', Twitter);
   await world.applyBlockTexture('Mail', 'displaypz', Mail);
 
-  ['Youtube', 'LinkedIn', 'Github', 'Twitter', 'Mail'].forEach(async (name) => {
-    allFaces.forEach(async (face) => {
-      if (face === 'pz') return;
+  for (const name of ['Youtube', 'LinkedIn', 'Github', 'Twitter', 'Mail']) {
+    for (const face of allFaces) {
+      if (face === 'pz') continue;
 
       await world.applyBlockTexture(
         name,
         `display${face}`,
         new Color('#121212'),
       );
-    });
+    }
 
-    allFaces.forEach(async (face) => {
+    for (const face of allFaces) {
       await world.applyBlockTexture(name, `stand${face}`, new Color('#272829'));
-    });
-  });
+    }
+  }
 
   await world.applyBlockTextures([
     {

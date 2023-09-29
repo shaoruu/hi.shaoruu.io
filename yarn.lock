@@ -915,10 +915,10 @@
     websocket "^1.0.34"
     ws "^8.8.0"
 
-"@voxelize/transport@^1.0.21":
-  version "1.0.21"
-  resolved "https://registry.yarnpkg.com/@voxelize/transport/-/transport-1.0.21.tgz#6153e599b4e61dc82508d4b67e5d0bf3b76909b5"
-  integrity sha512-iMpvZRS+mLmN7M/435HFW4v9ufqN3bV+jRCcIyLm87qDTb60Lj7t19eSJ4Igkid+lLwKzREOgGjVV9m65zH5yA==
+"@voxelize/transport@^1.0.22":
+  version "1.0.22"
+  resolved "https://registry.yarnpkg.com/@voxelize/transport/-/transport-1.0.22.tgz#d906a447dc7c6bf788106fe2d0aac205732d1380"
+  integrity sha512-HVkftPJfq15bJ9RInLbtjdEsApCMOG7ROpP8Mb2VgJxoytJ5gFK9dPjkKQmEuHhUEeMT2dzJj1bYx+/3GcTFkg==
   dependencies:
     fflate "^0.7.3"
     protobufjs "^7.2.2"

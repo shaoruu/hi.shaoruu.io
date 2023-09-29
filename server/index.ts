@@ -4,10 +4,13 @@ require('dotenv-defaults').config({
 
 import path from 'path';
 
+import { Transport } from '@voxelize/transport';
 import chokidar from 'chokidar';
 import cors from 'cors';
 import express from 'express';
 import { OpenAI } from 'openai';
+
+import { getCoreUrl } from '@/server/urls';
 
 const worldDataWatcher = chokidar.watch(
   path.resolve(__dirname, '..', 'core', 'data'),
@@ -38,7 +41,12 @@ server.get('/voxelize', async (req, res) => {
 
 const port = process.env.PORT || 8080;
 
+const transport = new Transport(5000);
+
 async function startServer() {
+  const coreUrl = getCoreUrl().replace(/http/, 'ws');
+  await transport.connect(coreUrl, 'test');
+
   server
     .listen(port, () => console.log(`Server started on port ${port}`))
     .on('error', console.error);
