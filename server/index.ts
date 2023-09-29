@@ -47,6 +47,7 @@ async function startServer() {
   await transport.connect(coreUrl, 'test');
 
   startCronJobs();
+  await buildContributionBlocks();
 
   server
     .listen(port, () => console.log(`Server started on port ${port}`))

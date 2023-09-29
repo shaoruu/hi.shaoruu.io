@@ -63,7 +63,7 @@ export function Chat() {
   );
 
   useLayoutEffect(() => {
-    if (!chat || !inputs || !rigidControls) {
+    if (!chat || !inputs || !rigidControls || !world) {
       return;
     }
 
@@ -73,11 +73,8 @@ export function Chat() {
     });
 
     chat.addCommand('all-blocks', () => {
-      if (!world) return;
-
       const allBlocks = Array.from(world.registry.blocksById.values()).slice(1);
       const perRow = 10;
-      const numRows = Math.ceil(allBlocks.length / perRow);
 
       const updates: BlockUpdate[] = [];
       const [vx, vy, vz] = rigidControls.voxel;
@@ -142,6 +139,10 @@ export function Chat() {
     return () => {
       inputs.unbind('t');
       inputs.unbind(chat.commandSymbol);
+
+      chat.removeCommand('tp');
+      chat.removeCommand('test');
+      chat.removeCommand('all-blocks');
     };
   }, [chat, inputs, openChatInput, rigidControls, world]);
 

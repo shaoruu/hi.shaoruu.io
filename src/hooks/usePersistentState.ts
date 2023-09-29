@@ -13,7 +13,11 @@ export function usePersistentState<T>(storageKey: string, defaultValue?: T) {
 
   return [
     data,
-    (newData: T) => {
+    (newData: T | ((data: T) => T)) => {
+      if (typeof newData === 'function') {
+        newData = (newData as (data: T) => T)(data);
+      }
+
       localStorage.setItem(storageKey, JSON.stringify(newData));
       setData(newData);
     },

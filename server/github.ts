@@ -67,6 +67,20 @@ export async function buildContributionBlocks() {
       row--;
     }
 
+    // If i'm on the last column, check if contributionDays is less than 7
+    // If so, fill the rest with 0s
+    if (column === weeksData.length - 1 && contributionDays.length < 7) {
+      for (let i = contributionDays.length; i < 7; i++) {
+        updates.push({
+          voxel: 0,
+          vx: column + 26,
+          vy: row,
+          vz: 68,
+        });
+        row--;
+      }
+    }
+
     column--;
   }
 

@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { ItemSlots } from '@voxelize/core';
 import classNames from 'classnames';
 
+import { usePersistentState } from '../hooks/usePersistentState';
 import { useVoxelize } from '../hooks/useVoxelize';
 
 export function Inventory() {
@@ -10,9 +11,10 @@ export function Inventory() {
 
   const { itemSlots, world, inputs, voxelInteract, rigidControls } =
     useVoxelize();
-  const [itemSlotIds, setItemSlotIds] = useState([
-    1, 2, 50, 51, 52, 53, 54, 55, 56, 57,
-  ]);
+  const [itemSlotIds, setItemSlotIds] = usePersistentState(
+    'shaoruu-voxelize-inventory',
+    [1, 2, 50, 51, 52, 53, 54, 55, 56, 57],
+  );
 
   const inventorySlotsRef = useRef<ItemSlots>(null);
   const [shouldShowInventory, setShouldShowInventory] = useState(false);

@@ -121,8 +121,6 @@ export async function makeRegistry(world: World) {
     })),
   ]);
 
-  console.log(world.getBlockByName('Trophy').faces);
-
   for (const face of all) {
     await world.applyBlockTexture(
       'Trophy',

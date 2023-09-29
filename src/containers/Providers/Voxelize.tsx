@@ -33,6 +33,7 @@ import {
 } from '@voxelize/core';
 import { GUI } from 'lil-gui';
 import {
+  BloomEffect,
   EffectComposer,
   EffectPass,
   RenderPass,
@@ -211,7 +212,17 @@ export function VoxelizeProvider({
     const composer = new EffectComposer(renderer);
 
     composer.addPass(new RenderPass(world, camera));
-    composer.addPass(new EffectPass(camera, new SMAAEffect({})));
+    composer.addPass(
+      new EffectPass(
+        camera,
+        new SMAAEffect({}),
+        new BloomEffect({
+          luminanceThreshold: 0.4,
+          luminanceSmoothing: 0.5,
+          intensity: 0.2,
+        }),
+      ),
+    );
 
     /* -------------------------------------------------------------------------- */
     /*                            SETUP RIGID CONTROLS                            */
