@@ -228,9 +228,10 @@ export function VoxelizeProvider({
       renderer.domElement,
       world,
       {
-        initialPosition: [0.5, 11, 0.5],
+        initialPosition: [0.5, 36, 0.5],
         // bodyHeight: 0.434210526 * Peers.MODEL_SCALE,
-        flyForce: 200,
+        flyForce: 100,
+        flyImpulse: 1,
         ...rigidControlsOptions,
       },
     );
@@ -249,6 +250,7 @@ export function VoxelizeProvider({
       highlightColor: new THREE.Color('#000'),
       highlightOpacity: 0.5,
       inverseDirection: true,
+      reachDistance: 10,
     });
 
     world.add(voxelInteract);

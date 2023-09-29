@@ -9,10 +9,10 @@ type Props = {
 };
 
 export function LinkBlock({ url, blockName }: Props) {
-  const { inputs, voxelInteract } = useVoxelize();
+  const { inputs, voxelInteract, rigidControls } = useVoxelize();
 
   useEffect(() => {
-    if (!inputs || !voxelInteract) {
+    if (!inputs || !voxelInteract || !rigidControls) {
       return;
     }
 
@@ -26,13 +26,14 @@ export function LinkBlock({ url, blockName }: Props) {
 
       if (block.name === blockName) {
         window.open(url, '_blank');
+        rigidControls.resetMovements();
       }
     });
 
     return () => {
       unbind();
     };
-  }, [inputs, voxelInteract, url, blockName]);
+  }, [inputs, voxelInteract, url, blockName, rigidControls]);
 
   return <></>;
 }

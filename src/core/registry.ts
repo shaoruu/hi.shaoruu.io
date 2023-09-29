@@ -123,6 +123,36 @@ export async function makeRegistry(world: World) {
 
   const allFaces = ['px', 'nx', 'py', 'ny', 'pz', 'nz'];
 
+  console.log(world.getBlockByName('Trophy').faces);
+
+  allFaces.forEach(async (face) => {
+    await world.applyBlockTexture(
+      'Trophy',
+      `stand${face}`,
+      new Color('#E25E3E'),
+    );
+
+    await world.applyBlockTexture(
+      'Trophy',
+      `handleleft${face}`,
+      new Color('#F0A500'),
+    );
+
+    await world.applyBlockTexture(
+      'Trophy',
+      `handleright${face}`,
+      new Color('#F0A500'),
+    );
+
+    await world.applyBlockTexture(
+      'Trophy',
+      `column${face}`,
+      new Color('#FF9B50'),
+    );
+
+    await world.applyBlockTexture('Trophy', `cup${face}`, new Color('#FAC213'));
+  });
+
   await world.applyBlockTexture('Youtube', 'displaypz', Youtube);
   await world.applyBlockTexture('LinkedIn', 'displaypz', LinkedIn);
   await world.applyBlockTexture('Github', 'displaypz', Github);
