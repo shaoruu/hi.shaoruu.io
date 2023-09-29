@@ -352,11 +352,21 @@ export function VoxelizeProvider({
       'in-game',
     );
 
+    const blocksToSkip = ['Youtube', 'Github', 'LinkedIn', 'Twitter', 'Mail'];
+
     inputs.click('right', () => {
       if (!voxelInteract.potential) return;
+
       const {
         voxel: [vx, vy, vz],
       } = voxelInteract.potential;
+
+      // Check if target block has an action
+      if (voxelInteract.target) {
+        const [tvx, tvy, tvz] = voxelInteract.target || [0, 0, 0];
+        const block = world.getBlockAt(tvx, tvy, tvz);
+        if (blocksToSkip.includes(block?.name || '')) return;
+      }
 
       const slot = itemSlots.getFocused();
       const id = slot.content;
