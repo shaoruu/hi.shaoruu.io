@@ -7,6 +7,7 @@ import { Vector3 } from 'three';
 
 import { ImageVoxelizer } from '../core/image-voxelizer';
 import { useVoxelize } from '../hooks/useVoxelize';
+import { getServerUrl } from '../utils/urls';
 
 export function AIVoxelizer() {
   const { world, gui, rigidControls } = useVoxelize();
@@ -89,14 +90,11 @@ export function AIVoxelizer() {
 
                   setIsLoading(true);
 
-                  const response = await axios(
-                    'http://localhost:8080/voxelize',
-                    {
-                      params: {
-                        prompt,
-                      },
+                  const response = await axios(getServerUrl(), {
+                    params: {
+                      prompt,
                     },
-                  );
+                  });
 
                   const { data } = response;
                   console.log(data);

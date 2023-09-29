@@ -49,12 +49,7 @@ import {
   VoxelizeContext,
   type VoxelizeContextData,
 } from '@/src/contexts/voxelize';
-
-const url = new URL(window.location.href);
-if (url.origin.includes('localhost')) {
-  url.port = '4000';
-}
-const serverUrl = url.toString();
+import { getCoreUrl } from '@/src/utils/urls';
 
 ColorText.SPLITTER = '$';
 
@@ -228,8 +223,7 @@ export function VoxelizeProvider({
       renderer.domElement,
       world,
       {
-        initialPosition: [0.5, 36, 0.5],
-        // bodyHeight: 0.434210526 * Peers.MODEL_SCALE,
+        initialPosition: [0, 38, 0],
         flyForce: 100,
         flyImpulse: 1,
         ...rigidControlsOptions,
@@ -237,8 +231,6 @@ export function VoxelizeProvider({
     );
 
     renderer.setTransparentSort(TRANSPARENT_SORT(rigidControls.object));
-
-    world.addChunkInitListener([0, 0], () => rigidControls.teleportToTop(0, 0));
 
     rigidControlsRef.current = rigidControls;
 
@@ -626,7 +618,7 @@ export function VoxelizeProvider({
 
       animate();
 
-      await network.connect(serverUrl, {
+      await network.connect(getCoreUrl(), {
         secret: 'test',
       });
       await network.join(worldName);
