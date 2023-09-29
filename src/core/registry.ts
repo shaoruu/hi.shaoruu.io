@@ -188,7 +188,7 @@ export async function makeRegistry(world: World) {
     await world.applyBlockTexture(
       'Github Contribution L0',
       face,
-      new Color('#F1EFEF'),
+      new Color('#F5F5DC'),
     );
     await world.applyBlockTexture(
       'Github Contribution L1',

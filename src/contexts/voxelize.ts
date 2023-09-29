@@ -19,6 +19,8 @@ import type {
 import type { GUI } from 'lil-gui';
 import type { PerspectiveCamera } from 'three';
 
+import type { Triggers } from '../core/trigger';
+
 export type VoxelizeContextData = {
   worldName: string;
   isConnecting: boolean;
@@ -38,6 +40,7 @@ export type VoxelizeContextData = {
   perspective?: Perspective;
   debug?: Debug;
   gui?: GUI;
+  triggers?: Triggers;
 
   camera?: PerspectiveCamera;
 

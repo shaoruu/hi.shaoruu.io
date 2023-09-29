@@ -6,8 +6,10 @@ import {
   type ReactNode,
 } from 'react';
 
+import { AABB } from '@voxelize/aabb';
 import type {
   BlockUpdate,
+  Coords3,
   RigidControlsOptions,
   WorldOptions,
 } from '@voxelize/core';
@@ -33,7 +35,6 @@ import {
 } from '@voxelize/core';
 import { GUI } from 'lil-gui';
 import {
-  BloomEffect,
   EffectComposer,
   EffectPass,
   RenderPass,
@@ -50,6 +51,7 @@ import {
   VoxelizeContext,
   type VoxelizeContextData,
 } from '@/src/contexts/voxelize';
+import { Triggers } from '@/src/core/trigger';
 import { getCoreUrl } from '@/src/utils/urls';
 
 ColorText.SPLITTER = '$';
@@ -84,6 +86,7 @@ export function VoxelizeProvider({
   const shadowsRef = useRef<Shadows | null>(null);
   const lightShinedRef = useRef<LightShined | null>(null);
   const perspectiveRef = useRef<Perspective | null>(null);
+  const triggersRef = useRef<Triggers | null>(null);
   const debugRef = useRef<Debug | null>(null);
   const guiRef = useRef<GUI | null>(null);
   const chatRef = useRef<Chat | null>(null);
@@ -212,17 +215,7 @@ export function VoxelizeProvider({
     const composer = new EffectComposer(renderer);
 
     composer.addPass(new RenderPass(world, camera));
-    composer.addPass(
-      new EffectPass(
-        camera,
-        new SMAAEffect({}),
-        new BloomEffect({
-          luminanceThreshold: 0.4,
-          luminanceSmoothing: 0.5,
-          intensity: 0.2,
-        }),
-      ),
-    );
+    composer.addPass(new EffectPass(camera, new SMAAEffect({})));
 
     /* -------------------------------------------------------------------------- */
     /*                            SETUP RIGID CONTROLS                            */
@@ -261,6 +254,28 @@ export function VoxelizeProvider({
     voxelInteractRef.current = voxelInteract;
 
     /* -------------------------------------------------------------------------- */
+    /*                               SETUP TRIGGERS                               */
+    /* -------------------------------------------------------------------------- */
+    const triggers = new Triggers(rigidControls);
+
+    const netSize = 500;
+    const netHeight = 1;
+
+    triggers.set(
+      new AABB(-netSize, 0, -netSize, netSize, netHeight, netSize),
+      () => {
+        rigidControls.teleport(
+          ...(rigidControls.options.initialPosition as Coords3),
+        );
+      },
+      {
+        name: 'Lobby Net',
+      },
+    );
+
+    triggersRef.current = triggers;
+
+    /* -------------------------------------------------------------------------- */
     /*                                SETUP INPUTS                                */
     /* -------------------------------------------------------------------------- */
     const inputs = new Inputs<'menu' | 'in-game' | 'chat'>();
@@ -283,6 +298,7 @@ export function VoxelizeProvider({
       crosshairDom.style.display = debug.visible ? 'flex' : 'none';
       debug.dataWrapper.style.display = debug.visible ? 'block' : 'none';
       gui.domElement.style.display = debug.visible ? 'block' : 'none';
+      triggers.toggleVisible();
     };
 
     inputs.bind('j', hideDebugUI, 'in-game');
@@ -432,7 +448,11 @@ export function VoxelizeProvider({
     /* -------------------------------------------------------------------------- */
 
     function createCharacter() {
-      const character = new Character();
+      const character = new Character({
+        nameTagOptions: {
+          fontFace: 'ConnectionSerif-d20X',
+        },
+      });
       lightShined.add(character);
       shadows.add(character);
       return character;
@@ -608,6 +628,7 @@ export function VoxelizeProvider({
           perspective.update();
           lightShined.update();
           shadows.update();
+          triggers.update();
           debug.update();
 
           updateHooks.forEach((hook) => hook());
@@ -732,6 +753,7 @@ export function VoxelizeProvider({
       lightShined: lightShinedRef.current!,
       perspective: perspectiveRef.current!,
       debug: debugRef.current!,
+      triggers: triggersRef.current!,
       gui: guiRef.current!,
       itemSlots: itemSlotsRef.current!,
     };
