@@ -302,7 +302,7 @@ pub fn get_registry() -> Registry {
 
     // Special Blocks
 
-    let mut link_block = BlockFaces::six_faces().scale_z(0.8).prefix("stand").build();
+    let mut link_block = BlockFaces::six_faces().scale_z(0.7).prefix("stand").build();
 
     let mut display = BlockFaces::six_faces()
         .scale_z(0.2)
@@ -310,7 +310,7 @@ pub fn get_registry() -> Registry {
         .scale_y(0.8)
         .offset_x(0.1)
         .offset_y(0.1)
-        .offset_z(0.8)
+        .offset_z(0.7)
         .prefix("display")
         .build();
     // .independent_at(2);
