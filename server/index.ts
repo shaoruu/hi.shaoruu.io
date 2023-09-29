@@ -2,19 +2,14 @@ require('dotenv-defaults').config({
   path: `${__dirname}/../.env`,
 });
 
-import path from 'path';
-
-import { Transport } from '@voxelize/transport';
-import chokidar from 'chokidar';
 import cors from 'cors';
 import express from 'express';
+import cron from 'node-cron';
 import { OpenAI } from 'openai';
 
+import { buildContributionBlocks } from '@/server/github';
+import { transport } from '@/server/transport';
 import { getCoreUrl } from '@/server/urls';
-
-const worldDataWatcher = chokidar.watch(
-  path.resolve(__dirname, '..', 'core', 'data'),
-);
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -41,11 +36,17 @@ server.get('/voxelize', async (req, res) => {
 
 const port = process.env.PORT || 8080;
 
-const transport = new Transport(5000);
+function startCronJobs() {
+  cron.schedule('0 0 * * *', async () => {
+    await buildContributionBlocks();
+  });
+}
 
 async function startServer() {
   const coreUrl = getCoreUrl().replace(/http/, 'ws');
   await transport.connect(coreUrl, 'test');
+
+  startCronJobs();
 
   server
     .listen(port, () => console.log(`Server started on port ${port}`))

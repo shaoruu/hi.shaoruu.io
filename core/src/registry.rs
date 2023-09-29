@@ -470,5 +470,28 @@ pub fn get_registry() -> Registry {
             .build(),
     );
 
+    registry.register_blocks(&[
+        Block::new("Github Contribution L0")
+            .id(3000)
+            .torch_light_level(15)
+            .build(),
+        Block::new("Github Contribution L1")
+            .id(3001)
+            .torch_light_level(15)
+            .build(),
+        Block::new("Github Contribution L2")
+            .id(3002)
+            .torch_light_level(15)
+            .build(),
+        Block::new("Github Contribution L3")
+            .id(3003)
+            .torch_light_level(15)
+            .build(),
+        Block::new("Github Contribution L4")
+            .id(3004)
+            .torch_light_level(15)
+            .build(),
+    ]);
+
     registry
 }

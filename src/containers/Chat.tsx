@@ -67,6 +67,11 @@ export function Chat() {
       return;
     }
 
+    chat.addCommand('tp', (rest) => {
+      const [x, y, z] = rest.split(' ').map((n) => parseInt(n));
+      rigidControls.teleport(x, y, z);
+    });
+
     chat.addCommand('all-blocks', () => {
       if (!world) return;
 

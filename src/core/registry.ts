@@ -121,11 +121,9 @@ export async function makeRegistry(world: World) {
     })),
   ]);
 
-  const allFaces = ['px', 'nx', 'py', 'ny', 'pz', 'nz'];
-
   console.log(world.getBlockByName('Trophy').faces);
 
-  for (const face of allFaces) {
+  for (const face of all) {
     await world.applyBlockTexture(
       'Trophy',
       `stand${face}`,
@@ -160,7 +158,7 @@ export async function makeRegistry(world: World) {
   await world.applyBlockTexture('Mail', 'displaypz', Mail);
 
   for (const name of ['Youtube', 'LinkedIn', 'Github', 'Twitter', 'Mail']) {
-    for (const face of allFaces) {
+    for (const face of all) {
       if (face === 'pz') continue;
 
       await world.applyBlockTexture(
@@ -170,7 +168,7 @@ export async function makeRegistry(world: World) {
       );
     }
 
-    for (const face of allFaces) {
+    for (const face of all) {
       await world.applyBlockTexture(name, `stand${face}`, new Color('#272829'));
     }
   }
@@ -187,4 +185,32 @@ export async function makeRegistry(world: World) {
       source: new Color('#E4DCCF'),
     },
   ]);
+
+  for (const face of all) {
+    await world.applyBlockTexture(
+      'Github Contribution L0',
+      face,
+      new Color('#F1EFEF'),
+    );
+    await world.applyBlockTexture(
+      'Github Contribution L1',
+      face,
+      new Color('#9be9a8'),
+    );
+    await world.applyBlockTexture(
+      'Github Contribution L2',
+      face,
+      new Color('#40c463'),
+    );
+    await world.applyBlockTexture(
+      'Github Contribution L3',
+      face,
+      new Color('#30a14e'),
+    );
+    await world.applyBlockTexture(
+      'Github Contribution L4',
+      face,
+      new Color('#216e39'),
+    );
+  }
 }
