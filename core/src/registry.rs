@@ -317,6 +317,8 @@ pub fn get_registry() -> Registry {
 
     link_block.append(&mut display);
 
+    let link_block_aabbs = [AABB::from_faces(&link_block)];
+
     let make_link_block = |name: &str, id: u32| {
         Block::new(name)
             .id(id)
@@ -325,7 +327,7 @@ pub fn get_registry() -> Registry {
             .is_transparent(true)
             .is_x_transparent(false)
             .faces(&link_block)
-            .aabbs(&[AABB::from_faces(&link_block)])
+            .aabbs(&link_block_aabbs)
             .torch_light_level(15)
             .build()
     };
@@ -336,6 +338,16 @@ pub fn get_registry() -> Registry {
         make_link_block("LinkedIn", 1502),
         make_link_block("Github", 1503),
         make_link_block("Mail", 1504),
+        Block::new("BuyMeACoffee")
+            .id(1505)
+            .rotatable(true)
+            .y_rotatable(true)
+            .is_transparent(true)
+            .is_x_transparent(false)
+            .faces(&link_block.independent_at(2 + 6))
+            .aabbs(&link_block_aabbs)
+            .torch_light_level(15)
+            .build(),
     ]);
 
     registry.register_block(
@@ -420,8 +432,7 @@ pub fn get_registry() -> Registry {
         .offset_z(0.5 - trophy_cup_width / 2.0)
         .offset_y(trophy_place_height + trophy_column_height)
         .prefix("cup")
-        .build()
-        .independent_at(2);
+        .build();
 
     let trophy_handle_width = 0.3;
     let trophy_handle_depth = 0.1;
@@ -468,7 +479,6 @@ pub fn get_registry() -> Registry {
             .aabbs(&trophy_aabbs)
             .rotatable(true)
             .y_rotatable(true)
-            .is_transparent(true)
             .torch_light_level(15)
             .build(),
         Block::new("Trophy (modern-graphql-tutorial)")
@@ -477,7 +487,6 @@ pub fn get_registry() -> Registry {
             .aabbs(&trophy_aabbs)
             .rotatable(true)
             .y_rotatable(true)
-            .is_transparent(true)
             .torch_light_level(15)
             .build(),
         Block::new("Trophy (mine.js)")
@@ -486,7 +495,6 @@ pub fn get_registry() -> Registry {
             .aabbs(&trophy_aabbs)
             .rotatable(true)
             .y_rotatable(true)
-            .is_transparent(true)
             .torch_light_level(15)
             .build(),
         Block::new("Trophy (voxelize)")
@@ -495,7 +503,6 @@ pub fn get_registry() -> Registry {
             .aabbs(&trophy_aabbs)
             .rotatable(true)
             .y_rotatable(true)
-            .is_transparent(true)
             .torch_light_level(15)
             .build(),
         Block::new("Trophy (mc.js-legacy)")
@@ -504,7 +511,6 @@ pub fn get_registry() -> Registry {
             .aabbs(&trophy_aabbs)
             .rotatable(true)
             .y_rotatable(true)
-            .is_transparent(true)
             .torch_light_level(15)
             .build(),
         Block::new("Trophy (rust-typescript-template)")
@@ -513,7 +519,6 @@ pub fn get_registry() -> Registry {
             .aabbs(&trophy_aabbs)
             .rotatable(true)
             .y_rotatable(true)
-            .is_transparent(true)
             .torch_light_level(15)
             .build(),
         Block::new("Trophy (lunar-lander-ai)")
@@ -522,7 +527,6 @@ pub fn get_registry() -> Registry {
             .aabbs(&trophy_aabbs)
             .rotatable(true)
             .y_rotatable(true)
-            .is_transparent(true)
             .torch_light_level(15)
             .build(),
     ]);

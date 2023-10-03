@@ -365,6 +365,7 @@ export function VoxelizeProvider({
       'LinkedIn',
       'Twitter',
       'Mail',
+      'BuyMeACoffee',
       'Trophy (mc.js)',
       'Trophy (voxelize)',
       'Trophy (modern-graphql-tutorial)',
@@ -698,6 +699,11 @@ export function VoxelizeProvider({
       await world.loader.load();
       await world.initialize();
       await makeRegistry(world);
+      await new Promise<void>((resolve) => {
+        setTimeout(() => {
+          resolve();
+        }, 2000);
+      });
 
       /* -------------------------------------------------------------------------- */
       /*                         POST-INTIALIZE PREPARATIONS                        */

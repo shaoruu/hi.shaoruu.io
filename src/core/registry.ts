@@ -12,6 +12,7 @@ import BlackConcrete from '../assets/images/blocks/black_concrete.png';
 import Bloodstone from '../assets/images/blocks/bloodstone.png';
 import BlueConcrete from '../assets/images/blocks/blue_concrete.png';
 import BlueLaceAgate from '../assets/images/blocks/blue_lace_agate.png';
+import BuyMeACoffee from '../assets/images/blocks/buymeacoffee.png';
 import Chalk from '../assets/images/blocks/chalk_block.png';
 import CondorAgate from '../assets/images/blocks/condor_agate.png';
 import Coral from '../assets/images/blocks/coral.png';
@@ -204,8 +205,16 @@ export async function makeRegistry(world: World) {
   await world.applyBlockTexture('Github', 'displaypz', Github);
   await world.applyBlockTexture('Twitter', 'displaypz', Twitter);
   await world.applyBlockTexture('Mail', 'displaypz', Mail);
+  await world.applyBlockTexture('BuyMeACoffee', 'displaypz', BuyMeACoffee);
 
-  for (const name of ['Youtube', 'LinkedIn', 'Github', 'Twitter', 'Mail']) {
+  for (const name of [
+    'Youtube',
+    'LinkedIn',
+    'Github',
+    'Twitter',
+    'Mail',
+    'BuyMeACoffee',
+  ]) {
     for (const face of all) {
       if (face === 'pz') continue;
 

@@ -1,5 +1,6 @@
 import { LinkBlock } from '../components/LinkBlock';
 import {
+  buyMeACoffeeLink,
   githubLink,
   linkedInLink,
   mailLink,
@@ -15,6 +16,7 @@ export function LinkBlocks() {
       <LinkBlock url={linkedInLink} blockName="LinkedIn" />
       <LinkBlock url={twitterLink} blockName="Twitter" />
       <LinkBlock url={mailLink} blockName="Mail" />
+      <LinkBlock url={buyMeACoffeeLink} blockName="BuyMeACoffee" />
 
       <LinkBlock
         url="https://github.com/shaoruu/voxelize"

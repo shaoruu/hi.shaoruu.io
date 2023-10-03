@@ -19,6 +19,7 @@ export function App() {
       <Inventory />
       <AIVoxelizer />
       <LinkBlocks />
+      {/* <Menu /> */}
     </VoxelizeProvider>
   );
 }
