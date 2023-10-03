@@ -1,15 +1,17 @@
+mod components;
+mod dispatcher;
 mod entities;
+mod methods;
 mod stage;
+mod systems;
 
 use serde::{Deserialize, Serialize};
 use voxelize::{Registry, World, WorldConfig};
 
-use self::{entities::setup_entities, stage::LimitedStage};
-
-#[derive(Serialize, Deserialize, Debug)]
-struct TimeMethodPayload {
-    time: f32,
-}
+use self::{
+    components::setup_components, dispatcher::setup_dispatcher, entities::setup_entities,
+    methods::setup_methods, stage::LimitedStage,
+};
 
 pub fn setup_main_world(registry: &Registry) -> World {
     let config = WorldConfig::new()
@@ -24,18 +26,15 @@ pub fn setup_main_world(registry: &Registry) -> World {
 
     let mut world = World::new("main", &config);
 
+    setup_components(&mut world);
     setup_entities(&mut world);
+    setup_dispatcher(&mut world);
+    setup_methods(&mut world);
 
     {
         let mut pipeline = world.pipeline_mut();
         pipeline.add_stage(LimitedStage)
     }
-
-    world.set_method_handle("time", |world, _, payload| {
-        let time_per_day = world.config().time_per_day as f32;
-        let new_time: TimeMethodPayload = serde_json::from_str(&payload).unwrap();
-        world.stats_mut().set_time(new_time.time % time_per_day);
-    });
 
     world
 }

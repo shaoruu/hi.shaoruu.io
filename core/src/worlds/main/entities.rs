@@ -1,11 +1,5 @@
-use nanoid::nanoid;
-use specs::{Builder, Component, VecStorage, WorldExt};
-use voxelize::{PositionComp, World};
+use voxelize::World;
 
-#[derive(Default, Component)]
-#[storage(VecStorage)]
-pub struct Text(pub String);
+use super::components::TextComp;
 
-pub fn setup_entities(world: &mut World) {
-    world.ecs_mut().register::<Text>();
-}
+pub fn setup_entities(world: &mut World) {}

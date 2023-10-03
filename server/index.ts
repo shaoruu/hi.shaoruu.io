@@ -5,6 +5,7 @@ require('dotenv-defaults').config({
 import cors from 'cors';
 import express from 'express';
 import cron from 'node-cron';
+import fetch from 'node-fetch';
 import { OpenAI } from 'openai';
 
 import { buildContributionBlocks } from '@/server/github';
@@ -34,6 +35,54 @@ server.get('/voxelize', async (req, res) => {
   res.json({ result: result.data });
 });
 
+server.get('/top-stars', async (req, res) => {
+  const user = 'shaoruu';
+
+  let page = 1;
+  let allRepos: any[] = [];
+
+  console.log('Fetching repositories...');
+
+  while (true) {
+    const response = await fetch(`https://api.github.com/graphql`, {
+      method: 'POST',
+      body: JSON.stringify({
+        query: `query {
+            user(login: "${user}") {
+              repositories(first: 100, after: "${page * 100}") {
+                nodes {
+                  name
+                  stargazers {
+                    totalCount
+                  }
+                }
+              }
+            }
+          }`,
+      }),
+      headers: {
+        Authorization: `bearer ${process.env.GITHUB_TOKEN}`,
+      },
+    });
+    const data = await response.json();
+
+    // Break the loop if the page has no repositories
+    if (data.length === 0) break;
+
+    allRepos = allRepos.concat(data);
+    page++;
+  }
+
+  // Sort and pick the top 10
+  const topStars = allRepos
+    .sort((a, b) => b.stargazers_count - a.stargazers_count)
+    .slice(0, 10);
+
+  console.log('Done fetching repositories.');
+
+  res.json({ result: topStars });
+});
+
 const port = process.env.PORT || 8080;
 
 function startCronJobs() {
@@ -47,7 +96,6 @@ async function startServer() {
   await transport.connect(coreUrl, 'test');
 
   startCronJobs();
-  await buildContributionBlocks();
 
   server
     .listen(port, () => console.log(`Server started on port ${port}`))

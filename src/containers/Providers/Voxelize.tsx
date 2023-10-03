@@ -7,17 +7,12 @@ import {
 } from 'react';
 
 import { AABB } from '@voxelize/aabb';
-import type {
-  BlockUpdate,
-  Coords3,
-  RigidControlsOptions,
-  WorldOptions,
-} from '@voxelize/core';
 import {
   Character,
   Chat,
   ColorText,
   Debug,
+  Entities,
   Events,
   Inputs,
   ItemSlots,
@@ -32,6 +27,10 @@ import {
   VoxelInteract,
   World,
   artFunctions,
+  type BlockUpdate,
+  type Coords3,
+  type RigidControlsOptions,
+  type WorldOptions,
 } from '@voxelize/core';
 import { GUI } from 'lil-gui';
 import {
@@ -81,6 +80,7 @@ export function VoxelizeProvider({
   const inputsRef = useRef<Inputs<'menu' | 'in-game' | 'chat'>>();
   const peersRef = useRef<Peers<Character> | null>(null);
   const methodRef = useRef<Method | null>(null);
+  const entitiesRef = useRef<Entities | null>(null);
   const itemSlotsRef = useRef<ItemSlots | null>(null);
   const voxelInteractRef = useRef<VoxelInteract | null>(null);
   const shadowsRef = useRef<Shadows | null>(null);
@@ -478,6 +478,13 @@ export function VoxelizeProvider({
     peersRef.current = peers;
 
     /* -------------------------------------------------------------------------- */
+    /*                               SETUP ENTITIES                               */
+    /* -------------------------------------------------------------------------- */
+    const entities = new Entities();
+
+    entitiesRef.current = entities;
+
+    /* -------------------------------------------------------------------------- */
     /*                                 SETUP DEBUG                                */
     /* -------------------------------------------------------------------------- */
     const debug = new Debug(document.body, {
@@ -528,6 +535,7 @@ export function VoxelizeProvider({
     );
     debug.registerDisplay('Chunks Loaded', world.chunks.loaded, 'size');
     debug.registerDisplay('Edit radius', () => radius);
+    debug.registerDisplay('Target voxel', voxelInteract, 'target');
 
     ['Red', 'Green', 'Blue'].forEach((color) => {
       debug.registerDisplay(`${color} Light`, () => {

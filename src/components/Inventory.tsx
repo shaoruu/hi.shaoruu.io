@@ -112,8 +112,6 @@ export function Inventory() {
     const inventorySlotsDom = inventorySlots.element;
     wrapperDomRef.current.appendChild(inventorySlotsDom);
 
-    console.log(world.getBlockByName('Youtube'));
-
     for (let i = 0; i < sortedBlocks.length; i++) {
       const id = sortedBlocks[i][1].id;
       const mesh = world.makeBlockMesh(id, { material: 'standard' });

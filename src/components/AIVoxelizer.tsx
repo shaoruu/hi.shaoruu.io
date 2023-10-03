@@ -90,14 +90,13 @@ export function AIVoxelizer() {
 
                   setIsLoading(true);
 
-                  const response = await axios(getServerUrl(), {
+                  const response = await axios(`${getServerUrl()}/prompt`, {
                     params: {
                       prompt,
                     },
                   });
 
                   const { data } = response;
-                  console.log(data);
                   const { result } = data;
                   const [{ b64_json }] = result;
 

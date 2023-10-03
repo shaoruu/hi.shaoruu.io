@@ -4,6 +4,7 @@ import type {
   Character,
   Chat,
   Debug,
+  Entities,
   Inputs,
   ItemSlots,
   LightShined,
@@ -27,6 +28,7 @@ export type VoxelizeContextData = {
 
   network?: Network;
   world?: World;
+  entities?: Entities;
   rigidControls?: RigidControls;
   inputs?: Inputs<'menu' | 'in-game' | 'chat'>;
   peers?: Peers<Character>;
