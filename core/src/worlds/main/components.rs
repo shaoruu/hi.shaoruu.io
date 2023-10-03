@@ -1,8 +1,8 @@
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use specs::{Component, VecStorage, WorldExt};
 use voxelize::World;
 
-#[derive(Default, Component, Serialize)]
+#[derive(Default, Component, Serialize, Deserialize)]
 #[storage(VecStorage)]
 pub struct TextComp(pub String);
 

@@ -1,0 +1,44 @@
+[
+  { "name": "mc.js", "stars": 2689, "url": "https://github.com/shaoruu/mc.js" },
+  {
+    "name": "modern-graphql-tutorial",
+    "stars": 320,
+    "url": "https://github.com/shaoruu/modern-graphql-tutorial"
+  },
+  {
+    "name": "mine.js",
+    "stars": 292,
+    "url": "https://github.com/shaoruu/mine.js"
+  },
+  {
+    "name": "voxelize",
+    "stars": 164,
+    "url": "https://github.com/shaoruu/voxelize"
+  },
+  {
+    "name": "mc.js-legacy",
+    "stars": 37,
+    "url": "https://github.com/shaoruu/mc.js-legacy"
+  },
+  {
+    "name": "rust-typescript-template",
+    "stars": 28,
+    "url": "https://github.com/shaoruu/rust-typescript-template"
+  },
+  {
+    "name": "lunar-lander-ai",
+    "stars": 13,
+    "url": "https://github.com/shaoruu/lunar-lander-ai"
+  },
+  { "name": "flapp5", "stars": 12, "url": "https://github.com/shaoruu/flapp5" },
+  {
+    "name": "Gooseberries",
+    "stars": 10,
+    "url": "https://github.com/shaoruu/Gooseberries"
+  },
+  {
+    "name": "py-floopy-bird",
+    "stars": 10,
+    "url": "https://github.com/shaoruu/py-floopy-bird"
+  }
+]

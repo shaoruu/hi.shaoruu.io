@@ -34,19 +34,14 @@ pub fn setup_methods(world: &mut World) {
     world.set_method_handle("add-floating-text", |world, _, payload| {
         let data: AddFloatingTextPayload = serde_json::from_str(&payload).unwrap();
         let text = data.text;
-        let position = data.position;
 
-        world
-            .ecs_mut()
-            .create_entity()
-            .with(IDComp::new(&nanoid!()))
-            .with(EntityFlag::default())
-            .with(ETypeComp::new("floating-text"))
-            .with(MetadataComp::new())
-            .with(CurrentChunkComp::default())
-            .with(TextComp::new(&text))
-            .with(PositionComp::new(position.0, position.1, position.2))
-            .build();
+        if let Some(entity) = world.spawn_entity_at("floating-text", &data.position) {
+            world
+                .ecs_mut()
+                .write_storage::<TextComp>()
+                .insert(entity, TextComp::new(&text))
+                .unwrap();
+        }
     });
 
     world.set_method_handle("remove-floating-text", |world, _, payload| {

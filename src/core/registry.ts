@@ -64,6 +64,12 @@ import Twitter from '../assets/images/blocks/twitter.png';
 import WhiteConcrete from '../assets/images/blocks/white_concrete.png';
 import YellowConcrete from '../assets/images/blocks/yellow_concrete.png';
 import Youtube from '../assets/images/blocks/youtube.png';
+import GraphQL from '../assets/images/ui/graphql.png';
+import MCJSLegacy from '../assets/images/ui/mc.js-legacy.png';
+import MCJS from '../assets/images/ui/mcjs.png';
+import MineJS from '../assets/images/ui/minejs.png';
+import RSTS from '../assets/images/ui/rust-ts.png';
+import Voxelize from '../assets/images/ui/voxelize.png';
 
 export async function makeRegistry(world: World) {
   const all = ['px', 'nx', 'py', 'ny', 'pz', 'nz'];
@@ -136,32 +142,62 @@ export async function makeRegistry(world: World) {
   ]);
 
   for (const face of all) {
-    await world.applyBlockTexture(
-      'Trophy',
-      `stand${face}`,
-      new Color('#E25E3E'),
-    );
+    for (const project of [
+      'mc.js',
+      'modern-graphql-tutorial',
+      'mine.js',
+      'voxelize',
+      'mc.js-legacy',
+      'rust-typescript-template',
+    ]) {
+      const trophyName = `Trophy (${project})`;
 
-    await world.applyBlockTexture(
-      'Trophy',
-      `handleleft${face}`,
-      new Color('#F0A500'),
-    );
+      await world.applyBlockTexture(
+        trophyName,
+        `stand${face}`,
+        new Color('#E25E3E'),
+      );
 
-    await world.applyBlockTexture(
-      'Trophy',
-      `handleright${face}`,
-      new Color('#F0A500'),
-    );
+      await world.applyBlockTexture(
+        trophyName,
+        `handleleft${face}`,
+        new Color('#F0A500'),
+      );
 
-    await world.applyBlockTexture(
-      'Trophy',
-      `column${face}`,
-      new Color('#FF9B50'),
-    );
+      await world.applyBlockTexture(
+        trophyName,
+        `handleright${face}`,
+        new Color('#F0A500'),
+      );
 
-    await world.applyBlockTexture('Trophy', `cup${face}`, new Color('#FAC213'));
+      await world.applyBlockTexture(
+        trophyName,
+        `column${face}`,
+        new Color('#FF9B50'),
+      );
+
+      await world.applyBlockTexture(
+        trophyName,
+        `cup${face}`,
+        new Color('#FAC213'),
+      );
+    }
   }
+
+  await world.applyBlockTexture('Trophy (mc.js)', 'cuppz', MCJS);
+  await world.applyBlockTexture('Trophy (mine.js)', 'cuppz', MineJS);
+  await world.applyBlockTexture(
+    'Trophy (modern-graphql-tutorial)',
+    'cuppz',
+    GraphQL,
+  );
+  await world.applyBlockTexture('Trophy (voxelize)', 'cuppz', Voxelize);
+  await world.applyBlockTexture('Trophy (mc.js-legacy)', 'cuppz', MCJSLegacy);
+  await world.applyBlockTexture(
+    'Trophy (rust-typescript-template)',
+    'cuppz',
+    RSTS,
+  );
 
   await world.applyBlockTexture('Youtube', 'displaypz', Youtube);
   await world.applyBlockTexture('LinkedIn', 'displaypz', LinkedIn);

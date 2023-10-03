@@ -411,7 +411,7 @@ pub fn get_registry() -> Registry {
         .build();
 
     let trophy_cup_width = 0.5;
-    let trophy_cup_height = 0.5;
+    let trophy_cup_height = 0.6;
     let mut trophy_cup = BlockFaces::six_faces()
         .scale_x(trophy_cup_width)
         .scale_z(trophy_cup_width)
@@ -420,7 +420,8 @@ pub fn get_registry() -> Registry {
         .offset_z(0.5 - trophy_cup_width / 2.0)
         .offset_y(trophy_place_height + trophy_column_height)
         .prefix("cup")
-        .build();
+        .build()
+        .independent_at(2);
 
     let trophy_handle_width = 0.3;
     let trophy_handle_depth = 0.1;
@@ -457,6 +458,74 @@ pub fn get_registry() -> Registry {
     trophy.append(&mut trophy_cup);
     trophy.append(&mut trophy_handle_left);
     trophy.append(&mut trophy_handle_right);
+
+    let trophy_aabbs = [AABB::from_faces(&trophy)];
+
+    registry.register_blocks(&[
+        Block::new("Trophy (mc.js)")
+            .id(2500)
+            .faces(&trophy)
+            .aabbs(&trophy_aabbs)
+            .rotatable(true)
+            .y_rotatable(true)
+            .is_transparent(true)
+            .torch_light_level(15)
+            .build(),
+        Block::new("Trophy (modern-graphql-tutorial)")
+            .id(2501)
+            .faces(&trophy)
+            .aabbs(&trophy_aabbs)
+            .rotatable(true)
+            .y_rotatable(true)
+            .is_transparent(true)
+            .torch_light_level(15)
+            .build(),
+        Block::new("Trophy (mine.js)")
+            .id(2502)
+            .faces(&trophy)
+            .aabbs(&trophy_aabbs)
+            .rotatable(true)
+            .y_rotatable(true)
+            .is_transparent(true)
+            .torch_light_level(15)
+            .build(),
+        Block::new("Trophy (voxelize)")
+            .id(2503)
+            .faces(&trophy)
+            .aabbs(&trophy_aabbs)
+            .rotatable(true)
+            .y_rotatable(true)
+            .is_transparent(true)
+            .torch_light_level(15)
+            .build(),
+        Block::new("Trophy (mc.js-legacy)")
+            .id(2504)
+            .faces(&trophy)
+            .aabbs(&trophy_aabbs)
+            .rotatable(true)
+            .y_rotatable(true)
+            .is_transparent(true)
+            .torch_light_level(15)
+            .build(),
+        Block::new("Trophy (rust-typescript-template)")
+            .id(2505)
+            .faces(&trophy)
+            .aabbs(&trophy_aabbs)
+            .rotatable(true)
+            .y_rotatable(true)
+            .is_transparent(true)
+            .torch_light_level(15)
+            .build(),
+        Block::new("Trophy (lunar-lander-ai)")
+            .id(2506)
+            .faces(&trophy)
+            .aabbs(&trophy_aabbs)
+            .rotatable(true)
+            .y_rotatable(true)
+            .is_transparent(true)
+            .torch_light_level(15)
+            .build(),
+    ]);
 
     registry.register_block(
         &Block::new("Trophy")

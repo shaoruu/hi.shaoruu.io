@@ -15,6 +15,7 @@
     "docker:build": "docker build -t shaoruu.io .",
     "docker:run": "docker run -p 4000:4000 -d shaoruu.io",
     "docker:stop": "docker stop $(docker ps -a -q --filter ancestor=shaoruu.io --format=\"{{.ID}}\")",
+    "run-script": "yarn ts-node --project tsconfig.server.json -r tsconfig-paths/register",
     "preview": "vite preview"
   },
   "dependencies": {

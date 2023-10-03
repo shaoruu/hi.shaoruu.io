@@ -6,13 +6,13 @@ import {
   type ReactNode,
 } from 'react';
 
-import { AABB } from '@voxelize/aabb';
 import {
   Character,
   Chat,
   ColorText,
   Debug,
   Entities,
+  Entity,
   Events,
   Inputs,
   ItemSlots,
@@ -23,6 +23,7 @@ import {
   Perspective,
   RigidControls,
   Shadows,
+  SpriteText,
   TRANSPARENT_SORT,
   VoxelInteract,
   World,
@@ -258,21 +259,6 @@ export function VoxelizeProvider({
     /* -------------------------------------------------------------------------- */
     const triggers = new Triggers(rigidControls);
 
-    const netSize = 500;
-    const netHeight = 1;
-
-    triggers.set(
-      new AABB(-netSize, 0, -netSize, netSize, netHeight, netSize),
-      () => {
-        rigidControls.teleport(
-          ...(rigidControls.options.initialPosition as Coords3),
-        );
-      },
-      {
-        name: 'Lobby Net',
-      },
-    );
-
     triggersRef.current = triggers;
 
     /* -------------------------------------------------------------------------- */
@@ -373,7 +359,19 @@ export function VoxelizeProvider({
       'in-game',
     );
 
-    const blocksToSkip = ['Youtube', 'Github', 'LinkedIn', 'Twitter', 'Mail'];
+    const blocksToSkip = [
+      'Youtube',
+      'Github',
+      'LinkedIn',
+      'Twitter',
+      'Mail',
+      'Trophy (mc.js)',
+      'Trophy (voxelize)',
+      'Trophy (modern-graphql-tutorial)',
+      'Trophy (mine.js)',
+      'Trophy (rust-typescript-template)',
+      'Trophy (mc.js-legacy)',
+    ];
 
     inputs.click('right', () => {
       if (!voxelInteract.potential) return;
@@ -481,6 +479,36 @@ export function VoxelizeProvider({
     /*                               SETUP ENTITIES                               */
     /* -------------------------------------------------------------------------- */
     const entities = new Entities();
+
+    class FloatingText extends Entity<{ position: Coords3; text: string }> {
+      textMesh = new SpriteText('', 0.2);
+
+      constructor(id: string) {
+        super(id);
+
+        this.textMesh.material.depthWrite = false;
+        this.textMesh.material.depthTest = false;
+        this.textMesh.material.transparent = true;
+        this.textMesh.fontFace = 'ConnectionSerif-d20X';
+        this.textMesh.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+        this.add(this.textMesh);
+      }
+
+      onCreate = (data: { position: Coords3; text: string }) => {
+        this.textMesh.text = data.text.replace(/\\n/, '\n');
+        this.position.set(...data.position);
+      };
+
+      onUpdate = (data: { position: Coords3; text: string }) => {
+        this.textMesh.text = data.text.replace(/\\n/, '\n');
+        this.position.set(...data.position);
+      };
+    }
+
+    entities.setClass('floating-text', FloatingText);
+    world.add(entities);
+
+    network.register(entities);
 
     entitiesRef.current = entities;
 
@@ -650,6 +678,10 @@ export function VoxelizeProvider({
             ) * 2,
           );
 
+          if (rigidControls.voxel[1] < -5) {
+            rigidControls.teleport(0, 40, 0);
+          }
+
           network.flush();
         }
 
@@ -754,6 +786,7 @@ export function VoxelizeProvider({
       inputs: inputsRef.current!,
       updateHooks: updateHooksRef.current!,
       peers: peersRef.current!,
+      entities: entitiesRef.current!,
       method: methodRef.current!,
       chat: chatRef.current!,
       voxelInteract: voxelInteractRef.current!,
