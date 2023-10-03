@@ -227,7 +227,7 @@ export function VoxelizeProvider({
       renderer.domElement,
       world,
       {
-        initialPosition: [0, 38, 0],
+        initialPosition: [0, 40, 0],
         flyForce: 100,
         flyImpulse: 1,
         ...rigidControlsOptions,

@@ -6,7 +6,11 @@ import Andersite from '../assets/images/blocks/andersite_block.png';
 import Aquamarine from '../assets/images/blocks/aquamarine.png';
 import Azurite from '../assets/images/blocks/azurite.png';
 import Basalt from '../assets/images/blocks/basalt_block.png';
+import BirchLogSide from '../assets/images/blocks/birch_log_side.png';
+import BirchLogTop from '../assets/images/blocks/birch_log_top.png';
+import BlackConcrete from '../assets/images/blocks/black_concrete.png';
 import Bloodstone from '../assets/images/blocks/bloodstone.png';
+import BlueConcrete from '../assets/images/blocks/blue_concrete.png';
 import BlueLaceAgate from '../assets/images/blocks/blue_lace_agate.png';
 import Chalk from '../assets/images/blocks/chalk_block.png';
 import CondorAgate from '../assets/images/blocks/condor_agate.png';
@@ -19,10 +23,12 @@ import EnhydroAgate from '../assets/images/blocks/enhydro_agate.png';
 import Flint from '../assets/images/blocks/flint.png';
 import Gabbro from '../assets/images/blocks/gabbro_block.png';
 import Github from '../assets/images/blocks/github.png';
+import Glass from '../assets/images/blocks/glass.png';
 import Granite from '../assets/images/blocks/granite_block.png';
 import Graphite from '../assets/images/blocks/graphite_block.png';
 import Hematite from '../assets/images/blocks/hematite.png';
 import Iolite from '../assets/images/blocks/iolite.png';
+import Ivory from '../assets/images/blocks/ivory_block.png';
 import Jade from '../assets/images/blocks/jade.png';
 import LapisLazuli from '../assets/images/blocks/lapis_lazuli.png';
 import Limestone from '../assets/images/blocks/limestone_block.png';
@@ -32,12 +38,18 @@ import Malachite from '../assets/images/blocks/malachite.png';
 import Marble from '../assets/images/blocks/marble_block.png';
 import Moonstone from '../assets/images/blocks/moonstone.png';
 import MossAgate from '../assets/images/blocks/moss_agate.png';
+import OakLeaves from '../assets/images/blocks/oak_leaves.png';
+import OakLogSide from '../assets/images/blocks/oak_log_side.png';
+import OakLogTop from '../assets/images/blocks/oak_log_top.png';
+import OakPlanks from '../assets/images/blocks/oak_planks.png';
 import Obsidian from '../assets/images/blocks/obsidian_block.png';
 import OnyxAgate from '../assets/images/blocks/onyx_agate.png';
 import Opal from '../assets/images/blocks/opal.png';
+import OrangeConcrete from '../assets/images/blocks/orange_concrete.png';
 import Pumice from '../assets/images/blocks/pumice_block.png';
 import Pyrite from '../assets/images/blocks/pyrite.png';
 import Quartzite from '../assets/images/blocks/quartzite_block.png';
+import RedConcrete from '../assets/images/blocks/red_concrete.png';
 import RoseQuartz from '../assets/images/blocks/rose_quartz.png';
 import Ruby from '../assets/images/blocks/ruby.png';
 import SageniteAgate from '../assets/images/blocks/sagenite_agate.png';
@@ -49,6 +61,8 @@ import Sunstone from '../assets/images/blocks/sunstone.png';
 import Tuff from '../assets/images/blocks/tuff_block.png';
 import Turquoise from '../assets/images/blocks/turquoise.png';
 import Twitter from '../assets/images/blocks/twitter.png';
+import WhiteConcrete from '../assets/images/blocks/white_concrete.png';
+import YellowConcrete from '../assets/images/blocks/yellow_concrete.png';
 import Youtube from '../assets/images/blocks/youtube.png';
 
 export async function makeRegistry(world: World) {
@@ -211,4 +225,28 @@ export async function makeRegistry(world: World) {
       new Color('#216e39'),
     );
   }
+
+  await world.applyBlockTexture('Orange Concrete', all, OrangeConcrete);
+  await world.applyBlockTexture('Red Concrete', all, RedConcrete);
+  await world.applyBlockTexture('Yellow Concrete', all, YellowConcrete);
+  await world.applyBlockTexture('White Concrete', all, WhiteConcrete);
+  await world.applyBlockTexture('Black Concrete', all, BlackConcrete);
+  await world.applyBlockTexture('Blue Concrete', all, BlueConcrete);
+  await world.applyBlockTexture('Glass', all, Glass);
+  await world.applyBlockTexture(
+    'Birch Log',
+    ['px', 'nx', 'pz', 'nz'],
+    BirchLogSide,
+  );
+  await world.applyBlockTexture('Birch Log', ['py', 'ny'], BirchLogTop);
+  await world.applyBlockTexture(
+    'Oak Log',
+    ['px', 'nx', 'pz', 'nz'],
+    OakLogSide,
+  );
+  await world.applyBlockTexture('Oak Log', ['py', 'ny'], OakLogTop);
+  await world.applyBlockTexture('Oak Leaves', all, OakLeaves);
+  await world.applyBlockTexture('Oak Leaves', ['one', 'two'], OakLeaves);
+  await world.applyBlockTexture('Ivory', all, Ivory);
+  await world.applyBlockTexture('Oak Planks', all, OakPlanks);
 }

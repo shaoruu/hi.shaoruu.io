@@ -326,7 +326,7 @@ pub fn get_registry() -> Registry {
             .is_x_transparent(false)
             .faces(&link_block)
             .aabbs(&[AABB::from_faces(&link_block)])
-            .torch_light_level(10)
+            .torch_light_level(15)
             .build()
     };
 
@@ -491,6 +491,41 @@ pub fn get_registry() -> Registry {
             .id(3004)
             .torch_light_level(15)
             .build(),
+    ]);
+
+    // Voxelize blocks
+    registry.register_blocks(&[
+        Block::new("Glass")
+            .id(5000)
+            .is_transparent(true)
+            .is_see_through(true)
+            .build(),
+        Block::new("Birch Log").id(5001).rotatable(true).build(),
+        Block::new("Oak Planks").id(5002).build(),
+        Block::new("Oak Log").id(5003).rotatable(true).build(),
+        Block::new("Oak Leaves")
+            .id(5004)
+            .faces(
+                &BlockFaces::six_faces().build().join(
+                    BlockFaces::diagonal_faces()
+                        .offset_x(0.1)
+                        .offset_z(0.1)
+                        .scale_horizontal(1.2)
+                        .build(),
+                ),
+            )
+            .is_transparent(true)
+            .is_see_through(true)
+            .light_reduce(true)
+            .transparent_standalone(true)
+            .build(),
+        Block::new("Orange Concrete").id(5006).build(),
+        Block::new("Blue Concrete").id(5007).build(),
+        Block::new("Red Concrete").id(5008).build(),
+        Block::new("White Concrete").id(5009).build(),
+        Block::new("Yellow Concrete").id(5010).build(),
+        Block::new("Black Concrete").id(5011).build(),
+        Block::new("Ivory").id(5012).build(),
     ]);
 
     registry
