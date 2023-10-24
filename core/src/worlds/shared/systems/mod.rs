@@ -1,3 +1,11 @@
+mod entity_observe;
+mod entity_tree;
+mod path_finding;
+mod path_metadata;
+mod rotation_metadata;
+mod target_metadata;
+mod text_metadata;
+
 use specs::DispatcherBuilder;
 use voxelize::{
     BroadcastSystem, ChunkGeneratingSystem, ChunkRequestsSystem, ChunkSavingSystem,
@@ -6,14 +14,36 @@ use voxelize::{
     PhysicsSystem, UpdateStatsSystem, World,
 };
 
-use super::systems::TextMetadataSystem;
+use self::{
+    entity_observe::EntityObserveSystem, entity_tree::EntityTreeSystem,
+    path_finding::PathFindingSystem, path_metadata::PathMetadataSystem,
+    rotation_metadata::RotationMetadataSystem, target_metadata::TargetMetadataSystem,
+    text_metadata::TextMetadataSystem,
+};
 
 pub fn setup_dispatcher(world: &mut World) {
     world.set_dispatcher(|| {
         DispatcherBuilder::new()
             .with(UpdateStatsSystem, "update-stats", &[])
-            .with(EntitiesMetaSystem, "entities-meta", &[])
-            .with(TextMetadataSystem, "text-metadata", &["entities-meta"])
+            .with(EntityObserveSystem, "entity-observe", &[])
+            .with(PathFindingSystem, "path-finding", &["entity-observe"])
+            .with(TextMetadataSystem, "text-meta", &[])
+            .with(TargetMetadataSystem, "target-meta", &[])
+            .with(RotationMetadataSystem, "rotation-meta", &[])
+            .with(PathMetadataSystem, "path-meta", &[])
+            .with(EntityTreeSystem, "entity-tree", &[])
+            .with(
+                EntitiesMetaSystem,
+                "entities-meta",
+                &[
+                    "text-meta",
+                    "target-meta",
+                    "rotation-meta",
+                    "path-meta",
+                    "entity-observe",
+                    "entity-tree",
+                ],
+            )
             .with(PeersMetaSystem, "peers-meta", &[])
             .with(CurrentChunkSystem, "current-chunk", &[])
             .with(ChunkUpdatingSystem, "chunk-updating", &["current-chunk"])

@@ -97,6 +97,9 @@ async fn main() -> std::io::Result<()> {
     server
         .add_world(worlds::setup_main_world(&registry))
         .expect("Failed to add the main world");
+    server
+        .add_world(worlds::setup_flat_world(&registry))
+        .expect("Failed to add the flat world");
 
     server.prepare();
     server.started = true;

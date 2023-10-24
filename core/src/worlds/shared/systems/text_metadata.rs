@@ -1,7 +1,7 @@
 use specs::{ReadStorage, System, WriteStorage};
 use voxelize::MetadataComp;
 
-use crate::worlds::main::components::TextComp;
+use crate::worlds::shared::components::TextComp;
 
 pub struct TextMetadataSystem;
 

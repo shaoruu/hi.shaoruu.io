@@ -4,3 +4,7 @@ export const linkedInLink = 'https://www.linkedin.com/in/shaoruu/';
 export const twitterLink = 'https://www.twitter.com/shaoruu';
 export const mailLink = 'mailto:ian1314159@gmail.com';
 export const buyMeACoffeeLink = 'https://www.buymeacoffee.com/shaoruu';
+
+export const voxelizeWorldLocalStorageKey = 'voxelize-world-name';
+export const currentWorldName =
+  localStorage.getItem(voxelizeWorldLocalStorageKey) ?? 'main';

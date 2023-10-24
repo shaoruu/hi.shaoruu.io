@@ -48,6 +48,10 @@ import { BreakParticles } from '../../core/particles';
 import { makeRegistry } from '../../core/registry';
 
 import {
+  currentWorldName,
+  voxelizeWorldLocalStorageKey,
+} from '@/src/constants';
+import {
   VoxelizeContext,
   type VoxelizeContextData,
 } from '@/src/contexts/voxelize';
@@ -712,6 +716,12 @@ export function VoxelizeProvider({
       world.chunks.uniforms.fogFar.value = 3000;
       world.renderRadius = 8;
 
+      gui
+        .add({ world: currentWorldName }, 'world', ['test', 'main', 'flat'])
+        .onChange((worldName: string) => {
+          localStorage.setItem(voxelizeWorldLocalStorageKey, worldName);
+          window.location.reload();
+        });
       gui.add(world, 'renderRadius', 3, 20, 1);
       gui
         .add({ time: world.time }, 'time', 0, world.options.timePerDay, 0.01)
