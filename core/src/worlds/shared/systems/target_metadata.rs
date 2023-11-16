@@ -17,7 +17,7 @@ impl<'a> System<'a> for TargetMetadataSystem {
         (&targets, &mut metadatas)
             .par_join()
             .for_each(|(target, metadata)| {
-                metadata.set("target_position", target);
+                metadata.set("target", target);
             });
     }
 }

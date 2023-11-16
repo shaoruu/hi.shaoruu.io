@@ -1,4 +1,5 @@
 mod brain;
+mod flags;
 mod path;
 mod rotation;
 mod target;
@@ -7,6 +8,7 @@ mod text;
 use specs::WorldExt;
 
 pub use brain::BrainComp;
+pub use flags::*;
 pub use path::PathComp;
 pub use rotation::RotationComp;
 pub use target::TargetComp;
@@ -20,4 +22,5 @@ pub fn setup_components(world: &mut World) {
     world.ecs_mut().register::<TargetComp>();
     world.ecs_mut().register::<RotationComp>();
     world.ecs_mut().register::<PathComp>();
+    world.ecs_mut().register::<BotFlag>();
 }

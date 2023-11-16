@@ -5,6 +5,8 @@ mod path_metadata;
 mod rotation_metadata;
 mod target_metadata;
 mod text_metadata;
+mod void_kill;
+mod walk_towards;
 
 use specs::DispatcherBuilder;
 use voxelize::{
@@ -18,12 +20,13 @@ use self::{
     entity_observe::EntityObserveSystem, entity_tree::EntityTreeSystem,
     path_finding::PathFindingSystem, path_metadata::PathMetadataSystem,
     rotation_metadata::RotationMetadataSystem, target_metadata::TargetMetadataSystem,
-    text_metadata::TextMetadataSystem,
+    text_metadata::TextMetadataSystem, void_kill::VoidKillSystem, walk_towards::WalkTowardsSystem,
 };
 
 pub fn setup_dispatcher(world: &mut World) {
     world.set_dispatcher(|| {
         DispatcherBuilder::new()
+            .with(VoidKillSystem, "void-kill", &[])
             .with(UpdateStatsSystem, "update-stats", &[])
             .with(EntityObserveSystem, "entity-observe", &[])
             .with(PathFindingSystem, "path-finding", &["entity-observe"])
@@ -32,6 +35,7 @@ pub fn setup_dispatcher(world: &mut World) {
             .with(RotationMetadataSystem, "rotation-meta", &[])
             .with(PathMetadataSystem, "path-meta", &[])
             .with(EntityTreeSystem, "entity-tree", &[])
+            .with(WalkTowardsSystem, "walk-towards", &["path-finding"])
             .with(
                 EntitiesMetaSystem,
                 "entities-meta",
@@ -42,6 +46,7 @@ pub fn setup_dispatcher(world: &mut World) {
                     "path-meta",
                     "entity-observe",
                     "entity-tree",
+                    "walk-towards",
                 ],
             )
             .with(PeersMetaSystem, "peers-meta", &[])

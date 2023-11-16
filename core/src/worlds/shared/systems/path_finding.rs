@@ -1,4 +1,7 @@
-use std::sync::{Arc, Mutex};
+use std::{
+    sync::{Arc, Mutex},
+    time::Instant,
+};
 
 use specs::{ReadExpect, ReadStorage, System, WriteStorage};
 use voxelize::{Chunks, Registry, RigidBodyComp, Vec3, VoxelAccess, WorldConfig};
@@ -31,7 +34,7 @@ impl<'a> System<'a> for PathFindingSystem {
         // Returns whether or not a block can be stepped on
         let get_is_voxel_walkable = |vx: i32, vy: i32, vz: i32| {
             let voxel = chunks.get_voxel(vx, vy, vz);
-            !registry.is_air(voxel)
+            registry.is_air(voxel)
         };
 
         let get_is_walkable = |vx: i32, vy: i32, vz: i32, h: f32| {
@@ -50,8 +53,16 @@ impl<'a> System<'a> for PathFindingSystem {
 
         let get_standable_voxel = |voxel: &Vec3<i32>| -> Vec3<i32> {
             let mut voxel = voxel.clone();
+
+            if !get_is_voxel_walkable(voxel.0, voxel.1, voxel.2)
+                && get_is_voxel_walkable(voxel.0, voxel.1 + 1, voxel.2)
+            {
+                voxel.1 += 1;
+                return voxel;
+            }
+
             loop {
-                if voxel.1 == 0 || get_is_voxel_walkable(voxel.0, voxel.1, voxel.2) {
+                if voxel.1 > 0 && get_is_voxel_walkable(voxel.0, voxel.1, voxel.2) {
                     voxel.1 -= 1;
                 } else {
                     break;
@@ -66,6 +77,7 @@ impl<'a> System<'a> for PathFindingSystem {
             .for_each(|(body, target, entity_path)| {
                 if let Some(target) = target.0.to_owned() {
                     let body_pos = body.0.get_position();
+
                     let height = body.0.aabb.height();
 
                     let body_vpos = Vec3(body_pos.0 as i32, body_pos.1 as i32, body_pos.2 as i32);
@@ -194,7 +206,7 @@ impl<'a> System<'a> for PathFindingSystem {
                     );
 
                     if let Some((nodes, count)) = path {
-                        if count > entity_path.current_index as u32 {
+                        if count > entity_path.max_nodes as u32 {
                             entity_path.path = None;
                         } else {
                             entity_path.path = Some(

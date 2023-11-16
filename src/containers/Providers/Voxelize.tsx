@@ -293,6 +293,12 @@ export function VoxelizeProvider({
 
     inputs.bind('j', hideDebugUI, 'in-game');
 
+    inputs.bind('z', () => {
+      method.call('spawn-bot', {
+        position: rigidControls.object.position.toArray(),
+      });
+    });
+
     let radius = 1;
     const maxRadius = 10;
     const minRadius = 1;
@@ -510,7 +516,115 @@ export function VoxelizeProvider({
       };
     }
 
+    type BotData = {
+      position: Coords3;
+      rotation: [number, number, number, number];
+      target: Coords3;
+      path: {
+        maxNodes: number;
+        path: Coords3[];
+      };
+    };
+
+    const botPaths = new THREE.Group();
+    const botCharacters = new Map<string, Character>();
+
+    world.add(botPaths);
+
+    class Bot extends Entity<BotData> {
+      entityId: string;
+      character: Character;
+      path = new THREE.Group();
+
+      constructor(id: string) {
+        super(id);
+
+        this.entityId = id;
+
+        this.character = new Character({
+          nameTagOptions: {
+            fontFace: 'ConnectionSerif-d20X',
+          },
+        });
+
+        // shadows.add(this.character);
+        // lightShined.add(this.character);
+
+        this.character.head.paint('all', new THREE.Color('#F99417'));
+        this.character.head.paint('front', new THREE.Color('#F4CE14'));
+
+        this.character.scale.set(0.5, 0.5, 0.5);
+        this.character.position.y += this.character.totalHeight / 4;
+        this.add(this.character);
+
+        botPaths.add(this.path);
+
+        botCharacters.set(id, this.character);
+      }
+
+      adjustPosition = (position: Coords3) => {
+        position[1] += this.character.totalHeight / 4;
+        return position;
+      };
+
+      onCreate = (data: BotData) => {
+        const adjustedPosition = this.adjustPosition(data.position);
+        this.character.set(adjustedPosition, [0, 0, 0]);
+      };
+
+      onDelete = () => {
+        this.path.children.forEach((node) => {
+          this.path.remove(node);
+        });
+
+        botPaths.remove(this.path);
+        botCharacters.delete(this.entityId);
+      };
+
+      onUpdate = (data: BotData) => {
+        const { position, target } = data;
+
+        const adjustedPosition = this.adjustPosition(position);
+
+        const origin = this.character.position;
+
+        const [tx, ty, tz] = target || [0, 0, 0];
+        const delta = new THREE.Vector3(tx, ty, tz).sub(origin);
+        const direction = delta.clone().normalize();
+
+        this.character.set(adjustedPosition, direction.toArray());
+
+        this.path.children.forEach((node) => {
+          this.path.remove(node);
+        });
+
+        const { path } = data;
+
+        if (path.path) {
+          const { path: nodes } = path;
+
+          for (let i = 0; i < nodes.length; i++) {
+            const node = nodes[i];
+            const color = new THREE.Color('#fff');
+            const geometry = new THREE.PlaneGeometry(1, 1);
+            geometry.rotateX(-Math.PI / 2);
+            const material = new THREE.MeshBasicMaterial({
+              color,
+              opacity: 0.1,
+              transparent: true,
+            });
+            const mesh = new THREE.Mesh(geometry, material);
+            mesh.position.set(...node);
+            mesh.position.addScalar(0.5);
+            mesh.position.y -= 0.49;
+            this.path.add(mesh);
+          }
+        }
+      };
+    }
+
     entities.setClass('floating-text', FloatingText);
+    entities.setClass('bot', Bot);
     world.add(entities);
 
     network.register(entities);
@@ -600,6 +714,10 @@ export function VoxelizeProvider({
 
     const updateHooks: (() => void)[] = [];
     updateHooksRef.current = updateHooks;
+
+    updateHooks.push(() => {
+      botCharacters.forEach((bot) => bot.update());
+    });
 
     const perspective = new Perspective(rigidControls, world);
     perspective.connect(inputs, 'in-game');
@@ -717,7 +835,7 @@ export function VoxelizeProvider({
       world.renderRadius = 8;
 
       gui
-        .add({ world: currentWorldName }, 'world', ['test', 'main', 'flat'])
+        .add({ world: currentWorldName }, 'world', ['main', 'flat'])
         .onChange((worldName: string) => {
           localStorage.setItem(voxelizeWorldLocalStorageKey, worldName);
           window.location.reload();

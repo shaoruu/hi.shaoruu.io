@@ -9,7 +9,6 @@ impl<'a> System<'a> for EntityObserveSystem {
     #[allow(clippy::type_complexity)]
     type SystemData = (
         ReadExpect<'a, KdTree>,
-        ReadExpect<'a, Chunks>,
         ReadStorage<'a, RigidBodyComp>,
         WriteStorage<'a, TargetComp>,
     );
@@ -18,9 +17,7 @@ impl<'a> System<'a> for EntityObserveSystem {
         use rayon::prelude::*;
         use specs::ParJoin;
 
-        let (tree, chunks, bodies, mut targets) = data;
-
-        let test_solid = |x: i32, y: i32, z: i32| -> bool { !chunks.get_voxel(x, y, z) != 0 };
+        let (tree, bodies, mut targets) = data;
 
         (&bodies, &mut targets)
             .par_join()
@@ -30,10 +27,14 @@ impl<'a> System<'a> for EntityObserveSystem {
 
                 if closest_arr.len() > 0 {
                     let entity = closest_arr[0].1;
-                    let body = bodies.get(entity.to_owned()).unwrap();
-                    let position = body.0.get_position();
 
-                    target.0 = Some(position);
+                    if let Some(body) = bodies.get(entity.to_owned()) {
+                        let position = body.0.get_position();
+
+                        target.0 = Some(position);
+                    } else {
+                        target.0 = None;
+                    }
                 } else {
                     target.0 = None;
                 }

@@ -85,6 +85,10 @@ export function Chat() {
       return;
     }
 
+    chat.addCommand('kill-all-bots', () => {
+      method.call('kill-all-bots');
+    });
+
     chat.addCommand('tp', (rest) => {
       const [x, y, z] = rest.split(' ').map((n) => parseInt(n));
       rigidControls.teleport(x, y, z);
