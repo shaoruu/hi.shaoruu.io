@@ -11,6 +11,7 @@ import type { BlockUpdate, Coords3 } from '@voxelize/core';
 import topStarredRepos from '../assets/data/topStars.json';
 import { useVoxelize } from '../hooks/useVoxelize';
 import type { ChatItem } from '../types';
+import { isAdmin } from '../utils/isAdmin';
 
 const chatMargin = '16px';
 const chatVanishTime = 5000;
@@ -85,102 +86,104 @@ export function Chat() {
       return;
     }
 
-    chat.addCommand('kill-all-bots', () => {
-      method.call('kill-all-bots');
-    });
+    if (isAdmin()) {
+      chat.addCommand('kill-all-bots', () => {
+        method.call('kill-all-bots');
+      });
 
-    chat.addCommand('tp', (rest) => {
-      const [x, y, z] = rest.split(' ').map((n) => parseInt(n));
-      rigidControls.teleport(x, y, z);
-    });
+      chat.addCommand('tp', (rest) => {
+        const [x, y, z] = rest.split(' ').map((n) => parseInt(n));
+        rigidControls.teleport(x, y, z);
+      });
 
-    chat.addCommand('all-blocks', () => {
-      const allBlocks = Array.from(world.registry.blocksById.values()).slice(1);
-      const perRow = 10;
+      chat.addCommand('all-blocks', () => {
+        const allBlocks = Array.from(world.registry.blocksById.values()).slice(
+          1,
+        );
+        const perRow = 10;
 
-      const updates: BlockUpdate[] = [];
-      const [vx, vy, vz] = rigidControls.voxel;
+        const updates: BlockUpdate[] = [];
+        const [vx, vy, vz] = rigidControls.voxel;
 
-      for (let i = 0; i < allBlocks.length; i++) {
-        const block = allBlocks[i];
-        const x = i % perRow;
-        const y = 0;
-        const z = Math.floor(i / perRow);
+        for (let i = 0; i < allBlocks.length; i++) {
+          const block = allBlocks[i];
+          const x = i % perRow;
+          const y = 0;
+          const z = Math.floor(i / perRow);
 
-        updates.push({ vx: vx + x, vy: vy + y, vz: vz + z, type: block.id });
-      }
+          updates.push({ vx: vx + x, vy: vy + y, vz: vz + z, type: block.id });
+        }
 
-      world.updateVoxels(updates);
-    });
+        world.updateVoxels(updates);
+      });
 
-    const placeTextAt = (text: string, coords: Coords3) => {
-      const [x, y, z] = coords;
+      const placeTextAt = (text: string, coords: Coords3) => {
+        const [x, y, z] = coords;
 
-      entities.map.forEach((entity, id) => {
-        // Check if any entity is already at this position
-        if (
-          entity.position.x === x &&
-          entity.position.y === y &&
-          entity.position.z === z
-        ) {
-          method.call('remove-floating-text', { id });
+        entities.map.forEach((entity, id) => {
+          // Check if any entity is already at this position
+          if (
+            entity.position.x === x &&
+            entity.position.y === y &&
+            entity.position.z === z
+          ) {
+            method.call('remove-floating-text', { id });
+            return;
+          }
+        });
+
+        method.call('add-floating-text', {
+          text,
+          position: [x, y, z],
+        });
+      };
+
+      chat.addCommand('trophies', () => {
+        const trophyLocations = [
+          [-11.5, 37.5, 3.5],
+          [-11.5, 37.5, -2.5],
+          [-13.5, 37.5, 3.5],
+          [-13.5, 37.5, -2.5],
+          [-15.5, 37.5, 3.5],
+          [-15.5, 37.5, -2.5],
+        ];
+
+        for (let i = 0; i < trophyLocations.length; i++) {
+          const trophy = topStarredRepos[i];
+          const [x, y, z] = trophyLocations[i];
+          let metainfo = '';
+
+          switch (trophy.name) {
+            case 'mc.js':
+              metainfo = "\n$#7D7C7C$DMCA'd by Mojang";
+              break;
+          }
+
+          placeTextAt(
+            `$gold$${trophy.name}\n$white$⭐${trophy.stars} stars⭐${metainfo}`,
+            [x, y, z],
+          );
+        }
+      });
+
+      chat.addCommand('text', (rest) => {
+        const text = rest.trim();
+        const { target } = voxelInteract;
+
+        if (!target) {
+          console.warn('no target, cannot add text');
           return;
         }
+
+        let [x, y, z] = target;
+
+        x += 0.5;
+        y += 1.5;
+        z += 0.5;
+
+        placeTextAt(text, [x, y, z]);
       });
-
-      method.call('add-floating-text', {
-        text,
-        position: [x, y, z],
-      });
-    };
-
-    chat.addCommand('trophies', () => {
-      const trophyLocations = [
-        [-11.5, 37.5, 3.5],
-        [-11.5, 37.5, -2.5],
-        [-13.5, 37.5, 3.5],
-        [-13.5, 37.5, -2.5],
-        [-15.5, 37.5, 3.5],
-        [-15.5, 37.5, -2.5],
-      ];
-
-      for (let i = 0; i < trophyLocations.length; i++) {
-        const trophy = topStarredRepos[i];
-        const [x, y, z] = trophyLocations[i];
-        let metainfo = '';
-
-        switch (trophy.name) {
-          case 'mc.js':
-            metainfo = "\n$#7D7C7C$DMCA'd by Mojang";
-            break;
-        }
-
-        console.log(metainfo);
-
-        placeTextAt(
-          `$gold$${trophy.name}\n$white$⭐${trophy.stars} stars⭐${metainfo}`,
-          [x, y, z],
-        );
-      }
-    });
-
-    chat.addCommand('text', (rest) => {
-      const text = rest.trim();
-      const { target } = voxelInteract;
-
-      if (!target) {
-        console.warn('no target, cannot add text');
-        return;
-      }
-
-      let [x, y, z] = target;
-
-      x += 0.5;
-      y += 1.5;
-      z += 0.5;
-
-      placeTextAt(text, [x, y, z]);
-    });
+    }
 
     chat.onChat = (chat: ChatItem) => {
       setChatItems((prev) => [...prev, chat]);
@@ -256,7 +259,7 @@ export function Chat() {
 
   return (
     <div
-      className="absolute bottom-px left-1/2 transform translate-x-[-50%] flex flex-col w-[60vw] gap-2 z-[1000000]"
+      className="absolute bottom-px left-1/2 transform translate-x-[-50%] flex flex-col w-[60vw] gap-8 z-[1000000]"
       style={{
         width: 'calc(100% - ${chatMargin} * 2)',
         margin: chatMargin,
@@ -272,7 +275,14 @@ export function Chat() {
             className="flex items-center gap-1 text-background-primary px-3 py-2 text-xs"
           >
             {chatItem.sender && (
-              <p className="text-text-tertiary">{chatItem.sender}: </p>
+              <p className="text-text-tertiary">
+                {chatItem.type === 'ian-chat' ? (
+                  <span className="text-red-500">[OWNER] Ian</span>
+                ) : (
+                  chatItem.sender
+                )}
+                :{' '}
+              </p>
             )}
             <p>{chatItem.body}</p>
           </div>
@@ -293,7 +303,7 @@ export function Chat() {
             if (e.currentTarget.value === '') return;
 
             chat?.send({
-              type: 'chat',
+              type: isAdmin() ? 'ian-chat' : 'chat',
               sender: network?.clientInfo.username,
               body: e.currentTarget.value,
             });

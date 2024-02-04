@@ -12,10 +12,13 @@ use super::shared::{
 pub fn setup_flat_world(registry: &Registry) -> World {
     let config = WorldConfig::new()
         .preload(true)
-        .min_chunk([-50, -50])
-        .max_chunk([50, 50])
+        .preload_radius(3)
+        .min_chunk([-6, -6])
+        .max_chunk([5, 5])
         .time_per_day(2400)
         .max_updates_per_tick(100)
+        .saving(true)
+        .save_dir("data/worlds/flat")
         .build();
 
     let mut world = World::new("flat", &config);

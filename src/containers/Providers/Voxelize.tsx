@@ -56,6 +56,7 @@ import {
   type VoxelizeContextData,
 } from '@/src/contexts/voxelize';
 import { Triggers } from '@/src/core/trigger';
+import { isAdmin } from '@/src/utils/isAdmin';
 import { getCoreUrl } from '@/src/utils/urls';
 
 ColorText.SPLITTER = '$';
@@ -71,6 +72,7 @@ type Props = {
 };
 
 const emptyObject = {};
+const worldsToPlace = ['flat'];
 
 export function VoxelizeProvider({
   canvasId,
@@ -101,6 +103,9 @@ export function VoxelizeProvider({
 
   useLayoutEffect(() => {
     if (networkRef.current) return;
+
+    const isUserAdmin = isAdmin();
+    const canRegularUserPlaceBreak = worldsToPlace.includes(worldName);
 
     const canvas = document.getElementById(canvasId) as HTMLCanvasElement;
 
@@ -280,8 +285,10 @@ export function VoxelizeProvider({
       inputs.setNamespace('menu');
     });
 
-    inputs.bind('f', rigidControls.toggleFly, 'in-game');
-    inputs.bind('g', rigidControls.toggleGhostMode, 'in-game');
+    if (isUserAdmin) {
+      inputs.bind('f', rigidControls.toggleFly, 'in-game');
+      inputs.bind('g', rigidControls.toggleGhostMode, 'in-game');
+    }
 
     const hideDebugUI = () => {
       debug.visible = !debug.visible;
@@ -291,13 +298,17 @@ export function VoxelizeProvider({
       triggers.toggleVisible();
     };
 
-    inputs.bind('j', hideDebugUI, 'in-game');
+    if (isUserAdmin) {
+      inputs.bind('j', hideDebugUI, 'in-game');
+    }
 
-    inputs.bind('z', () => {
-      method.call('spawn-bot', {
-        position: rigidControls.object.position.toArray(),
+    if (isUserAdmin) {
+      inputs.bind('z', () => {
+        method.call('spawn-bot', {
+          position: rigidControls.object.position.toArray(),
+        });
       });
-    });
+    }
 
     const radius = 1;
     const maxRadius = 10;
@@ -306,6 +317,7 @@ export function VoxelizeProvider({
 
     const bulkDestroy = () => {
       if (!voxelInteract.target) return;
+      if (!isUserAdmin && !canRegularUserPlaceBreak) return;
 
       const [vx, vy, vz] = voxelInteract.target;
 
@@ -332,6 +344,7 @@ export function VoxelizeProvider({
 
     const bulkPlace = () => {
       if (!voxelInteract.potential) return;
+      if (!isUserAdmin && !canRegularUserPlaceBreak) return;
 
       const {
         voxel: [vx, vy, vz],
@@ -894,6 +907,9 @@ export function VoxelizeProvider({
       //   },
       //   '*',
       // );
+
+      // Hide debug first
+      hideDebugUI();
 
       setIsConnecting(false);
     }
