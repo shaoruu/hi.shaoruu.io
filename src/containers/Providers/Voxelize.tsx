@@ -299,7 +299,7 @@ export function VoxelizeProvider({
       });
     });
 
-    let radius = 1;
+    const radius = 1;
     const maxRadius = 10;
     const minRadius = 1;
     const circular = true;
@@ -363,11 +363,11 @@ export function VoxelizeProvider({
       if (updates.length) world.updateVoxels(updates);
     };
 
-    inputs.scroll(
-      () => (radius = Math.min(maxRadius, radius + 1)),
-      () => (radius = Math.max(minRadius, radius - 1)),
-      'in-game',
-    );
+    // inputs.scroll(
+    //   () => (radius = Math.min(maxRadius, radius + 1)),
+    //   () => (radius = Math.max(minRadius, radius - 1)),
+    //   'in-game',
+    // );
 
     const blocksToSkip = [
       'Youtube',

@@ -123,7 +123,8 @@ async fn main() -> std::io::Result<()> {
         let cors = Cors::default()
             .allowed_origin("http://localhost:3000")
             .allowed_origin("http://localhost:4000")
-            .allowed_origin("https://hi.shaoruu.io");
+            .allowed_origin("https://hi.shaoruu.io")
+            .allowed_origin("https://shaoruu.io");
 
         let app = App::new()
             .wrap(cors)
