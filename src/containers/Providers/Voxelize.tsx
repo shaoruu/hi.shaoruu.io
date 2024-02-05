@@ -292,7 +292,6 @@ export function VoxelizeProvider({
 
     const hideDebugUI = () => {
       debug.visible = !debug.visible;
-      crosshairDom.style.display = debug.visible ? 'flex' : 'none';
       debug.dataWrapper.style.display = debug.visible ? 'block' : 'none';
       gui.domElement.style.display = debug.visible ? 'block' : 'none';
       triggers.toggleVisible();
