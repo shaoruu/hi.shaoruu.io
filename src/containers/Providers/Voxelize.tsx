@@ -755,8 +755,6 @@ export function VoxelizeProvider({
       const animate = () => {
         frame = requestAnimationFrame(animate);
 
-        network.sync();
-
         if (world.isInitialized) {
           peers.update();
           rigidControls.update();
@@ -816,8 +814,6 @@ export function VoxelizeProvider({
           if (rigidControls.voxel[1] < -5) {
             rigidControls.teleport(0, 40, 0);
           }
-
-          network.flush();
         }
 
         composer.render();
