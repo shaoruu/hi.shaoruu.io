@@ -205,7 +205,7 @@ pub fn get_registry() -> Registry {
         Block::new("Flint").id(310).build(),
         Block::new("Moonstone").id(311).torch_light_level(8).build(),
         Block::new("Aquamarine").id(312).build(),
-        Block::new("Sunstone").id(313).torch_light_level(16).build(),
+        Block::new("Sunstone").id(313).torch_light_level(15).build(),
         Block::new("Opal").id(314).build(),
         Block::new("Bloodstone").id(315).build(),
         Block::new("Rose Quartz").id(316).build(),
