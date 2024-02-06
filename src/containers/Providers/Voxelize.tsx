@@ -326,7 +326,7 @@ export function VoxelizeProvider({
       if (!isUserAdmin && id === ADMINIUM_ID) return false;
 
       if (worldName === 'flat' && !isUserAdmin) {
-        const distFromOrigin = Math.sqrt(vx ** 2 + vy ** 2 + vz ** 2);
+        const distFromOrigin = Math.sqrt(vx ** 2 + vz ** 2);
         if (distFromOrigin <= 5) return false;
       }
 
