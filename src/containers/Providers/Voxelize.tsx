@@ -525,14 +525,21 @@ export function VoxelizeProvider({
         z: pz,
       } = rigidControls.object.getWorldPosition(emptyP);
 
+      const queryUsername = new URLSearchParams(window.location.search).get(
+        'username',
+      );
+
       return {
         id: peers.ownID,
-        username:
-          new URLSearchParams(window.location.search).get('username') ||
-          peers.ownUsername,
+        username: isUserAdmin
+          ? `$red$[ADMIN] $white$${queryUsername ?? 'Ian'}`
+          : queryUsername
+          ? `$white$${queryUsername}`
+          : `$gray$${peers.ownUsername}`,
         metadata: {
           position: [px, py, pz],
           direction: [dx, dy, dz],
+          role: isUserAdmin ? 'ADMIN' : 'USER',
         } as any,
       };
     };

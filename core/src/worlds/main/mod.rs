@@ -1,8 +1,8 @@
 use voxelize::{Registry, World, WorldConfig};
 
 use super::shared::{
-    components::setup_components, entities::setup_entities, kdtree, methods::setup_methods,
-    stage::LimitedStage, systems::setup_dispatcher,
+    client::setup_client, components::setup_components, entities::setup_entities, kdtree,
+    methods::setup_methods, stage::LimitedStage, systems::setup_dispatcher,
 };
 
 pub fn setup_main_world(registry: &Registry) -> World {
@@ -24,6 +24,7 @@ pub fn setup_main_world(registry: &Registry) -> World {
     setup_entities(&mut world);
     setup_dispatcher(&mut world);
     setup_methods(&mut world);
+    setup_client(&mut world);
 
     {
         let mut pipeline = world.pipeline_mut();

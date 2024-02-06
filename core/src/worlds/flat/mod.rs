@@ -5,8 +5,8 @@ use voxelize::{FlatlandStage, Registry, World, WorldConfig};
 use self::stage::GridLandStage;
 
 use super::shared::{
-    components::setup_components, entities::setup_entities, kdtree, methods::setup_methods,
-    systems::setup_dispatcher,
+    client::setup_client, components::setup_components, entities::setup_entities, kdtree,
+    methods::setup_methods, systems::setup_dispatcher,
 };
 
 pub fn setup_flat_world(registry: &Registry) -> World {
@@ -29,6 +29,7 @@ pub fn setup_flat_world(registry: &Registry) -> World {
     setup_entities(&mut world);
     setup_dispatcher(&mut world);
     setup_methods(&mut world);
+    setup_client(&mut world);
 
     {
         let mut pipeline = world.pipeline_mut();
