@@ -61,7 +61,7 @@ class Rigid extends Behaviour {
 export class BreakParticles {
   public system = new System();
 
-  public static PARTICLE_COUNT = 20;
+  public static PARTICLE_COUNT = 10;
   public blockUpdates: {
     oldValue: number;
     newValue: number;

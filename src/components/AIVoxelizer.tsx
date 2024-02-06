@@ -7,6 +7,7 @@ import { Vector3 } from 'three';
 
 import { ImageVoxelizer } from '../core/image-voxelizer';
 import { useVoxelize } from '../hooks/useVoxelize';
+import { isAdmin } from '../utils/isAdmin';
 import { getServerUrl } from '../utils/urls';
 
 export function AIVoxelizer() {
@@ -21,6 +22,10 @@ export function AIVoxelizer() {
 
   useEffect(() => {
     if (!world || !gui) {
+      return;
+    }
+
+    if (!isAdmin()) {
       return;
     }
 

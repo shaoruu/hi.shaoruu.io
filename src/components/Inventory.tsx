@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import { ItemSlots } from '@voxelize/core';
 import classNames from 'classnames';
+import { createPortal } from 'react-dom';
 
 import { usePersistentState } from '../hooks/usePersistentState';
 import { useVoxelize } from '../hooks/useVoxelize';
@@ -83,7 +84,7 @@ export function Inventory() {
 
     const sortedBlocks = [...Array.from(world.registry.blocksByName)]
       .sort((a, b) => a[1].id - b[1].id)
-      .filter(([name]) => name !== 'air');
+      .filter(([name]) => name !== 'air' && name.toLowerCase() !== 'adminium');
 
     const colCount = itemSlots.options.horizontalCount;
     const rowCount = Math.ceil(sortedBlocks.length / colCount);
@@ -180,7 +181,7 @@ export function Inventory() {
     });
   }, [itemSlotIds, itemSlots, world]);
 
-  return (
+  return createPortal(
     <>
       <div
         className={classNames(
@@ -201,6 +202,7 @@ export function Inventory() {
         <h3 className="text-base text-background-primary">Inventory</h3>
         <div ref={wrapperDomRef} className="no-scrollbar overflow-auto"></div>
       </div>
-    </>
+    </>,
+    document.body,
   );
 }

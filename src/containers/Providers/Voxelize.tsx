@@ -6,6 +6,7 @@ import {
   type ReactNode,
 } from 'react';
 
+import { AABB } from '@voxelize/aabb';
 import {
   Character,
   Chat,
@@ -55,11 +56,14 @@ import {
   VoxelizeContext,
   type VoxelizeContextData,
 } from '@/src/contexts/voxelize';
-import { Triggers } from '@/src/core/trigger';
+import { Trigger, Triggers } from '@/src/core/trigger';
 import { isAdmin } from '@/src/utils/isAdmin';
 import { getCoreUrl } from '@/src/utils/urls';
 
 ColorText.SPLITTER = '$';
+
+const emptyQ = new THREE.Quaternion();
+const emptyP = new THREE.Vector3();
 
 type Props = {
   worldName: string;
@@ -313,12 +317,31 @@ export function VoxelizeProvider({
     const maxRadius = 10;
     const minRadius = 1;
     const circular = true;
+    const ADMINIUM_ID = 10000;
+
+    const getAdminCheck = (target: Coords3) => {
+      const [vx, vy, vz] = target;
+
+      const id = world.getVoxelAt(vx, vy, vz);
+      if (!isUserAdmin && id === ADMINIUM_ID) return false;
+
+      if (worldName === 'flat' && !isUserAdmin) {
+        const distFromOrigin = Math.sqrt(vx ** 2 + vy ** 2 + vz ** 2);
+        if (distFromOrigin <= 5) return false;
+      }
+
+      return true;
+    };
 
     const bulkDestroy = () => {
       if (!voxelInteract.target) return;
       if (!isUserAdmin && !canRegularUserPlaceBreak) return;
 
       const [vx, vy, vz] = voxelInteract.target;
+
+      if (!getAdminCheck([vx, vy, vz])) {
+        return;
+      }
 
       const updates: BlockUpdate[] = [];
 
@@ -350,6 +373,11 @@ export function VoxelizeProvider({
         rotation,
         yRotation,
       } = voxelInteract.potential;
+      const target = voxelInteract.target;
+
+      if (!getAdminCheck([vx, vy, vz])) {
+        return;
+      }
 
       const updates: BlockUpdate[] = [];
       const block = world.getBlockById(itemSlots.getFocused().content);
@@ -455,6 +483,7 @@ export function VoxelizeProvider({
       wrapperStyles: {
         left: '50%',
         transform: 'translateX(-50%)',
+        zIndex: '100000000000000',
       },
       scrollable: false,
       activatedByDefault: true,
@@ -482,6 +511,31 @@ export function VoxelizeProvider({
     const peers = new Peers<Character>(rigidControls.object);
 
     peers.createPeer = createCharacter;
+    peers.packInfo = () => {
+      const {
+        x: dx,
+        y: dy,
+        z: dz,
+      } = new THREE.Vector3(0, 0, -1)
+        .applyQuaternion(rigidControls.object.getWorldQuaternion(emptyQ))
+        .normalize();
+      const {
+        x: px,
+        y: py,
+        z: pz,
+      } = rigidControls.object.getWorldPosition(emptyP);
+
+      return {
+        id: peers.ownID,
+        username:
+          new URLSearchParams(window.location.search).get('username') ||
+          peers.ownUsername,
+        metadata: {
+          position: [px, py, pz],
+          direction: [dx, dy, dz],
+        } as any,
+      };
+    };
 
     peers.onPeerUpdate = (object, data, info) => {
       object.set(data.position, data.direction);
@@ -558,6 +612,7 @@ export function VoxelizeProvider({
             fontFace: 'ConnectionSerif-d20X',
           },
         });
+        this.character.username = "$#B4D4FF$Ian's Bot";
 
         // shadows.add(this.character);
         // lightShined.add(this.character);
@@ -745,7 +800,34 @@ export function VoxelizeProvider({
 
     chatRef.current = chat;
 
-    /* -------------------------------------------------------------------------- */
+    if (worldName === 'main') {
+      triggers.add(
+        new Trigger(
+          new AABB(-19, 35, -2, -18, 38, 1),
+          () => {
+            localStorage.setItem(voxelizeWorldLocalStorageKey, 'flat');
+            window.location.reload();
+          },
+          {
+            name: 'flat',
+          },
+        ),
+      );
+    } else {
+      triggers.add(
+        new Trigger(
+          new AABB(-10000, -1, -10000, 10000, 0, 10000),
+          () => {
+            localStorage.setItem(voxelizeWorldLocalStorageKey, 'main');
+            window.location.reload();
+          },
+          {
+            name: 'main',
+          },
+        ),
+      );
+    }
+
     /*                                   CONNECT                                  */
     /* -------------------------------------------------------------------------- */
 
@@ -848,12 +930,15 @@ export function VoxelizeProvider({
           localStorage.setItem(voxelizeWorldLocalStorageKey, worldName);
           window.location.reload();
         });
-      gui.add(world, 'renderRadius', 3, 20, 1);
-      gui
-        .add({ time: world.time }, 'time', 0, world.options.timePerDay, 0.01)
-        .onFinishChange((time: number) => {
-          method.call('time', { time });
-        });
+
+      if (isUserAdmin) {
+        gui.add(world, 'renderRadius', 3, 20, 1);
+        gui
+          .add({ time: world.time }, 'time', 0, world.options.timePerDay, 0.01)
+          .onFinishChange((time: number) => {
+            method.call('time', { time });
+          });
+      }
 
       ['1', '2', '3', '4', '5', '6', '7', '8', '9'].forEach((key) => {
         inputs.bind(
@@ -902,9 +987,6 @@ export function VoxelizeProvider({
       //   },
       //   '*',
       // );
-
-      // Hide debug first
-      hideDebugUI();
 
       setIsConnecting(false);
     }

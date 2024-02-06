@@ -168,20 +168,42 @@ export function Chat() {
 
       chat.addCommand('text', (rest) => {
         const text = rest.trim();
-        const { target } = voxelInteract;
+        const { potential } = voxelInteract;
 
-        if (!target) {
+        if (!potential) {
           console.warn('no target, cannot add text');
           return;
         }
 
-        let [x, y, z] = target;
+        let [x, y, z] = potential.voxel;
 
         x += 0.5;
-        y += 1.5;
+        y += 0.5;
         z += 0.5;
 
         placeTextAt(text, [x, y, z]);
+      });
+
+      chat.addCommand('potential', () => {
+        const { potential } = voxelInteract;
+        console.log(potential);
+      });
+
+      chat.addCommand('remove-text', () => {
+        const { potential } = voxelInteract;
+        if (!potential) return;
+        const [x, y, z] = potential.voxel;
+
+        entities.map.forEach((entity, id) => {
+          // Check if any entity is already at this position
+          if (
+            Math.floor(entity.position.x) === x &&
+            Math.floor(entity.position.y) === y &&
+            Math.floor(entity.position.z) === z
+          ) {
+            method.call('remove-floating-text', { id });
+          }
+        });
       });
     }
 
@@ -259,7 +281,7 @@ export function Chat() {
 
   return (
     <div
-      className="absolute bottom-px left-1/2 transform translate-x-[-50%] flex flex-col w-[60vw] gap-8 z-[1000000]"
+      className="fixed bottom-[60px] left-1/2 transform translate-x-[-50%] flex flex-col w-[60vw] gap-8 z-[10000000000000]"
       style={{
         width: 'calc(100% - ${chatMargin} * 2)',
         margin: chatMargin,

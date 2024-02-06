@@ -294,4 +294,5 @@ export async function makeRegistry(world: World) {
   await world.applyBlockTexture('Oak Leaves', ['one', 'two'], OakLeaves);
   await world.applyBlockTexture('Ivory', all, Ivory);
   await world.applyBlockTexture('Oak Planks', all, OakPlanks);
+  await world.applyBlockTexture('Adminium', all, '/logo.png');
 }

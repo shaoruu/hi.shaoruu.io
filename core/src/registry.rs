@@ -1,4 +1,4 @@
-use voxelize::{Block, BlockFace, BlockFaces, Registry, AABB};
+use voxelize::{Block, BlockFace, BlockFaces, Registry, AABB, SIX_FACES_PY};
 
 pub fn get_registry() -> Registry {
     let slab_top_faces = BlockFaces::six_faces()
@@ -87,6 +87,11 @@ pub fn get_registry() -> Registry {
         Block::new("Enhydro Agate").id(204).build(),
         Block::new("Sagenite Agate").id(205).build(),
         Block::new("Crazy Lace Agate").id(206).build(),
+        Block::new("Adminium")
+            .id(10000)
+            .torch_light_level(5)
+            .faces(&BlockFaces::six_faces().build())
+            .build(),
     ]);
 
     registry.register_blocks(&[
