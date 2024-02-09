@@ -7,11 +7,13 @@ import {
 } from 'react';
 
 import type { BlockUpdate, Coords3 } from '@voxelize/core';
+import axios from 'axios';
 
 import topStarredRepos from '../assets/data/topStars.json';
 import { useVoxelize } from '../hooks/useVoxelize';
 import type { ChatItem } from '../types';
 import { isAdmin } from '../utils/isAdmin';
+import { getServerUrl } from '../utils/urls';
 
 const chatMargin = '16px';
 const chatVanishTime = 5000;
@@ -94,6 +96,16 @@ export function Chat() {
       chat.addCommand('tp', (rest) => {
         const [x, y, z] = rest.split(' ').map((n) => parseInt(n));
         rigidControls.teleport(x, y, z);
+      });
+
+      chat.addCommand('contributions', async () => {
+        const fetch = async () => {
+          const response = await axios(`${getServerUrl()}/contributions`);
+          const { result } = response.data;
+          console.log(result);
+        };
+
+        fetch();
       });
 
       chat.addCommand('all-blocks', () => {

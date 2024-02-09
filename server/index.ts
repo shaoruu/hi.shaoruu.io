@@ -35,6 +35,11 @@ server.get('/voxelize', async (req, res) => {
   res.json({ result: result.data });
 });
 
+server.get('/contributions', async (req, res) => {
+  await buildContributionBlocks();
+  res.json({ result: 'done' });
+});
+
 server.get('/top-stars', async (req, res) => {
   const user = 'shaoruu';
 
