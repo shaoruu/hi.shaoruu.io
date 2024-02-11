@@ -31,6 +31,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-loading": "^2.0.3",
+    "sharp": "^0.33.2",
     "three": "^0.156.1",
     "three-nebula": "^10.0.3",
     "vite-plugin-image-optimizer": "^1.1.7"
