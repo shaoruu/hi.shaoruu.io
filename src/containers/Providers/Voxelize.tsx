@@ -306,11 +306,11 @@ export function VoxelizeProvider({
     }
 
     if (isUserAdmin) {
-      inputs.bind('z', () => {
-        method.call('spawn-bot', {
-          position: rigidControls.object.position.toArray(),
-        });
-      });
+      // inputs.bind(']', () => {
+      //   method.call('spawn-bot', {
+      //     position: rigidControls.object.position.toArray(),
+      //   });
+      // });
     }
 
     const radius = 1;
