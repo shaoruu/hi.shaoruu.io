@@ -6,5 +6,11 @@ export const mailLink = 'mailto:ian1314159@gmail.com';
 export const buyMeACoffeeLink = 'https://www.buymeacoffee.com/shaoruu';
 
 export const voxelizeWorldLocalStorageKey = 'voxelize-world-name';
-export const currentWorldName =
-  localStorage.getItem(voxelizeWorldLocalStorageKey) ?? 'main';
+const potentialWorldName =
+  new URLSearchParams(window.location.search).get('world') ??
+  localStorage.getItem(voxelizeWorldLocalStorageKey) ??
+  'main';
+export const knownWorlds = ['main', 'flat'];
+export const currentWorldName = knownWorlds.includes(potentialWorldName)
+  ? potentialWorldName
+  : knownWorlds[0];
