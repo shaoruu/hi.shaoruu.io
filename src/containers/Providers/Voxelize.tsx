@@ -349,14 +349,6 @@ export function VoxelizeProvider({
       inputs.bind('j', hideDebugUI, 'in-game');
     }
 
-    if (isUserAdmin) {
-      // inputs.bind(']', () => {
-      //   method.call('spawn-bot', {
-      //     position: rigidControls.object.position.toArray(),
-      //   });
-      // });
-    }
-
     const radius = 1;
     const maxRadius = 10;
     const minRadius = 1;
@@ -541,14 +533,15 @@ export function VoxelizeProvider({
     /*                                 SETUP PEERS                                */
     /* -------------------------------------------------------------------------- */
 
-    function createCharacter() {
+    function createCharacter(forceOwner?: boolean) {
       const character = new Character({
         nameTagOptions: {
           fontFace: 'ConnectionSerif-d20X',
         },
       });
 
-      paintCharacterByRole(character, isUserAdmin ? 'OWNER' : 'GUEST');
+      // paint as guest by default
+      paintCharacterByRole(character, forceOwner ? 'OWNER' : 'GUEST');
 
       lightShined.add(character);
       shadows.add(character);
@@ -557,7 +550,7 @@ export function VoxelizeProvider({
 
     const peers = new Peers<Character, PeersData>(rigidControls.object);
 
-    peers.createPeer = createCharacter;
+    peers.createPeer = () => createCharacter();
     peers.packInfo = () => {
       const {
         x: dx,
@@ -603,7 +596,7 @@ export function VoxelizeProvider({
       }
     };
 
-    const userCharacter = createCharacter();
+    const userCharacter = createCharacter(isUserAdmin);
     rigidControls.attachCharacter(userCharacter);
 
     world.add(peers);
@@ -1025,29 +1018,18 @@ export function VoxelizeProvider({
         return block ? `${block.name} (${block.id})` : '<Empty>';
       });
 
-      // inputs.bind(
-      //   'o',
-      //   () => {
-      //     const radius = 5;
-      //     const base = 35;
-      //     const height = 1;
-
-      //     // const obsidianId = world.getBlockByName('Obsidian')!.id;
-      //     const blockId = world.getBlockByName('Chalk Slab Bottom')!.id;
-      //     const ringOnly = true;
-
-      //     for (let x = -radius; x <= radius; x++) {
-      //       for (let z = -radius; z <= radius; z++) {
-      //         for (let y = base; y < base + height; y++) {
-      //           if (x ** 2 + z ** 2 > radius ** 2) continue;
-      //           if (ringOnly && x ** 2 + z ** 2 < (radius - 1) ** 2) continue;
-      //           world.updateVoxel(x, y, z, blockId);
-      //         }
-      //       }
-      //     }
-      //   },
-      //   '*',
-      // );
+      if (isUserAdmin) {
+        gui.add(
+          {
+            'Spawn Bot': () => {
+              method.call('spawn-bot', {
+                position: rigidControls.object.position.toArray(),
+              });
+            },
+          },
+          'Spawn Bot',
+        );
+      }
 
       setIsConnecting(false);
     }
