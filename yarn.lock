@@ -866,10 +866,10 @@
     typescript "^4.6.4"
     vitest "^0.10.4"
 
-"@voxelize/core@^0.1.154":
-  version "0.1.154"
-  resolved "https://registry.yarnpkg.com/@voxelize/core/-/core-0.1.154.tgz#712ac42773f4a2e865d4cab1c83064d52417ae63"
-  integrity sha512-WvJtusUtEklNoDKKz1c8aWd7VjtPLU2NylLEd8r/TIah4gLAnNmy/Dd/qPLEX6UzkF8OLsotMmRKypinp4aToQ==
+"@voxelize/core@^0.1.155":
+  version "0.1.155"
+  resolved "https://registry.yarnpkg.com/@voxelize/core/-/core-0.1.155.tgz#16649ac3ec1052d72aebd528db5e93acfc521867"
+  integrity sha512-MmNz6czDEG2v/1cRyENwL+6J18OtPQ0+LaIXZgG/y8qNnZlMw3HMIK2R3gIXjcHPH/morA54KjR8qc3rNmT52g==
   dependencies:
     "@tweenjs/tween.js" "^18.6.4"
     "@voxelize/aabb" "*"

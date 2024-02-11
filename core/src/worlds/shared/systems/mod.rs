@@ -2,6 +2,7 @@ mod entity_observe;
 mod entity_tree;
 mod path_finding;
 mod path_metadata;
+mod role_metadata;
 mod rotation_metadata;
 mod target_metadata;
 mod text_metadata;
@@ -19,8 +20,9 @@ use voxelize::{
 use self::{
     entity_observe::EntityObserveSystem, entity_tree::EntityTreeSystem,
     path_finding::PathFindingSystem, path_metadata::PathMetadataSystem,
-    rotation_metadata::RotationMetadataSystem, target_metadata::TargetMetadataSystem,
-    text_metadata::TextMetadataSystem, void_kill::VoidKillSystem, walk_towards::WalkTowardsSystem,
+    role_metadata::ExtraPeerMetaSystem, rotation_metadata::RotationMetadataSystem,
+    target_metadata::TargetMetadataSystem, text_metadata::TextMetadataSystem,
+    void_kill::VoidKillSystem, walk_towards::WalkTowardsSystem,
 };
 
 pub fn setup_dispatcher(world: &mut World) {
@@ -50,6 +52,7 @@ pub fn setup_dispatcher(world: &mut World) {
                 ],
             )
             .with(PeersMetaSystem, "peers-meta", &[])
+            .with(ExtraPeerMetaSystem, "peers-extra-meta", &[])
             .with(CurrentChunkSystem, "current-chunk", &[])
             .with(ChunkUpdatingSystem, "chunk-updating", &["current-chunk"])
             .with(ChunkRequestsSystem, "chunk-requests", &["current-chunk"])
@@ -67,7 +70,11 @@ pub fn setup_dispatcher(world: &mut World) {
                 "entities-sending",
                 &["entities-meta"],
             )
-            .with(PeersSendingSystem, "peers-sending", &["peers-meta"])
+            .with(
+                PeersSendingSystem,
+                "peers-sending",
+                &["peers-meta", "peers-extra-meta"],
+            )
             .with(
                 BroadcastSystem,
                 "broadcast",

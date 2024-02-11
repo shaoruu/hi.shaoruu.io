@@ -45,6 +45,12 @@ import * as THREE from 'three';
 import { PerspectiveCamera, WebGLRenderer } from 'three';
 import { MeshRenderer } from 'three-nebula';
 
+import Amethyst from '../../assets/images/blocks/amethyst.png';
+import BlueLaceAgate from '../../assets/images/blocks/blue_lace_agate.png';
+import Diorite from '../../assets/images/blocks/diorite_block.png';
+import MossAgate from '../../assets/images/blocks/moss_agate.png';
+import OakLeaves from '../../assets/images/blocks/oak_leaves.png';
+import OnyxAgate from '../../assets/images/blocks/onyx_agate.png';
 import { BreakParticles } from '../../core/particles';
 import { makeRegistry } from '../../core/registry';
 
@@ -78,6 +84,44 @@ type Props = {
 const emptyObject = {};
 const worldsToPlace = ['flat'];
 
+export type PeerRole = 'OWNER' | 'GUEST';
+
+export type PeersData = {
+  direction: number[];
+  position: number[];
+  role: PeerRole;
+};
+
+function paintCharacterByRole(character: Character, role: PeerRole) {
+  if (role === 'GUEST' || !role) {
+    // ...copied from voxelize
+    character.head.paint('all', new THREE.Color('#96baff'));
+    character.head.paint('front', new THREE.Color('#f99999'));
+    character.body.paint('all', new THREE.Color('#2b2e42'));
+    character.leftArm.paint('all', new THREE.Color('#548ca8'));
+    character.rightArm.paint('all', new THREE.Color('#548ca8'));
+    character.leftLeg.paint('all', new THREE.Color('#96baff'));
+    character.rightLeg.paint('all', new THREE.Color('#96baff'));
+  } else {
+    const loader = new THREE.TextureLoader();
+    loader.load(Amethyst, (texture) => {
+      character.body.paint('all', texture);
+    });
+    loader.load(MossAgate, (texture) => {
+      character.head.paint('all', texture);
+      character.head.paint('front', new THREE.Color('#f99999')); // Medium Sea Green
+    });
+    loader.load(BlueLaceAgate, (texture) => {
+      character.leftArm.paint('all', texture);
+      character.rightArm.paint('all', texture);
+    });
+    loader.load(Diorite, (texture) => {
+      character.leftLeg.paint('all', texture);
+      character.rightLeg.paint('all', texture);
+    });
+  }
+}
+
 export function VoxelizeProvider({
   canvasId,
   worldName,
@@ -89,7 +133,7 @@ export function VoxelizeProvider({
   const worldRef = useRef<World | null>(null);
   const cameraRef = useRef<PerspectiveCamera | null>(null);
   const inputsRef = useRef<Inputs<'menu' | 'in-game' | 'chat'>>();
-  const peersRef = useRef<Peers<Character> | null>(null);
+  const peersRef = useRef<Peers<Character, PeersData> | null>(null);
   const methodRef = useRef<Method | null>(null);
   const entitiesRef = useRef<Entities | null>(null);
   const itemSlotsRef = useRef<ItemSlots | null>(null);
@@ -503,12 +547,15 @@ export function VoxelizeProvider({
           fontFace: 'ConnectionSerif-d20X',
         },
       });
+
+      paintCharacterByRole(character, isUserAdmin ? 'OWNER' : 'GUEST');
+
       lightShined.add(character);
       shadows.add(character);
       return character;
     }
 
-    const peers = new Peers<Character>(rigidControls.object);
+    const peers = new Peers<Character, PeersData>(rigidControls.object);
 
     peers.createPeer = createCharacter;
     peers.packInfo = () => {
@@ -532,21 +579,28 @@ export function VoxelizeProvider({
       return {
         id: peers.ownID,
         username: isUserAdmin
-          ? `$red$[ADMIN] $white$${queryUsername ?? 'Ian'}`
+          ? `$red$[OWNER] $white$${queryUsername ?? 'Ian'}`
           : queryUsername
           ? `$white$${queryUsername}`
           : `$gray$${peers.ownUsername}`,
         metadata: {
           position: [px, py, pz],
           direction: [dx, dy, dz],
-          role: isUserAdmin ? 'ADMIN' : 'USER',
-        } as any,
+          role: isUserAdmin ? 'OWNER' : 'GUEST',
+        },
       };
     };
 
     peers.onPeerUpdate = (object, data, info) => {
       object.set(data.position, data.direction);
       object.username = info.username;
+
+      // User role change
+      if (!object.extraData) object.extraData = {};
+      if (object.extraData.role !== data.role) {
+        paintCharacterByRole(object, data.role);
+        object.extraData.role = data.role;
+      }
     };
 
     const userCharacter = createCharacter();

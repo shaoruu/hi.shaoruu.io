@@ -20,6 +20,7 @@ import type {
 import type { GUI } from 'lil-gui';
 import type { PerspectiveCamera } from 'three';
 
+import type { PeersData } from '../containers/Providers/Voxelize';
 import type { Triggers } from '../core/trigger';
 
 export type VoxelizeContextData = {
@@ -31,7 +32,7 @@ export type VoxelizeContextData = {
   entities?: Entities;
   rigidControls?: RigidControls;
   inputs?: Inputs<'menu' | 'in-game' | 'chat'>;
-  peers?: Peers<Character>;
+  peers?: Peers<Character, PeersData>;
   method?: Method;
   chat?: Chat;
   itemSlots?: ItemSlots;

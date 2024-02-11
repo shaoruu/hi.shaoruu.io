@@ -291,6 +291,10 @@ export function Chat() {
     ]?.scrollIntoView();
   }, [chatItems]);
 
+  const queryUsername = new URLSearchParams(window.location.search).get(
+    'username',
+  );
+
   return (
     <div
       className="fixed bottom-[60px] left-1/2 transform translate-x-[-50%] flex flex-col w-[60vw] gap-8 z-[10000000000000]"
@@ -311,7 +315,10 @@ export function Chat() {
             {chatItem.sender && (
               <p className="text-text-tertiary">
                 {chatItem.type === 'ian-chat' ? (
-                  <span className="text-red-500">[OWNER] Ian</span>
+                  <span className="text-red-500">
+                    [OWNER]{' '}
+                    <span className="text-white">{queryUsername ?? 'Ian'}</span>
+                  </span>
                 ) : (
                   chatItem.sender
                 )}
