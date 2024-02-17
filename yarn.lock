@@ -986,10 +986,10 @@
     typescript "^4.6.4"
     vitest "^0.10.4"
 
-"@voxelize/core@^0.1.156":
-  version "0.1.156"
-  resolved "https://registry.yarnpkg.com/@voxelize/core/-/core-0.1.156.tgz#d7502754d75edb969b84e924f921ea3f721699ff"
-  integrity sha512-GgrpvCArwfKXwJDXxjKET0Y2bGOc2DkoE2/9okLe2B0nr6PSZf6RBv6a28w7NNfdEQPFy9jcr4Z61tgIbK8Iyg==
+"@voxelize/core@^0.1.157":
+  version "0.1.157"
+  resolved "https://registry.yarnpkg.com/@voxelize/core/-/core-0.1.157.tgz#19b69763c90d468055bc38e0a6535a7dd540ee33"
+  integrity sha512-Vm3Yx2lgkLiTBybcnmADmjWCmuyXXaaqTHBIeB16OaClhdlNs7M54R7Cp2XRVJKUc3mXxu1/Ca+hSPGQvdGpdQ==
   dependencies:
     "@tweenjs/tween.js" "^18.6.4"
     "@voxelize/aabb" "*"
@@ -1006,7 +1006,6 @@
     omggif "^1.0.10"
     regenerator-runtime "^0.13.9"
     socket.io-client "^4.4.1"
-    typedarray-pool "^1.2.0"
     uuid "^8.3.2"
 
 "@voxelize/physics-engine@*", "@voxelize/physics-engine@^1.1.28":
@@ -1040,10 +1039,10 @@
     websocket "^1.0.34"
     ws "^8.8.0"
 
-"@voxelize/transport@^1.0.22":
-  version "1.0.22"
-  resolved "https://registry.yarnpkg.com/@voxelize/transport/-/transport-1.0.22.tgz#d906a447dc7c6bf788106fe2d0aac205732d1380"
-  integrity sha512-HVkftPJfq15bJ9RInLbtjdEsApCMOG7ROpP8Mb2VgJxoytJ5gFK9dPjkKQmEuHhUEeMT2dzJj1bYx+/3GcTFkg==
+"@voxelize/transport@^1.0.23":
+  version "1.0.23"
+  resolved "https://registry.yarnpkg.com/@voxelize/transport/-/transport-1.0.23.tgz#0c58625651e553a291ea8c2522ef1fe3af8c2543"
+  integrity sha512-Pu0jmCeQ7gzvGhKl3dz22QW0j8q2JCNvBqhGTXBHEfE+XOT2w7B8d3J0vWby4jypu/6L1CQa4/pvAPGXlkT6Zg==
   dependencies:
     fflate "^0.7.3"
     protobufjs "^7.2.2"
@@ -1323,11 +1322,6 @@ binary-extensions@^2.0.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/binary-extensions/-/binary-extensions-2.2.0.tgz#75f502eeaf9ffde42fc98829645be4ea76bd9e2d"
   integrity sha512-jDctJ/IVQbZoJykoeHbhXpOlNBqGNcwXJKJog42E5HDPUwQTSdjCHdihjj0DlnheQ7blbT6dHOafNAiS8ooQKA==
-
-bit-twiddle@^1.0.0:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/bit-twiddle/-/bit-twiddle-1.0.2.tgz#0c6c1fabe2b23d17173d9a61b7b7093eb9e1769e"
-  integrity sha512-B9UhK0DKFZhoTFcfvAzhqsjStvGJp9vYWf3+6SNTtdSQnvIgfkHbgHrg/e4+TH71N2GDu8tpmCVoyfrL1d7ntA==
 
 body-parser@1.20.1:
   version "1.20.1"
@@ -1833,11 +1827,6 @@ dotenv@^14.0.0:
   version "14.3.2"
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-14.3.2.tgz#7c30b3a5f777c79a3429cb2db358eef6751e8369"
   integrity sha512-vwEppIphpFdvaMCaHfCEv9IgwcxMljMw2TnAQBB4VWPvzXQLTb82jwmdOKzlEVUL3gNFT4l4TPKO+Bn+sqcrVQ==
-
-dup@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/dup/-/dup-1.0.0.tgz#51fc5ac685f8196469df0b905e934b20af5b4029"
-  integrity sha512-Bz5jxMMC0wgp23Zm15ip1x8IhYRqJvF3nFC0UInJUDkN1z4uNPk9jTnfCUJXbOGiQ1JbXLQsiV41Fb+HXcj5BA==
 
 ecdsa-sig-formatter@1.0.11:
   version "1.0.11"
@@ -5006,14 +4995,6 @@ typed-array-length@^1.0.4:
     call-bind "^1.0.2"
     for-each "^0.3.3"
     is-typed-array "^1.1.9"
-
-typedarray-pool@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/typedarray-pool/-/typedarray-pool-1.2.0.tgz#e7e90720144ba02b9ed660438af6f3aacfe33ac3"
-  integrity sha512-YTSQbzX43yvtpfRtIDAYygoYtgT+Rpjuxy9iOpczrjpXLgGoyG7aS5USJXV2d3nn8uHTeb9rXDvzS27zUg5KYQ==
-  dependencies:
-    bit-twiddle "^1.0.0"
-    dup "^1.0.0"
 
 typedarray-to-buffer@^3.1.5:
   version "3.1.5"
