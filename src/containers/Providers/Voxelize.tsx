@@ -29,7 +29,6 @@ import {
   VoxelInteract,
   World,
   artFunctions,
-  setWorkerInterval,
   type BlockUpdate,
   type Coords3,
   type RigidControlsOptions,
@@ -886,10 +885,12 @@ export function VoxelizeProvider({
     /*                                   CONNECT                                  */
     /* -------------------------------------------------------------------------- */
 
-    let unbind: any;
+    let frame: any;
 
     async function start() {
       const animate = () => {
+        frame = requestAnimationFrame(animate);
+
         if (world.isInitialized) {
           peers.update();
           rigidControls.update();
@@ -954,7 +955,7 @@ export function VoxelizeProvider({
         composer.render();
       };
 
-      const unbind = setWorkerInterval(animate, 1000 / 60);
+      animate();
 
       await network.connect(getCoreUrl(), {
         secret: 'test',
@@ -1040,7 +1041,7 @@ export function VoxelizeProvider({
         network.disconnect();
       }
 
-      unbind();
+      cancelAnimationFrame(frame);
     };
   }, [canvasId, options, worldName]);
 
