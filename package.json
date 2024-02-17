@@ -22,7 +22,7 @@
     "@voxelize/aabb": "^1.0.0",
     "@voxelize/core": "^0.1.156",
     "@voxelize/physics-engine": "^1.1.28",
-    "@voxelize/transport": "^1.0.22",
+    "@voxelize/transport": "^1.0.23",
     "axios": "^1.5.0",
     "classnames": "^2.3.2",
     "lil-gui": "^0.18.2",
