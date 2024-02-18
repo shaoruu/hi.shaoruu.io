@@ -2368,9 +2368,9 @@ checksum = "49874b5167b65d7193b8aba1567f5c7d93d001cafc34600cee003eda787e483f"
 
 [[package]]
 name = "voxelize"
-version = "0.8.57"
+version = "0.8.58"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1095087e95926ed7bf6a4ad3968aeea54827a7404c6c924e63febce3d85c73ab"
+checksum = "22b92360d20849889bf96cfabd05b0b9979d30347d19a78629d43e75c507cf54"
 dependencies = [
  "actix",
  "actix-cors",
