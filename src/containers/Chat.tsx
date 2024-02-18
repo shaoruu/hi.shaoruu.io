@@ -292,9 +292,9 @@ export function Chat() {
     ]?.scrollIntoView();
   }, [chatItems]);
 
-  const queryUsername = new URLSearchParams(window.location.search).get(
-    'username',
-  );
+  const getQueryUsername = () => {
+    return new URLSearchParams(window.location.search).get('username');
+  };
 
   return (
     <div
@@ -317,8 +317,8 @@ export function Chat() {
               <>
                 <ColorText callback={() => {}}>
                   {chatItem.type === 'ian-chat'
-                    ? `$red$[OWNER]$white$ ${queryUsername ?? 'Ian'}`
-                    : `$gray$${chatItem.sender}`}
+                    ? `$red$[OWNER]$white$ ${getQueryUsername() ?? 'Ian'}`
+                    : `${chatItem.sender}`}
                 </ColorText>
                 <span className="text-gray-300 mr-1">: </span>
               </>
@@ -341,10 +341,12 @@ export function Chat() {
           if (e.key === 'Enter' && e.nativeEvent.isComposing === false) {
             if (e.currentTarget.value === '') return;
 
+            const queryUsername = getQueryUsername();
+
             chat?.send({
               type: isAdmin() ? 'ian-chat' : 'chat',
               sender: queryUsername
-                ? `$white$${queryUsername}`
+                ? `$#FBFADA$${queryUsername}`
                 : network?.clientInfo.username,
               body: e.currentTarget.value,
             });
