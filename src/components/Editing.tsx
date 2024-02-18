@@ -76,7 +76,7 @@ export function Editing() {
         {
           type: 'chat',
           sender: '[SYSTEM]',
-          body: `$gray$Spawn protection!${Math.random()}`,
+          body: `$gray$Spawn protection!`,
         },
       ]);
     };
