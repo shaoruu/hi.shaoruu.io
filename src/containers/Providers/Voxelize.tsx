@@ -29,7 +29,6 @@ import {
   VoxelInteract,
   World,
   artFunctions,
-  type BlockUpdate,
   type Coords3,
   type RigidControlsOptions,
   type WorldOptions,
@@ -49,8 +48,6 @@ import Amethyst from '../../assets/images/blocks/amethyst.png';
 import BlueLaceAgate from '../../assets/images/blocks/blue_lace_agate.png';
 import Diorite from '../../assets/images/blocks/diorite_block.png';
 import MossAgate from '../../assets/images/blocks/moss_agate.png';
-import OakLeaves from '../../assets/images/blocks/oak_leaves.png';
-import OnyxAgate from '../../assets/images/blocks/onyx_agate.png';
 import { BreakParticles } from '../../core/particles';
 import { makeRegistry } from '../../core/registry';
 
@@ -82,7 +79,6 @@ type Props = {
 };
 
 const emptyObject = {};
-const worldsToPlace = ['flat'];
 
 export type PeerRole = 'OWNER' | 'GUEST';
 
@@ -153,7 +149,6 @@ export function VoxelizeProvider({
     if (networkRef.current) return;
 
     const isUserAdmin = isAdmin();
-    const canRegularUserPlaceBreak = worldsToPlace.includes(worldName);
 
     const canvas = document.getElementById(canvasId) as HTMLCanvasElement;
 
@@ -304,7 +299,7 @@ export function VoxelizeProvider({
       highlightColor: new THREE.Color('#000'),
       highlightOpacity: 0.5,
       inverseDirection: true,
-      reachDistance: 10,
+      reachDistance: 32,
     });
 
     world.add(voxelInteract);
@@ -348,159 +343,6 @@ export function VoxelizeProvider({
     if (isUserAdmin) {
       inputs.bind('j', hideDebugUI, 'in-game');
     }
-
-    const radius = 1;
-    const maxRadius = 10;
-    const minRadius = 1;
-    const circular = true;
-    const ADMINIUM_ID = 10000;
-
-    const getAdminCheck = (target: Coords3) => {
-      const [vx, vy, vz] = target;
-
-      const id = world.getVoxelAt(vx, vy, vz);
-      if (!isUserAdmin && id === ADMINIUM_ID) return false;
-
-      if (worldName === 'flat' && !isUserAdmin) {
-        const distFromOrigin = Math.sqrt(vx ** 2 + vz ** 2);
-        if (distFromOrigin <= 5) return false;
-      }
-
-      return true;
-    };
-
-    const bulkDestroy = () => {
-      if (!voxelInteract.target) return;
-      if (!isUserAdmin && !canRegularUserPlaceBreak) return;
-
-      const [vx, vy, vz] = voxelInteract.target;
-
-      if (!getAdminCheck([vx, vy, vz])) {
-        return;
-      }
-
-      const updates: BlockUpdate[] = [];
-
-      for (let x = -radius; x <= radius; x++) {
-        for (let y = -radius; y <= radius; y++) {
-          for (let z = -radius; z <= radius; z++) {
-            if (circular && x ** 2 + y ** 2 + z ** 2 > radius ** 2 - 1)
-              continue;
-
-            updates.push({
-              vx: vx + x,
-              vy: vy + y,
-              vz: vz + z,
-              type: 0,
-            });
-          }
-        }
-      }
-
-      if (updates.length) world.updateVoxels(updates);
-    };
-
-    const bulkPlace = () => {
-      if (!voxelInteract.potential) return;
-      if (!isUserAdmin && !canRegularUserPlaceBreak) return;
-
-      const {
-        voxel: [vx, vy, vz],
-        rotation,
-        yRotation,
-      } = voxelInteract.potential;
-      const target = voxelInteract.target;
-
-      if (!getAdminCheck([vx, vy, vz])) {
-        return;
-      }
-
-      const updates: BlockUpdate[] = [];
-      const block = world.getBlockById(itemSlots.getFocused().content);
-
-      for (let x = -radius; x <= radius; x++) {
-        for (let y = -radius; y <= radius; y++) {
-          for (let z = -radius; z <= radius; z++) {
-            if (circular && x ** 2 + y ** 2 + z ** 2 > radius ** 2 - 1)
-              continue;
-
-            updates.push({
-              vx: vx + x,
-              vy: vy + y,
-              vz: vz + z,
-              type: block.id,
-              rotation,
-              yRotation,
-            });
-          }
-        }
-      }
-
-      if (updates.length) world.updateVoxels(updates);
-    };
-
-    // inputs.scroll(
-    //   () => (radius = Math.min(maxRadius, radius + 1)),
-    //   () => (radius = Math.max(minRadius, radius - 1)),
-    //   'in-game',
-    // );
-
-    const blocksToSkip = [
-      'Youtube',
-      'Github',
-      'LinkedIn',
-      'Twitter',
-      'Mail',
-      'BuyMeACoffee',
-      'Trophy (mc.js)',
-      'Trophy (voxelize)',
-      'Trophy (modern-graphql-tutorial)',
-      'Trophy (mine.js)',
-      'Trophy (rust-typescript-template)',
-      'Trophy (mc.js-legacy)',
-    ];
-
-    inputs.click('right', () => {
-      if (!voxelInteract.potential) return;
-
-      const {
-        voxel: [vx, vy, vz],
-      } = voxelInteract.potential;
-
-      // Check if target block has an action
-      if (voxelInteract.target) {
-        const [tvx, tvy, tvz] = voxelInteract.target || [0, 0, 0];
-        const block = world.getBlockAt(tvx, tvy, tvz);
-        if (blocksToSkip.includes(block?.name || '')) return;
-      }
-
-      const slot = itemSlots.getFocused();
-      const id = slot.content;
-      if (!id) return;
-
-      const { aabbs } = world.getBlockById(id);
-      if (
-        aabbs.find((aabb) =>
-          aabb
-            .clone()
-            .translate([vx, vy, vz])
-            .intersects(rigidControls.body.aabb),
-        )
-      )
-        return;
-
-      bulkPlace();
-    });
-
-    inputs.click(
-      'left',
-      () => {
-        const { target } = voxelInteract;
-        if (!target) return;
-        bulkDestroy();
-      },
-      'in-game',
-    );
 
     inputsRef.current = inputs;
 
@@ -802,7 +644,6 @@ export function VoxelizeProvider({
       'length',
     );
     debug.registerDisplay('Chunks Loaded', world.chunks.loaded, 'size');
-    debug.registerDisplay('Edit radius', () => radius);
     debug.registerDisplay('Target voxel', voxelInteract, 'target');
 
     ['Red', 'Green', 'Blue'].forEach((color) => {
