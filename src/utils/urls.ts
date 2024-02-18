@@ -5,5 +5,5 @@ export function getCoreUrl() {
 }
 
 export function getServerUrl() {
-  return IS_PRODUCTION ? 'https://hi.shaoruu.io' : 'http://localhost:8080';
+  return IS_PRODUCTION ? 'https://server.shaoruu.io' : 'http://localhost:8080';
 }
