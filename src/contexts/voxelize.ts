@@ -22,6 +22,7 @@ import type { PerspectiveCamera } from 'three';
 
 import type { PeersData } from '../containers/Providers/Voxelize';
 import type { Triggers } from '../core/trigger';
+import type { ChatItem } from '../types';
 
 export type VoxelizeContextData = {
   worldName: string;
@@ -46,6 +47,11 @@ export type VoxelizeContextData = {
   triggers?: Triggers;
 
   camera?: PerspectiveCamera;
+
+  chatItems: ChatItem[];
+  setChatItems: (
+    items: ChatItem[] | ((items: ChatItem[]) => ChatItem[]),
+  ) => void;
 
   updateHooks: (() => void)[];
 };

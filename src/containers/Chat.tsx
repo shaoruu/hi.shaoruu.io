@@ -1,15 +1,10 @@
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef } from 'react';
 
 import type { BlockUpdate, Coords3 } from '@voxelize/core';
 import axios from 'axios';
 
 import topStarredRepos from '../assets/data/topStars.json';
+import { ColorText } from '../components/ColorText';
 import { useVoxelize } from '../hooks/useVoxelize';
 import type { ChatItem } from '../types';
 import { isAdmin } from '../utils/isAdmin';
@@ -30,12 +25,12 @@ export function Chat() {
     method,
     voxelInteract,
     entities,
+    chatItems,
+    setChatItems,
   } = useVoxelize();
 
   const chatListDomRef = useRef<HTMLUListElement>(null);
   const chatInputDomRef = useRef<HTMLInputElement>(null);
-
-  const [chatItems, setChatItems] = useState<ChatItem[]>([]);
 
   const hideInput = () => {
     if (!chatInputDomRef.current) return;
@@ -57,6 +52,11 @@ export function Chat() {
       chatListDomRef.current?.classList.add('remove');
     }, chatVanishTime);
   };
+
+  useEffect(() => {
+    showChatList();
+    hideChatList();
+  }, [chatItems]);
 
   const openChatInput = useCallback(
     (isCommand = false) => {
@@ -281,6 +281,7 @@ export function Chat() {
     method,
     openChatInput,
     rigidControls,
+    setChatItems,
     voxelInteract,
     world,
   ]);
@@ -304,7 +305,7 @@ export function Chat() {
       }}
     >
       <ul
-        className="list-none overflow-auto w-full rounded max-h-[200px] flex flex-col bg-overlay"
+        className="list-none overflow-auto w-full rounded max-h-[200px] flex flex-col bg-overlay no-scrollbar"
         ref={chatListDomRef}
       >
         {chatItems.map((chatItem, index) => (
@@ -313,19 +314,16 @@ export function Chat() {
             className="flex items-center gap-1 text-background-primary px-3 py-2 text-xs"
           >
             {chatItem.sender && (
-              <p className="text-text-tertiary">
-                {chatItem.type === 'ian-chat' ? (
-                  <span className="text-red-500">
-                    [OWNER]{' '}
-                    <span className="text-white">{queryUsername ?? 'Ian'}</span>
-                  </span>
-                ) : (
-                  chatItem.sender
-                )}
-                :{' '}
-              </p>
+              <>
+                <ColorText callback={() => {}}>
+                  {chatItem.type === 'ian-chat'
+                    ? `$red$[OWNER]$white$ ${queryUsername ?? 'Ian'}`
+                    : `$gray$${chatItem.sender}`}
+                </ColorText>
+                <span className="text-gray-300 mr-1">: </span>
+              </>
             )}
-            <p>{chatItem.body}</p>
+            <ColorText>{chatItem.body}</ColorText>
           </div>
         ))}
       </ul>

@@ -22,6 +22,7 @@ export function Editing() {
     itemSlots,
     rigidControls,
     updateHooks,
+    setChatItems,
   } = useVoxelize();
 
   const { playAudio } = useAudio();
@@ -69,15 +70,32 @@ export function Editing() {
 
     const canRegularUserPlaceBreak = worldsToPlace.includes(worldName);
 
+    const sendNoBreakMessage = () => {
+      setChatItems((prev) => [
+        ...prev,
+        {
+          type: 'chat',
+          sender: '[SYSTEM]',
+          body: `$gray$Spawn protection!${Math.random()}`,
+        },
+      ]);
+    };
+
     const getAdminCheck = (target: Coords3) => {
       const [vx, vy, vz] = target;
 
       const id = world.getVoxelAt(vx, vy, vz);
-      if (!isUserAdmin && id === ADMINIUM_ID) return false;
+      if (!isUserAdmin && id === ADMINIUM_ID) {
+        sendNoBreakMessage();
+        return false;
+      }
 
       if (worldName === 'flat' && !isUserAdmin) {
         const distFromOrigin = Math.sqrt(vx ** 2 + vz ** 2);
-        if (distFromOrigin <= 5) return false;
+        if (distFromOrigin <= 5) {
+          sendNoBreakMessage();
+          return false;
+        }
       }
 
       return true;
@@ -152,11 +170,23 @@ export function Editing() {
       if (updates.length) world.updateVoxels(updates);
     };
 
+    const maxCols = itemSlots.options.horizontalCount;
+
+    inputs.scroll(
+      () => {
+        itemSlots.setFocused(0, (itemSlots.focusedCol + 1) % maxCols);
+      },
+      () => {
+        itemSlots.setFocused(0, (itemSlots.focusedCol - 1) % maxCols);
+      },
+      'in-game',
+    );
+
     if (isUserAdmin) {
       inputs.scroll(
         () => (radius = Math.min(maxRadius, radius + 1)),
         () => (radius = Math.max(minRadius, radius - 1)),
-        'in-game',
+        'menu',
       );
     }
 
@@ -218,6 +248,8 @@ export function Editing() {
     );
 
     debug.registerDisplay('Edit radius', () => radius);
+
+    // eslint-disable-next-line
   }, [
     debug,
     inputs,

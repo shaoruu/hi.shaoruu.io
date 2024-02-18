@@ -60,6 +60,7 @@ import {
   type VoxelizeContextData,
 } from '@/src/contexts/voxelize';
 import { Trigger, Triggers } from '@/src/core/trigger';
+import type { ChatItem } from '@/src/types';
 import { isAdmin } from '@/src/utils/isAdmin';
 import { getCoreUrl } from '@/src/utils/urls';
 
@@ -881,10 +882,15 @@ export function VoxelizeProvider({
     };
   }, [canvasId, options, worldName]);
 
-  const memoedValue = useMemo<VoxelizeContextData>(() => {
+  const [chatItems, setChatItems] = useState<ChatItem[]>([]);
+
+  const memoedValue = useMemo<
+    Omit<
+      VoxelizeContextData,
+      'chatItems' | 'setChatItems' | 'worldName' | 'isConnecting'
+    >
+  >(() => {
     return {
-      worldName,
-      isConnecting,
       network: networkRef.current!,
       world: worldRef.current!,
       rigidControls: rigidControlsRef.current!,
@@ -907,7 +913,15 @@ export function VoxelizeProvider({
   }, [isConnecting, worldName]);
 
   return (
-    <VoxelizeContext.Provider value={{ ...memoedValue }}>
+    <VoxelizeContext.Provider
+      value={{
+        ...memoedValue,
+        isConnecting,
+        worldName,
+        chatItems,
+        setChatItems,
+      }}
+    >
       {children}
     </VoxelizeContext.Provider>
   );
