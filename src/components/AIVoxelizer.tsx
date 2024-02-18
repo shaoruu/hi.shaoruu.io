@@ -95,7 +95,7 @@ export function AIVoxelizer() {
 
                   setIsLoading(true);
 
-                  const response = await axios(`${getServerUrl()}/prompt`, {
+                  const response = await axios(`${getServerUrl()}/voxelize`, {
                     params: {
                       prompt,
                     },
