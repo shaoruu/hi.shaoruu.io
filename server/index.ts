@@ -24,8 +24,14 @@ server.use(express.json());
 server.use(express.urlencoded({ extended: false }));
 
 server.get('/voxelize', async (req, res) => {
-  const { prompt } = req.query as { prompt: string };
-  console.log(prompt);
+  const { prompt, secretKey } = req.query as {
+    prompt: string;
+    secretKey: string;
+  };
+  if (secretKey !== process.env.SECRET_ADMIN_KEY) {
+    res.status(401).json({ error: 'Unauthorized' });
+    return;
+  }
   const result = await openai.images.generate({
     prompt,
     n: 1,

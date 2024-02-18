@@ -98,6 +98,7 @@ export function AIVoxelizer() {
                   const response = await axios(`${getServerUrl()}/voxelize`, {
                     params: {
                       prompt,
+                      secretKey: process.env.SECRET_ADMIN_KEY,
                     },
                   });
 
