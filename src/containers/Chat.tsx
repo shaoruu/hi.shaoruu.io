@@ -343,7 +343,9 @@ export function Chat() {
 
             chat?.send({
               type: isAdmin() ? 'ian-chat' : 'chat',
-              sender: network?.clientInfo.username,
+              sender: queryUsername
+                ? `$white$${queryUsername}`
+                : network?.clientInfo.username,
               body: e.currentTarget.value,
             });
             e.currentTarget.value = '';
