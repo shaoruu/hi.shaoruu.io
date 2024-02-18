@@ -18,19 +18,25 @@ const openai = new OpenAI({
 
 const server = express();
 
-server.use(
-  cors({
-    origin: (origin, callback) => {
-      const allowedOrigins = ['https://hi.shaoruu.io']; // Add more origins as needed
-      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-        callback(null, true);
-      } else {
-        callback(new Error('CORS policy violation'));
-      }
-    },
-    credentials: true,
-  }),
-);
+if (process.env.NODE_ENV === 'development') {
+  server.use(cors({ origin: '*' }));
+} else {
+  server.use(
+    cors({
+      origin: (origin, callback) => {
+        const allowedOrigins = [
+          'https://hi.shaoruu.io',
+          'https://localhost:3001',
+        ]; // Add more origins as needed
+        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+          callback(null, true);
+        } else {
+          callback(new Error('CORS policy violation'));
+        }
+      },
+    }),
+  );
+}
 
 server.use(express.json());
 server.use(express.urlencoded({ extended: false }));

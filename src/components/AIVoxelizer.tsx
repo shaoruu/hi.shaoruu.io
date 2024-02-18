@@ -15,6 +15,7 @@ export function AIVoxelizer() {
 
   const [prompt, setPrompt] = useState('');
   const [width, setWidth] = useState(64);
+  const [orientation, setOrientation] = useState<'x' | 'z'>('x');
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -73,14 +74,30 @@ export function AIVoxelizer() {
                 onChange={(e) => setPrompt(e.target.value)}
               />
             </div>
-            <div className="flex flex-col gap-1 w-full">
-              <p className="text-xs">Width</p>
-              <input
-                type="number"
-                value={width}
-                onChange={(e) => setWidth(parseInt(e.target.value))}
-                className="bg-gray-text rounded p-2 outline-none text-background-primary resize-none border-slate-400 border-solid border"
-              />
+            <div className="flex gap-1 w-full">
+              <div className="flex flex-col gap-1 flex-1">
+                <p className="text-xs">Width</p>
+                <input
+                  type="number"
+                  value={width}
+                  onChange={(e) => setWidth(parseInt(e.target.value))}
+                  className="bg-gray-text rounded p-2 outline-none text-background-primary resize-none border-slate-400 border-solid border"
+                />
+              </div>
+              <div className="flex flex-col gap-1 flex-1">
+                <p className="text-xs">Orientation</p>
+                <button
+                  className={classNames(
+                    buttonClassName,
+                    orientation === 'x' && 'bg-background-primary',
+                  )}
+                  onClick={() =>
+                    setOrientation(orientation === 'x' ? 'z' : 'x')
+                  }
+                >
+                  {orientation}
+                </button>
+              </div>
             </div>
             <div className="flex flex-col gap-1 w-full">
               <button
@@ -96,9 +113,13 @@ export function AIVoxelizer() {
                   setIsLoading(true);
 
                   const response = await axios(`${getServerUrl()}/voxelize`, {
+                    method: 'GET',
                     params: {
                       prompt,
                       secretKey: process.env.SECRET_ADMIN_KEY,
+                    },
+                    headers: {
+                      'Content-Type': 'application/json',
                     },
                   });
 
@@ -114,7 +135,7 @@ export function AIVoxelizer() {
                       width,
                       height: width,
                       lockedRatio: true,
-                      orientation: 'x',
+                      orientation,
                     },
                   );
 

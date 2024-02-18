@@ -177,7 +177,7 @@ export function Editing() {
         itemSlots.setFocused(0, (itemSlots.focusedCol + 1) % maxCols);
       },
       () => {
-        itemSlots.setFocused(0, (itemSlots.focusedCol - 1) % maxCols);
+        itemSlots.setFocused(0, (itemSlots.focusedCol - 1 + maxCols) % maxCols);
       },
       'in-game',
     );
