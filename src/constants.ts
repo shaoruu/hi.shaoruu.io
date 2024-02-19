@@ -10,7 +10,7 @@ const potentialWorldName =
   new URLSearchParams(window.location.search).get('world') ??
   localStorage.getItem(voxelizeWorldLocalStorageKey) ??
   'main';
-export const knownWorlds = ['main', 'flat'];
+export const knownWorlds = ['main', 'flat', 'terrain'];
 export const currentWorldName = knownWorlds.includes(potentialWorldName)
   ? potentialWorldName
   : knownWorlds[0];

@@ -1,3 +1,4 @@
+import { Agility } from '../components/Agility';
 import { AIVoxelizer } from '../components/AIVoxelizer';
 import { Crosshair } from '../components/Crosshair';
 import { Editing } from '../components/Editing';
@@ -22,6 +23,7 @@ export function App() {
         <Tooltip />
         <Inventory />
         <AIVoxelizer />
+        <Agility />
         <Editing />
         <LinkBlocks />
         {/* <Menu /> */}

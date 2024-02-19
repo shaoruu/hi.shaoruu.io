@@ -53,6 +53,7 @@ import { makeRegistry } from '../../core/registry';
 
 import {
   currentWorldName,
+  knownWorlds,
   voxelizeWorldLocalStorageKey,
 } from '@/src/constants';
 import {
@@ -816,7 +817,7 @@ export function VoxelizeProvider({
       world.renderRadius = 8;
 
       gui
-        .add({ world: currentWorldName }, 'world', ['main', 'flat'])
+        .add({ world: currentWorldName }, 'world', knownWorlds)
         .onChange((worldName: string) => {
           localStorage.setItem(voxelizeWorldLocalStorageKey, worldName);
           window.location.reload();
