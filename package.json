@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "@voxelize/aabb": "^1.0.0",
-    "@voxelize/core": "^0.1.160",
+    "@voxelize/core": "^0.1.161",
     "@voxelize/physics-engine": "^1.1.28",
     "@voxelize/transport": "^1.0.23",
     "axios": "^1.5.0",
@@ -31,7 +31,6 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-loading": "^2.0.3",
-    "sharp": "^0.33.2",
     "three": "^0.156.1",
     "three-nebula": "^10.0.3",
     "vite-plugin-image-optimizer": "^1.1.7"
