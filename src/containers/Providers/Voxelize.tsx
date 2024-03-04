@@ -672,6 +672,12 @@ export function VoxelizeProvider({
       composer.setSize(window.innerWidth, window.innerHeight);
     });
 
+    if (worldName === 'terrain') {
+      world.addChunkInitListener([0, 0], () =>
+        rigidControls.teleportToTop(0, 0),
+      );
+    }
+
     /* -------------------------------------------------------------------------- */
     /*                                   OTHERS                                   */
     /* -------------------------------------------------------------------------- */

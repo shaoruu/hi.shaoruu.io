@@ -8,6 +8,7 @@ use super::shared::{
 pub fn setup_main_world(registry: &Registry) -> World {
     let config = WorldConfig::new()
         .preload(true)
+        .preload_radius(2)
         .min_chunk([-50, -50])
         .max_chunk([50, 50])
         .saving(true)

@@ -1,4 +1,4 @@
-import type { World } from '@voxelize/core';
+import { customShaders, type World } from '@voxelize/core';
 import { Color } from 'three';
 
 import Amethyst from '../assets/images/blocks/amethyst.png';
@@ -18,7 +18,6 @@ import CondorAgate from '../assets/images/blocks/condor_agate.png';
 import Coral from '../assets/images/blocks/coral.png';
 import CrazyLaceAgate from '../assets/images/blocks/crazy_lace_agate.png';
 import Diorite from '../assets/images/blocks/diorite_block.png';
-import Dirt from '../assets/images/blocks/dirt.png';
 import Emerald from '../assets/images/blocks/emerald.png';
 import EnhydroAgate from '../assets/images/blocks/enhydro_agate.png';
 import Flint from '../assets/images/blocks/flint.png';
@@ -39,9 +38,6 @@ import Malachite from '../assets/images/blocks/malachite.png';
 import Marble from '../assets/images/blocks/marble_block.png';
 import Moonstone from '../assets/images/blocks/moonstone.png';
 import MossAgate from '../assets/images/blocks/moss_agate.png';
-import OakLeaves from '../assets/images/blocks/oak_leaves.png';
-import OakLogSide from '../assets/images/blocks/oak_log_side.png';
-import OakLogTop from '../assets/images/blocks/oak_log_top.png';
 import OakPlanks from '../assets/images/blocks/oak_planks.png';
 import Obsidian from '../assets/images/blocks/obsidian_block.png';
 import OnyxAgate from '../assets/images/blocks/onyx_agate.png';
@@ -57,7 +53,6 @@ import SageniteAgate from '../assets/images/blocks/sagenite_agate.png';
 import Sand from '../assets/images/blocks/sand_block.png';
 import Sapphire from '../assets/images/blocks/sapphire.png';
 import Scoria from '../assets/images/blocks/scoria_block.png';
-import Stone from '../assets/images/blocks/stone.png';
 import Sunstone from '../assets/images/blocks/sunstone.png';
 import Tuff from '../assets/images/blocks/tuff_block.png';
 import Turquoise from '../assets/images/blocks/turquoise.png';
@@ -71,6 +66,15 @@ import MCJS from '../assets/images/ui/mcjs.png';
 import MineJS from '../assets/images/ui/minejs.png';
 import RSTS from '../assets/images/ui/rust-ts.png';
 import Voxelize from '../assets/images/ui/voxelize.png';
+import Water from '../assets/voxelize/own/water.png';
+import Dirt from '../assets/voxelize/pixel-perfection/dirt.png';
+import Grass from '../assets/voxelize/pixel-perfection/grass.png';
+import GrassBlockSide from '../assets/voxelize/pixel-perfection/grass_side.png';
+import GrassBlockTop from '../assets/voxelize/pixel-perfection/grass_top.png';
+import OakLeaves from '../assets/voxelize/pixel-perfection/leaves_oak.png';
+import OakLogSide from '../assets/voxelize/pixel-perfection/log_oak_side.png';
+import OakLogTop from '../assets/voxelize/pixel-perfection/log_oak_top.png';
+import Stone from '../assets/voxelize/pixel-perfection/stone.png';
 
 export async function makeRegistry(world: World) {
   const all = ['px', 'nx', 'py', 'ny', 'pz', 'nz'];
@@ -295,4 +299,48 @@ export async function makeRegistry(world: World) {
   await world.applyBlockTexture('Ivory', all, Ivory);
   await world.applyBlockTexture('Oak Planks', all, OakPlanks);
   await world.applyBlockTexture('Adminium', all, '/logo.png');
+
+  await world.applyBlockTextures([
+    {
+      idOrName: 'Water',
+      faceNames: all,
+      source: Water,
+    },
+    {
+      idOrName: 'Grass Block',
+      faceNames: 'py',
+      source: GrassBlockTop,
+    },
+    {
+      idOrName: 'Grass Block',
+      faceNames: ['px', 'nx', 'pz', 'nz'],
+      source: GrassBlockSide,
+    },
+    {
+      idOrName: 'Grass Block',
+      faceNames: 'ny',
+      source: Dirt,
+    },
+    {
+      idOrName: 'Grass',
+      faceNames: ['one', 'two'],
+      source: Grass,
+    },
+  ]);
+
+  world.customizeMaterialShaders(
+    'Grass',
+    null,
+    customShaders.sway({
+      rooted: true,
+    }),
+  );
+
+  world.customizeMaterialShaders(
+    'Oak Leaves',
+    null,
+    customShaders.sway({
+      yScale: 0,
+    }),
+  );
 }

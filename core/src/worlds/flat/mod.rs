@@ -12,7 +12,7 @@ use super::shared::{
 pub fn setup_flat_world(registry: &Registry) -> World {
     let config = WorldConfig::new()
         .preload(true)
-        .preload_radius(3)
+        .preload_radius(2)
         .min_chunk([-6, -6])
         .max_chunk([5, 5])
         .time_per_day(2400)

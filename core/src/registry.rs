@@ -1,4 +1,9 @@
-use voxelize::{Block, BlockFace, BlockFaces, Registry, AABB, SIX_FACES_PY};
+use voxelize::{
+    Block, BlockConditionalPart, BlockDynamicPattern, BlockFaces, BlockRule, BlockRuleLogic,
+    BlockSimpleRule, Registry, Vec3, VoxelPacker, AABB, SIX_FACES_PY,
+};
+
+const PLANT_SCALE: f32 = 0.6;
 
 pub fn get_registry() -> Registry {
     let slab_top_faces = BlockFaces::six_faces()
@@ -11,6 +16,11 @@ pub fn get_registry() -> Registry {
 
     let slab_bottom_faces = BlockFaces::six_faces().scale_y(0.5).uv_scale_y(0.5).build();
     let slab_bottom_aabb = [AABB::new().scale_y(0.5).build()];
+
+    let grass_faces = BlockFaces::diagonal_faces()
+        .scale_horizontal(PLANT_SCALE)
+        .scale_vertical(PLANT_SCALE)
+        .build();
 
     let make_top_slab = |name: &str, id: u32| {
         Block::new(name)
@@ -60,6 +70,48 @@ pub fn get_registry() -> Registry {
 
     let mut registry = Registry::new();
 
+    registry.register_air_active_fn(
+        |_, _, _| 0,
+        |voxel, space, registry| {
+            let Vec3(vx, vy, vz) = voxel;
+            let mut updates = vec![];
+
+            [
+                [1, 0, 0],
+                [-1, 0, 0],
+                [0, 1, 0],
+                [0, -1, 0],
+                [0, 0, 1],
+                [0, 0, -1],
+            ]
+            .into_iter()
+            .for_each(|[dx, dy, dz]| {
+                let id = space.get_voxel(vx + dx, vy + dy, vz + dz);
+
+                if id == 0 {
+                    return;
+                }
+
+                let block = registry.get_block_by_id(id);
+
+                if block.is_active {
+                    updates.push((
+                        Vec3(vx + dx, vy + dy, vz + dz),
+                        space.get_raw_voxel(vx + dx, vy + dy, vz + dz),
+                    ));
+                }
+            });
+
+            let voxel_above = space.get_voxel(vx, vy + 1, vz);
+
+            if voxel_above == 1000 || voxel_above == 400 {
+                updates.push((Vec3(vx, vy + 1, vz), 0));
+            }
+
+            updates
+        },
+    );
+
     registry.register_blocks(&[
         Block::new("Dirt").id(1).build(),
         Block::new("Stone").id(2).build(),
@@ -91,6 +143,84 @@ pub fn get_registry() -> Registry {
             .id(10000)
             .torch_light_level(5)
             .faces(&BlockFaces::six_faces().build())
+            .build(),
+        // Basic
+        Block::new("Water")
+            .id(30000)
+            .is_transparent(true)
+            .is_see_through(true)
+            .light_reduce(true)
+            .is_fluid(true)
+            .is_passable(true)
+            .faces(&BlockFaces::six_faces().build())
+            .dynamic_patterns(&[BlockDynamicPattern {
+                parts: vec![
+                    BlockConditionalPart {
+                        rule: BlockRule::Combination {
+                            logic: BlockRuleLogic::And, // Assuming you want an AND logic for demonstration
+                            rules: vec![
+                                BlockRule::Simple(BlockSimpleRule {
+                                    offset: Vec3(0, 1, 0),
+                                    id: Some(0),
+                                    rotation: None,
+                                    stage: None,
+                                }),
+                                // Add more BlockRule::Simple or BlockRule::Combination here as needed
+                            ],
+                        },
+                        aabbs: vec![AABB::new().scale_y(0.8).build()],
+                        faces: BlockFaces::six_faces().scale_y(0.8).build().to_vec(),
+                        is_transparent: [true, true, true, true, true, true],
+                    },
+                    // You can add more BlockConditionalPart here as needed
+                ],
+            }])
+            .aabbs(&[AABB::new().build()])
+            .active_fn(
+                |_, _, _| 100,
+                |voxel, space, _| {
+                    let Vec3(vx, vy, vz) = voxel;
+
+                    let curr_stage = space.get_voxel_stage(vx, vy, vz);
+
+                    let mut updates = vec![];
+
+                    if space.get_voxel(vx, vy - 1, vz) == 0 {
+                        updates.push((
+                            Vec3(vx, vy - 1, vz),
+                            VoxelPacker::new().with_id(30000).with_stage(0).pack(),
+                        ));
+                    } else {
+                        [[-1, 0], [1, 0], [0, -1], [0, 1]]
+                            .into_iter()
+                            .for_each(|[dx, dz]| {
+                                if space.get_voxel(vx + dx, vy, vz + dz) == 0 && curr_stage < 2 {
+                                    updates.push((
+                                        Vec3(vx + dx, vy, vz + dz),
+                                        VoxelPacker::new()
+                                            .with_id(30000)
+                                            .with_stage(curr_stage + 1)
+                                            .pack(),
+                                    ));
+                                }
+                            });
+                    }
+
+                    updates
+                },
+            )
+            .build(),
+        Block::new("Grass Block").id(30001).build(),
+        Block::new("Snow").id(30002).build(),
+        // plants
+        Block::new("Grass")
+            .id(30300)
+            .aabbs(&[AABB::from_faces(&grass_faces)])
+            .is_passable(true)
+            .faces(&grass_faces)
+            .is_transparent(true)
+            .is_see_through(true)
+            .transparent_standalone(true)
             .build(),
     ]);
 
