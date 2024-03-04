@@ -125,8 +125,13 @@ export class ImageVoxelizer {
     imgURL: string,
     world: World,
     position: Vector3,
-    options: ImageVoxelizerOptions,
+    partialOptions: Partial<ImageVoxelizerOptions>,
   ) => {
+    const options = {
+      ...defaultOptions,
+      ...partialOptions,
+    } as ImageVoxelizerOptions;
+
     console.log(`Starting to voxelize image: ${imgURL}`);
 
     const getPixelAt = (

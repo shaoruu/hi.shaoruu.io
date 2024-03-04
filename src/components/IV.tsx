@@ -14,7 +14,7 @@ export const IV = () => {
     if (!isAdmin()) return;
 
     chat.addCommand('iv', (rest) => {
-      const { url, options } = ImageVoxelizer.parse(rest);
+      const { url, options = {} } = ImageVoxelizer.parse(rest);
 
       ImageVoxelizer.build(
         url,

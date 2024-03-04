@@ -246,25 +246,37 @@ pub fn setup_terrain_world(registry: &Registry) -> World {
                 .seed(8675309)
                 .build(),
         );
-        mystical_trees.set_threshold(5.0);
-        let mystical = Tree::new(5004, 5003)
-            .leaf_height(3)
-            .leaf_radius(3)
-            .branch_initial_radius(3)
-            .branch_initial_length(9)
-            .branch_radius_factor(0.85)
-            .branch_length_factor(0.6)
-            .branch_dy_angle(f64::consts::PI / 6.0)
-            .branch_drot_angle(f64::consts::PI / 4.0)
+        mystical_trees.set_threshold(5.0); // A bit more selective in tree placement
+
+        // L-System rules:
+        // - F: branch out
+        // - #: branch rotation increase
+        // - $: branch rotation decrease
+        // - +: branch axis-rotation increase
+        // - -: branch axis rotation decrease
+        // - @: branch length *= factor
+        // - !: branch radius *= factor
+        // - %: place leaves at end of branch
+        // - [: push a new state
+        // - ]: pop back to previous state
+        let mystical = Tree::new(202, 57)
+            .leaf_height(3) // Increased leaf height for a fuller look
+            .leaf_radius(3) // Larger leaves for a more mystical appearance
+            .branch_initial_radius(3) // Thicker initial branches for a sturdier look
+            .branch_initial_length(7) // Longer initial branches for a grander scale
+            .branch_radius_factor(0.9) // Slightly less tapering for the branches
+            .branch_length_factor(0.65) // Longer branches overall
+            .branch_dy_angle(f64::consts::PI / 5.0) // Adjusted angle for a more spread out look
+            .branch_drot_angle(f64::consts::PI / 5.0) // Changed rotation angle for variety
             .system(
                 LSystem::new()
-                    .axiom("F")
-                    .rule('F', "FF")
-                    .iterations(4)
+                    .axiom("X")
+                    .rule('X', "FF$[B]+$[B]+$[B]FFFF")
+                    .rule('B', "F!$@!F$F%")
+                    .iterations(8) // Increased iterations for a more intricate structure
                     .build(),
             )
             .build();
-
         mystical_trees.register("Mystical", mystical);
 
         let tree_stage = TreeStage::new()

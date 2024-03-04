@@ -64,7 +64,7 @@ export function Editing() {
 
     const isUserAdmin = isAdmin();
 
-    let radius = 1;
+    const radius = 1;
     const circular = true;
     const ADMINIUM_ID = 10000;
 
@@ -119,12 +119,16 @@ export function Editing() {
             if (circular && x ** 2 + y ** 2 + z ** 2 > radius ** 2 - 1)
               continue;
 
-            updates.push({
-              vx: vx + x,
-              vy: vy + y,
-              vz: vz + z,
-              type: 0,
-            });
+            const currentId = world.getVoxelAt(vx + x, vy + y, vz + z);
+
+            if (currentId !== 0) {
+              updates.push({
+                vx: vx + x,
+                vy: vy + y,
+                vz: vz + z,
+                type: 0,
+              });
+            }
           }
         }
       }
@@ -183,11 +187,11 @@ export function Editing() {
     );
 
     if (isUserAdmin) {
-      inputs.scroll(
-        () => (radius = Math.min(maxRadius, radius + 1)),
-        () => (radius = Math.max(minRadius, radius - 1)),
-        'menu',
-      );
+      // inputs.scroll(
+      //   () => (radius = Math.min(maxRadius, radius + 1)),
+      //   () => (radius = Math.max(minRadius, radius - 1)),
+      //   'menu',
+      // );
     }
 
     const blocksToSkip = [

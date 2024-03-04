@@ -164,6 +164,7 @@ export function VoxelizeProvider({
 
     const world = new World({
       textureUnitDimension: 16,
+      maxUpdatesPerUpdate: 1000,
       ...worldOptions,
     });
 
@@ -283,8 +284,8 @@ export function VoxelizeProvider({
       world,
       {
         initialPosition: [0, 40, 0],
-        flyForce: 100,
-        flyImpulse: 1,
+        flyForce: 500,
+        flyImpulse: 3,
         ...rigidControlsOptions,
       },
     );
@@ -863,6 +864,7 @@ export function VoxelizeProvider({
       });
 
       if (isUserAdmin) {
+        gui.add(rigidControls.options, 'flyForce', 100, 600, 0.1);
         gui.add(
           {
             'Spawn Bot': () => {

@@ -53,8 +53,9 @@ server.get('/voxelize', async (req, res) => {
   const result = await openai.images.generate({
     prompt,
     n: 1,
-    size: '512x512',
+    size: '1024x1024',
     response_format: 'b64_json',
+    model: 'dall-e-3',
   });
   res.json({ result: result.data });
 });

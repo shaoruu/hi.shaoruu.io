@@ -63,7 +63,7 @@ export function AIVoxelizer() {
             onClick={() => setShouldShowMenu(false)}
           />
           <div className="w-[500px] flex flex-col items-center bg-text-primary rounded z-50 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 fixed gap-1.5 px-5 py-4 text-background-primary">
-            <h1 className="text-2xl font-bold">DALL·E 2 Voxelizer</h1>
+            <h1 className="text-2xl font-bold">DALL·E 3 Voxelizer</h1>
             <div className="flex flex-col gap-1 w-full">
               <p className="text-xs">Prompt:</p>
               <textarea
