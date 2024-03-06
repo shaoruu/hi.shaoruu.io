@@ -1,3 +1,7 @@
 # [shaoruu.io](https://shaoruu.io)
 
-welcome!
+Welcome!! I will update the readme more soon :)))
+
+## Assets Used
+
+- [Connection Serif Font](https://fonts2u.com/connection-serif.font)
