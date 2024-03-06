@@ -23,13 +23,9 @@ pub fn get_registry() -> Registry {
         .scale_y(0.5)
         .scale_x(0.1)
         .scale_z(0.1)
-        .uv_offset_x(0.45)
-        .uv_offset_z(0.45)
-        .uv_scale_x(0.1)
-        .uv_scale_z(0.1)
-        .uv_scale_y(0.5)
         .offset_x(0.45)
         .offset_z(0.45)
+        .auto_uv_offset(true)
         .suffix("body")
         .build();
     let torch_head_faces = BlockFaces::six_faces()
@@ -39,12 +35,7 @@ pub fn get_registry() -> Registry {
         .offset_y(0.51)
         .offset_x(0.45)
         .offset_z(0.45)
-        .uv_offset_x(0.45)
-        .uv_offset_z(0.45)
-        .uv_offset_z(0.51)
-        .uv_scale_x(0.1)
-        .uv_scale_z(0.1)
-        .uv_scale_y(0.1)
+        .auto_uv_offset(true)
         .suffix("head")
         .build();
     let torch_aabbs = AABB::from_faces(&torch_body_faces);
@@ -67,6 +58,242 @@ pub fn get_registry() -> Registry {
         .scale_horizontal(PLANT_SCALE)
         .scale_vertical(PLANT_SCALE)
         .build();
+
+    let fence_id = 50000;
+    let fence_base_xz_dimension = 0.2;
+    let fence_gate_dimension = 0.15;
+    let fence_base_height = 0.6;
+    let fence_gate_gap = 0.3;
+    let fence_base_faces = BlockFaces::six_faces()
+        .scale_y(fence_base_height)
+        .scale_x(fence_base_xz_dimension)
+        .scale_z(fence_base_xz_dimension)
+        .offset_x((1.0 - fence_base_xz_dimension) / 2.0)
+        .offset_z((1.0 - fence_base_xz_dimension) / 2.0)
+        .auto_uv_offset(true)
+        .build();
+    let fence_pos_100_faces_bottom = BlockFaces::six_faces()
+        .scale_y(fence_gate_dimension)
+        .offset_y(fence_base_height / 2.0 - fence_gate_dimension / 2.0 - fence_gate_gap / 2.0)
+        .scale_x((1.0 - fence_base_xz_dimension) / 2.0)
+        .scale_z(fence_base_xz_dimension / 2.0)
+        .offset_x((1.0 - fence_base_xz_dimension) / 2.0 + fence_base_xz_dimension)
+        .offset_z((1.0 - fence_base_xz_dimension) / 2.0 + fence_base_xz_dimension / 4.0)
+        .auto_uv_offset(true)
+        .build();
+    let fence_pos_100_faces_top = BlockFaces::six_faces()
+        .scale_y(fence_gate_dimension)
+        .offset_y(fence_base_height / 2.0 - fence_gate_dimension / 2.0 + fence_gate_gap / 2.0)
+        .scale_x((1.0 - fence_base_xz_dimension) / 2.0)
+        .scale_z(fence_base_xz_dimension / 2.0)
+        .offset_x((1.0 - fence_base_xz_dimension) / 2.0 + fence_base_xz_dimension)
+        .offset_z((1.0 - fence_base_xz_dimension) / 2.0 + fence_base_xz_dimension / 4.0)
+        .auto_uv_offset(true)
+        .build();
+    let fence_pos_001_faces_bottom = BlockFaces::six_faces()
+        .scale_y(fence_gate_dimension)
+        .offset_y(fence_base_height / 2.0 - fence_gate_dimension / 2.0 - fence_gate_gap / 2.0)
+        .scale_z((1.0 - fence_base_xz_dimension) / 2.0)
+        .scale_x(fence_base_xz_dimension / 2.0)
+        .offset_z((1.0 - fence_base_xz_dimension) / 2.0 + fence_base_xz_dimension)
+        .offset_x((1.0 - fence_base_xz_dimension) / 2.0 + fence_base_xz_dimension / 4.0)
+        .auto_uv_offset(true)
+        .build();
+    let fence_pos_001_faces_top = BlockFaces::six_faces()
+        .scale_y(fence_gate_dimension)
+        .offset_y(fence_base_height / 2.0 - fence_gate_dimension / 2.0 + fence_gate_gap / 2.0)
+        .scale_z((1.0 - fence_base_xz_dimension) / 2.0)
+        .scale_x(fence_base_xz_dimension / 2.0)
+        .offset_z((1.0 - fence_base_xz_dimension) / 2.0 + fence_base_xz_dimension)
+        .offset_x((1.0 - fence_base_xz_dimension) / 2.0 + fence_base_xz_dimension / 4.0)
+        .auto_uv_offset(true)
+        .build();
+    let fence_neg_100_faces_bottom = BlockFaces::six_faces()
+        .scale_y(fence_gate_dimension)
+        .offset_y(fence_base_height / 2.0 - fence_gate_dimension / 2.0 - fence_gate_gap / 2.0)
+        .scale_x((1.0 - fence_base_xz_dimension) / 2.0)
+        .scale_z(fence_base_xz_dimension / 2.0)
+        .offset_z((1.0 - fence_base_xz_dimension) / 2.0 + fence_base_xz_dimension / 4.0)
+        .auto_uv_offset(true)
+        .build();
+    let fence_neg_100_faces_top = BlockFaces::six_faces()
+        .scale_y(fence_gate_dimension)
+        .offset_y(fence_base_height / 2.0 - fence_gate_dimension / 2.0 + fence_gate_gap / 2.0)
+        .scale_x((1.0 - fence_base_xz_dimension) / 2.0)
+        .scale_z(fence_base_xz_dimension / 2.0)
+        .offset_z((1.0 - fence_base_xz_dimension) / 2.0 + fence_base_xz_dimension / 4.0)
+        .auto_uv_offset(true)
+        .build();
+    let fence_neg_001_faces_bottom = BlockFaces::six_faces()
+        .scale_y(fence_gate_dimension)
+        .offset_y(fence_base_height / 2.0 - fence_gate_dimension / 2.0 - fence_gate_gap / 2.0)
+        .scale_z((1.0 - fence_base_xz_dimension) / 2.0)
+        .scale_x(fence_base_xz_dimension / 2.0)
+        .offset_x((1.0 - fence_base_xz_dimension) / 2.0 + fence_base_xz_dimension / 4.0)
+        .auto_uv_offset(true)
+        .build();
+    let fence_neg_001_faces_top = BlockFaces::six_faces()
+        .scale_y(fence_gate_dimension)
+        .offset_y(fence_base_height / 2.0 - fence_gate_dimension / 2.0 + fence_gate_gap / 2.0)
+        .scale_z((1.0 - fence_base_xz_dimension) / 2.0)
+        .scale_x(fence_base_xz_dimension / 2.0)
+        .offset_x((1.0 - fence_base_xz_dimension) / 2.0 + fence_base_xz_dimension / 4.0)
+        .auto_uv_offset(true)
+        .build();
+    let fence_pos_100_faces = [
+        fence_pos_100_faces_bottom.to_vec(),
+        fence_pos_100_faces_top.to_vec(),
+    ]
+    .concat();
+    let fence_pos_001_faces = [
+        fence_pos_001_faces_bottom.to_vec(),
+        fence_pos_001_faces_top.to_vec(),
+    ]
+    .concat();
+    let fence_neg_100_faces = [
+        fence_neg_100_faces_bottom.to_vec(),
+        fence_neg_100_faces_top.to_vec(),
+    ]
+    .concat();
+    let fence_neg_001_faces = [
+        fence_neg_001_faces_bottom.to_vec(),
+        fence_neg_001_faces_top.to_vec(),
+    ]
+    .concat();
+    let fence_base_aabb = AABB::from_faces(&fence_base_faces);
+    let fence_pos_100_aabb = AABB::from_faces(&fence_pos_100_faces);
+    let fence_neg_100_aabb = AABB::from_faces(&fence_neg_100_faces);
+    let fence_pos_001_aabb = AABB::from_faces(&fence_pos_001_faces);
+    let fence_neg_001_aabb = AABB::from_faces(&fence_neg_001_faces);
+    let fence_dynamic_pattern = BlockDynamicPattern {
+        parts: vec![
+            BlockConditionalPart {
+                rule: BlockRule::None,
+                aabbs: vec![fence_base_aabb],
+                faces: fence_base_faces.to_vec(),
+                is_transparent: [true, true, true, true, true, true],
+            },
+            BlockConditionalPart {
+                rule: BlockRule::Combination {
+                    logic: BlockRuleLogic::Or,
+                    rules: vec![
+                        BlockRule::Simple(BlockSimpleRule {
+                            offset: Vec3(1, 1, 0),
+                            id: Some(fence_id),
+                            rotation: None,
+                            stage: None,
+                        }),
+                        BlockRule::Simple(BlockSimpleRule {
+                            offset: Vec3(1, 0, 0),
+                            id: Some(fence_id),
+                            rotation: None,
+                            stage: None,
+                        }),
+                        BlockRule::Simple(BlockSimpleRule {
+                            offset: Vec3(1, -1, 0),
+                            id: Some(fence_id),
+                            rotation: None,
+                            stage: None,
+                        }),
+                    ],
+                },
+                aabbs: vec![fence_pos_100_aabb],
+                faces: fence_pos_100_faces.to_vec(),
+                is_transparent: [true, true, true, true, true, true],
+            },
+            BlockConditionalPart {
+                rule: BlockRule::Combination {
+                    logic: BlockRuleLogic::Or,
+                    rules: vec![
+                        BlockRule::Simple(BlockSimpleRule {
+                            offset: Vec3(-1, 1, 0),
+                            id: Some(fence_id),
+                            rotation: None,
+                            stage: None,
+                        }),
+                        BlockRule::Simple(BlockSimpleRule {
+                            offset: Vec3(-1, 0, 0),
+                            id: Some(fence_id),
+                            rotation: None,
+                            stage: None,
+                        }),
+                        BlockRule::Simple(BlockSimpleRule {
+                            offset: Vec3(-1, -1, 0),
+                            id: Some(fence_id),
+                            rotation: None,
+                            stage: None,
+                        }),
+                    ],
+                },
+                aabbs: vec![fence_neg_100_aabb],
+                faces: fence_neg_100_faces.to_vec(),
+                is_transparent: [true, true, true, true, true, true],
+            },
+            BlockConditionalPart {
+                rule: BlockRule::Combination {
+                    logic: BlockRuleLogic::Or,
+                    rules: vec![
+                        BlockRule::Simple(BlockSimpleRule {
+                            offset: Vec3(0, 1, 1),
+                            id: Some(fence_id),
+                            rotation: None,
+                            stage: None,
+                        }),
+                        BlockRule::Simple(BlockSimpleRule {
+                            offset: Vec3(0, 0, 1),
+                            id: Some(fence_id),
+                            rotation: None,
+                            stage: None,
+                        }),
+                        BlockRule::Simple(BlockSimpleRule {
+                            offset: Vec3(0, -1, 1),
+                            id: Some(fence_id),
+                            rotation: None,
+                            stage: None,
+                        }),
+                    ],
+                },
+                aabbs: vec![fence_pos_001_aabb],
+                faces: fence_pos_001_faces.to_vec(),
+                is_transparent: [true, true, true, true, true, true],
+            },
+            BlockConditionalPart {
+                rule: BlockRule::Combination {
+                    logic: BlockRuleLogic::Or,
+                    rules: vec![
+                        BlockRule::Simple(BlockSimpleRule {
+                            offset: Vec3(0, 1, -1),
+                            id: Some(fence_id),
+                            rotation: None,
+                            stage: None,
+                        }),
+                        BlockRule::Simple(BlockSimpleRule {
+                            offset: Vec3(0, 0, -1),
+                            id: Some(fence_id),
+                            rotation: None,
+                            stage: None,
+                        }),
+                        BlockRule::Simple(BlockSimpleRule {
+                            offset: Vec3(0, -1, -1),
+                            id: Some(fence_id),
+                            rotation: None,
+                            stage: None,
+                        }),
+                    ],
+                },
+                aabbs: vec![fence_neg_001_aabb],
+                faces: fence_neg_001_faces.to_vec(),
+                is_transparent: [true, true, true, true, true, true],
+            },
+        ],
+    };
+    let fence_block = Block::new("Fence")
+        .id(fence_id)
+        .dynamic_patterns(&[fence_dynamic_pattern])
+        .is_transparent(true)
+        .transparent_standalone(true)
+        .build();
+    registry.register_block(&fence_block);
 
     let make_top_slab = |name: &str, id: u32| {
         Block::new(name)

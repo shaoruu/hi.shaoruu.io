@@ -336,6 +336,11 @@ export async function makeRegistry(world: World) {
       faceNames: `${face}body`,
       source: WhiteConcrete,
     })),
+    {
+      idOrName: 'Fence',
+      faceNames: '*',
+      source: OakLogSide,
+    },
   ]);
 
   world.customizeMaterialShaders(

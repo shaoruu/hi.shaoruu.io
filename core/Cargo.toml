@@ -20,7 +20,7 @@ rayon = "1.8.1"
 serde = { version = "1.0.196", features = ["derive"] }
 serde_json = "1.0.113"
 specs = { version = "0.20.0", features = ["specs-derive", "serde"] }
-voxelize = "0.8.62"
+voxelize = "0.8.63"
 ahash = "0.7.8"
 
 [profile.release]

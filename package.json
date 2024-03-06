@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "@voxelize/aabb": "^1.0.0",
-    "@voxelize/core": "^0.1.163",
+    "@voxelize/core": "^0.1.165",
     "@voxelize/physics-engine": "^1.1.28",
     "@voxelize/transport": "^1.0.23",
     "axios": "^1.5.0",
