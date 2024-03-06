@@ -326,6 +326,16 @@ export async function makeRegistry(world: World) {
       faceNames: ['one', 'two'],
       source: Grass,
     },
+    ...all.map((face) => ({
+      idOrName: 'Torch',
+      faceNames: `${face}head`,
+      source: new Color('#FFF67E'),
+    })),
+    ...all.map((face) => ({
+      idOrName: 'Torch',
+      faceNames: `${face}body`,
+      source: WhiteConcrete,
+    })),
   ]);
 
   world.customizeMaterialShaders(

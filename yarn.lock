@@ -872,10 +872,10 @@
     typescript "^4.6.4"
     vitest "^0.10.4"
 
-"@voxelize/core@^0.1.162":
-  version "0.1.162"
-  resolved "https://registry.yarnpkg.com/@voxelize/core/-/core-0.1.162.tgz#2c36111aa05ab9dad11ae40e8e6ea32471a3467f"
-  integrity sha512-mbTv5yQPcg3Vx5A1nMYSvWYGOeB7KANJvKSNFN9MUMgVg60xo+v5V5hGI6SmAP8r67446rlO2iQJlyDIhGdDUg==
+"@voxelize/core@^0.1.163":
+  version "0.1.163"
+  resolved "https://registry.yarnpkg.com/@voxelize/core/-/core-0.1.163.tgz#41fd7c0ff108473c6d2057bd551a2a4cc8d2848a"
+  integrity sha512-9wzT3MgLO9m0WARpwnKT54p+3Uqy0OdMklRbEY8UgnfMfO92tlB5/dPSNZiOsuED4Fp0sWSnFxxWqVbcqxisjw==
   dependencies:
     "@tweenjs/tween.js" "^18.6.4"
     "@voxelize/aabb" "*"

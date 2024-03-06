@@ -6,6 +6,8 @@ use voxelize::{
 const PLANT_SCALE: f32 = 0.6;
 
 pub fn get_registry() -> Registry {
+    let mut registry = Registry::new();
+
     let slab_top_faces = BlockFaces::six_faces()
         .scale_y(0.5)
         .offset_y(0.5)
@@ -16,6 +18,50 @@ pub fn get_registry() -> Registry {
 
     let slab_bottom_faces = BlockFaces::six_faces().scale_y(0.5).uv_scale_y(0.5).build();
     let slab_bottom_aabb = [AABB::new().scale_y(0.5).build()];
+
+    let torch_body_faces = BlockFaces::six_faces()
+        .scale_y(0.5)
+        .scale_x(0.1)
+        .scale_z(0.1)
+        .uv_offset_x(0.45)
+        .uv_offset_z(0.45)
+        .uv_scale_x(0.1)
+        .uv_scale_z(0.1)
+        .uv_scale_y(0.5)
+        .offset_x(0.45)
+        .offset_z(0.45)
+        .suffix("body")
+        .build();
+    let torch_head_faces = BlockFaces::six_faces()
+        .scale_x(0.1)
+        .scale_y(0.1)
+        .scale_z(0.1)
+        .offset_y(0.51)
+        .offset_x(0.45)
+        .offset_z(0.45)
+        .uv_offset_x(0.45)
+        .uv_offset_z(0.45)
+        .uv_offset_z(0.51)
+        .uv_scale_x(0.1)
+        .uv_scale_z(0.1)
+        .uv_scale_y(0.1)
+        .suffix("head")
+        .build();
+    let torch_aabbs = AABB::from_faces(&torch_body_faces);
+    let torch_body_faces = torch_body_faces.to_vec();
+    let torch_head_faces = torch_head_faces.to_vec();
+    let torch_faces = [torch_body_faces, torch_head_faces].concat();
+
+    registry.register_block(
+        &Block::new("Torch")
+            .id(40000)
+            .faces(&torch_faces)
+            .aabbs(&[torch_aabbs])
+            .is_transparent(true)
+            .is_passable(true)
+            .torch_light_level(10)
+            .build(),
+    );
 
     let grass_faces = BlockFaces::diagonal_faces()
         .scale_horizontal(PLANT_SCALE)
@@ -67,8 +113,6 @@ pub fn get_registry() -> Registry {
             .rotatable(true)
             .build()
     };
-
-    let mut registry = Registry::new();
 
     registry.register_air_active_fn(
         |_, _, _| 0,
