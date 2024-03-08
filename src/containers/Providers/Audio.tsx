@@ -96,9 +96,19 @@ export const AudioProvider = ({
     let shouldPlay = false;
     let soundSource: 'landing' | 'walking' | null = null;
     let lastRestY = 0;
+    let lastVelocityMagnitude = 0;
 
     updateHooks.push(() => {
-      if (rigidControls.state.running && rigidControls.body.atRestY === -1) {
+      const velocity = rigidControls.body.velocity;
+      const velocityMagnitude =
+        velocity[0] ** 2 + velocity[1] ** 2 + velocity[2] ** 2;
+      lastVelocityMagnitude = velocityMagnitude;
+
+      if (
+        rigidControls.state.running &&
+        rigidControls.body.atRestY === -1 &&
+        lastVelocityMagnitude > 0
+      ) {
         shouldPlay = true;
         soundSource = 'landing';
       } else {
@@ -109,7 +119,8 @@ export const AudioProvider = ({
       if (!shouldPlay) {
         if (
           lastRestY !== rigidControls.body.atRestY &&
-          rigidControls.body.atRestY === -1
+          rigidControls.body.atRestY === -1 &&
+          Math.abs(velocityMagnitude) > 0.01
         ) {
           shouldPlay = true;
           soundSource = 'walking';
