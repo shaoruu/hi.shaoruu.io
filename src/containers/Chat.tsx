@@ -251,6 +251,7 @@ export function Chat() {
       () => {
         rigidControls.unlock();
         openChatInput();
+        showChatList();
       },
       'in-game',
     );
