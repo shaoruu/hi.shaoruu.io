@@ -850,6 +850,41 @@ export function VoxelizeProvider({
         );
       });
 
+      const zoomedFactor = 3;
+      const zoomLerpFactor = 0.1;
+      let targetZoomFactor = 1;
+
+      inputs.bind(
+        'z',
+        () => {
+          targetZoomFactor = zoomedFactor;
+          console.log('bruh');
+        },
+        'in-game',
+        {
+          occasion: 'keydown',
+        },
+      );
+      inputs.bind(
+        'z',
+        () => {
+          targetZoomFactor = 1;
+        },
+        'in-game',
+        {
+          occasion: 'keyup',
+        },
+      );
+
+      updateHooks.push(() => {
+        camera.zoom = THREE.MathUtils.lerp(
+          camera.zoom,
+          targetZoomFactor,
+          zoomLerpFactor,
+        );
+        camera.updateProjectionMatrix();
+      });
+
       itemSlots.connect(inputs);
 
       debug.registerDisplay('Holding', () => {
