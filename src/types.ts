@@ -1,5 +1,5 @@
 export type ChatItem = {
-  type: 'chat' | 'ian-chat';
+  type: 'chat' | 'owner-chat' | 'system';
   sender: string;
   body: string;
 };

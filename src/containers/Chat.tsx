@@ -24,6 +24,7 @@ export function Chat() {
     network,
     method,
     voxelInteract,
+    peers,
     entities,
     chatItems,
     setChatItems,
@@ -81,6 +82,7 @@ export function Chat() {
       !inputs ||
       !rigidControls ||
       !world ||
+      !peers ||
       !method ||
       !entities ||
       !voxelInteract
@@ -265,6 +267,24 @@ export function Chat() {
       'in-game',
     );
 
+    peers.onPeerJoin = (id) => {
+      const peer = peers.getPeerById(id);
+      setTimeout(() => {
+        chat.onChat({
+          type: 'system',
+          body: `${peer.nametag.text} $gray$has joined the game`,
+        });
+        // some arbitrary number to wait until nametag is stable
+      }, 1000);
+    };
+
+    peers.onPeerLeave = (_, peer) => {
+      chat.onChat({
+        type: 'system',
+        body: `${peer.nametag.text} $gray$has left the game`,
+      });
+    };
+
     return () => {
       inputs.unbind('t');
       inputs.unbind(chat.commandSymbol);
@@ -285,6 +305,7 @@ export function Chat() {
     setChatItems,
     voxelInteract,
     world,
+    peers,
   ]);
 
   useEffect(() => {
@@ -317,7 +338,7 @@ export function Chat() {
             {chatItem.sender && (
               <>
                 <ColorText callback={() => {}}>
-                  {chatItem.type === 'ian-chat'
+                  {chatItem.type === 'owner-chat'
                     ? `$red$[OWNER]$white$ ${getQueryUsername() ?? 'Ian'}`
                     : `${chatItem.sender}`}
                 </ColorText>
@@ -345,7 +366,7 @@ export function Chat() {
             const queryUsername = getQueryUsername();
 
             chat?.send({
-              type: isAdmin() ? 'ian-chat' : 'chat',
+              type: isAdmin() ? 'owner-chat' : 'chat',
               sender: queryUsername
                 ? `$#FBFADA$${queryUsername}`
                 : network?.clientInfo.username,
