@@ -858,7 +858,6 @@ export function VoxelizeProvider({
         'z',
         () => {
           targetZoomFactor = zoomedFactor;
-          console.log('bruh');
         },
         'in-game',
         {
