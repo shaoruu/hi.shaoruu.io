@@ -2366,9 +2366,9 @@ checksum = "49874b5167b65d7193b8aba1567f5c7d93d001cafc34600cee003eda787e483f"
 
 [[package]]
 name = "voxelize"
-version = "0.8.63"
+version = "0.8.64"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "647bc93fc6a94589eb10028c2b0375c8d255d6833c4e23ff74ea4f4eae2eefea"
+checksum = "8244f6d0a67402b16843c451941b4d8609fd5f483c7edcca5558887b41c63f86"
 dependencies = [
  "actix",
  "actix-cors",
@@ -2391,6 +2391,7 @@ dependencies = [
  "nanoid",
  "noise",
  "num",
+ "pathfinding",
  "prost",
  "prost-build",
  "rapier3d",
