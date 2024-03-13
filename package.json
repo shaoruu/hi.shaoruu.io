@@ -8,7 +8,7 @@
     "dev:core": "cd core && cross-env RUST_BACKTRACE=full cargo watch -w src -x \"run --release\"",
     "dev:server": "cross-env NODE_ENV=development nodemon",
     "start": "npm-run-all -p start:*",
-    "start:core": "pm2 start ecosystem.config.js --only core-app",
+    "start:core": "pm2 start ecosystem.config.js --only core-app --attach",
     "start:server": "cross-env NODE_ENV=production ts-node --project tsconfig.server.json -r tsconfig-paths/register server/index.ts",
     "kill": "lsof -ti:4000 | xargs kill && pm2 kill",
     "build": "tsc && vite build",
