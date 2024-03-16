@@ -286,6 +286,7 @@ export function VoxelizeProvider({
         initialPosition: [0, 40, 0],
         flyForce: 500,
         flyImpulse: 3,
+        airJumps: 3,
         ...rigidControlsOptions,
       },
     );
