@@ -1,5 +1,6 @@
 import { Agility } from '../components/Agility';
 import { AIVoxelizer } from '../components/AIVoxelizer';
+import { Ambient } from '../components/Ambient';
 import { Crosshair } from '../components/Crosshair';
 import { Editing } from '../components/Editing';
 import { Inventory } from '../components/Inventory';
@@ -24,6 +25,7 @@ export function App() {
         <Inventory />
         <AIVoxelizer />
         <Agility />
+        <Ambient />
         <Editing />
         <LinkBlocks />
         {/* <Menu /> */}

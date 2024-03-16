@@ -42,7 +42,9 @@ export function Editing() {
       const limit = updatePositions.length > 3 ? 1 : updatePositions.length;
       for (let i = 0; i < limit; i++) {
         const [vx, vy, vz] = updatePositions[i];
-        playAudio(BlockSound, 1, new Vector3(vx, vy, vz));
+        playAudio(BlockSound, 1, {
+          position: new Vector3(vx, vy, vz),
+        });
       }
       updatePositions.length = 0;
     });

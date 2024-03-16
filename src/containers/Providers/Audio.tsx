@@ -9,7 +9,7 @@ import FootSteps3SFX from '../../assets/sounds/game/footsteps3.ogg';
 import FootSteps4SFX from '../../assets/sounds/game/footsteps4.ogg';
 import { useVoxelize } from '../../hooks/useVoxelize';
 
-import { AudioContext } from '@/src/contexts/audio';
+import { AudioContext, type PlayAudioOptions } from '@/src/contexts/audio';
 
 const WALKING_VOLUME = 0.05;
 const LANDING_VOLUME = 0.1;
@@ -28,7 +28,11 @@ export const AudioProvider = ({
   const listenerRef = useRef<null | THREE.AudioListener>(null);
 
   const playAudio = useCallback(
-    async (audio: string, volume: number, position?: THREE.Vector3) => {
+    async (
+      audio: string,
+      volume: number,
+      options?: Partial<PlayAudioOptions>,
+    ) => {
       if (!camera || !world) return;
 
       let audioLoader = audioLoaderRef.current as THREE.AudioLoader;
@@ -45,6 +49,8 @@ export const AudioProvider = ({
         listener = listenerRef.current;
       }
 
+      const { position, shouldRepeat, repeatDelay } = options ?? {};
+
       camera.add(listener);
 
       const sound = position
@@ -57,20 +63,35 @@ export const AudioProvider = ({
         world.add(sound);
       }
 
-      return new Promise<void>((resolve) => {
+      return new Promise<() => void | undefined>((resolve) => {
         audioLoader.load(audio, (buffer) => {
           sound.setBuffer(buffer);
           sound.setVolume(volume);
           sound.setLoop(false);
           sound.play();
-          if (sound.source)
-            sound.source.onended = () => {
-              if (position) world.remove(sound);
-              camera.remove(listener);
 
-              resolve();
-            };
-          else resolve();
+          const removeAudio = () => {
+            if (position) world.remove(sound);
+            camera.remove(listener);
+          };
+
+          const repeatLogic = () => {
+            if (!sound.source) return;
+
+            if (shouldRepeat) {
+              sound.source.onended = () => {
+                setTimeout(() => {
+                  sound.play();
+                }, repeatDelay);
+              };
+            } else {
+              sound.source.onended = removeAudio;
+            }
+          };
+
+          repeatLogic();
+
+          resolve(removeAudio);
         });
       });
     },
@@ -89,7 +110,7 @@ export const AudioProvider = ({
       const track = tracks[Math.floor(Math.random() * tracks.length)];
       const below = rigidControls.position.clone();
       below.y -= 2;
-      return playAudio(track, volume, below);
+      return playAudio(track, volume, { position: below });
     };
 
     let playing = false;
