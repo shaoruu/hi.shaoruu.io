@@ -286,7 +286,6 @@ export function VoxelizeProvider({
         initialPosition: [0, 40, 0],
         flyForce: 500,
         flyImpulse: 3,
-        airJumps: 3,
         ...rigidControlsOptions,
       },
     );
@@ -831,9 +830,23 @@ export function VoxelizeProvider({
           window.location.reload();
         });
 
-      const rememberedGuiData = {
-        alwaysSprint: true,
+      const saveKey = 'voxelizeGuiSettings';
+      const loadGuiData = () => {
+        const savedData = localStorage.getItem(saveKey);
+        return savedData ? JSON.parse(savedData) : { alwaysSprint: true };
       };
+
+      const rememberedGuiData = loadGuiData();
+
+      gui.add(rememberedGuiData, 'alwaysSprint').onChange((value) => {
+        rigidControls.options.alwaysSprint = value;
+        localStorage.setItem(
+          saveKey,
+          JSON.stringify({ ...rememberedGuiData, alwaysSprint: value }),
+        );
+      });
+
+      rigidControls.options.alwaysSprint = rememberedGuiData.alwaysSprint;
 
       if (isUserAdmin) {
         gui.add(world, 'renderRadius', 3, 20, 1);

@@ -23,11 +23,30 @@
   src: url('../assets/fonts/ConnectionSerif-d20X.otf');
 }
 
-* {
+*:not(.dg, .dg *) {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
   font-family: 'ConnectionSerif-d20X';
+}
+
+.dg {
+  select {
+    background: #1a1a1a !important;
+    color: #fff !important;
+    border-radius: 4px !important;
+  }
+}
+
+.save-row {
+  background: #1b1b1b !important;
+  border-bottom: 1px solid #2c2c2c !important;
+  display: flex;
+  align-items: center;
+
+  .button {
+    background-color: #343434 !important;
+  }
 }
 
 html,
