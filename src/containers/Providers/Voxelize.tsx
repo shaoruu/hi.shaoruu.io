@@ -33,7 +33,7 @@ import {
   type RigidControlsOptions,
   type WorldOptions,
 } from '@voxelize/core';
-import { GUI } from 'lil-gui';
+import { GUI } from 'dat.gui';
 import {
   EffectComposer,
   EffectPass,
@@ -830,6 +830,10 @@ export function VoxelizeProvider({
           localStorage.setItem(voxelizeWorldLocalStorageKey, worldName);
           window.location.reload();
         });
+
+      const rememberedGuiData = {
+        alwaysSprint: true,
+      };
 
       if (isUserAdmin) {
         gui.add(world, 'renderRadius', 3, 20, 1);

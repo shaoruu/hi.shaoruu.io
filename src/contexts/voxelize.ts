@@ -17,7 +17,7 @@ import type {
   VoxelInteract,
   World,
 } from '@voxelize/core';
-import type { GUI } from 'lil-gui';
+import type { GUI } from 'dat.gui';
 import type { PerspectiveCamera } from 'three';
 
 import type { PeersData } from '../containers/Providers/Voxelize';
