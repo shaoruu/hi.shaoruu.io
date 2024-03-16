@@ -1,6 +1,6 @@
 use voxelize::{
-    Block, BlockConditionalPart, BlockDynamicPattern, BlockFaces, BlockRule, BlockRuleLogic,
-    BlockSimpleRule, Registry, Vec3, VoxelPacker, AABB, SIX_FACES_PY,
+    Block, BlockConditionalPart, BlockDynamicPattern, BlockFaces, BlockRotation, BlockRule,
+    BlockRuleLogic, BlockSimpleRule, Registry, Vec3, VoxelPacker, AABB, SIX_FACES_PY,
 };
 
 const PLANT_SCALE: f32 = 0.6;
@@ -294,6 +294,15 @@ pub fn get_registry() -> Registry {
         .transparent_standalone(true)
         .build();
     registry.register_block(&fence_block);
+
+    let art_panel_base_block = Block::new("Art Panel Base")
+        .id(50001)
+        .is_transparent(true)
+        .faces(&[])
+        .is_entity(true)
+        .build();
+
+    registry.register_block(&art_panel_base_block);
 
     let make_top_slab = |name: &str, id: u32| {
         Block::new(name)

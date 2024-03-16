@@ -23,11 +23,25 @@
   src: url('../assets/fonts/ConnectionSerif-d20X.otf');
 }
 
-*:not(.dg, .dg *) {
+.base-styles {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
   font-family: 'ConnectionSerif-d20X';
+}
+
+// Apply the .base-styles globally but exclude .dg
+* {
+  @extend .base-styles;
+}
+
+// Reset or override styles for .dg and its children
+.dg,
+.dg * {
+  padding: revert;
+  margin: revert;
+  box-sizing: revert;
+  font-family: revert; // Or specify a different font-family if desired
 }
 
 .dg {
