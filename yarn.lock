@@ -965,10 +965,10 @@
     typescript "^4.6.4"
     vitest "^0.10.4"
 
-"@voxelize/core@^0.1.167":
-  version "0.1.167"
-  resolved "https://registry.yarnpkg.com/@voxelize/core/-/core-0.1.167.tgz#ea3446606c21f41defbf2d4b24c0794966b7aae2"
-  integrity sha512-PTig62lvPmDGByYzEfLEDblpY0bhSh9EojjxA+hGRvBMjdDCnBzLdfAv9+NyS9LZUTJr8cYbrLxhfsGpaX+8fw==
+"@voxelize/core@^0.1.168":
+  version "0.1.168"
+  resolved "https://registry.yarnpkg.com/@voxelize/core/-/core-0.1.168.tgz#0106eb3c40d991940cfe90ad722898c6ee78d92b"
+  integrity sha512-OZDZUb9NdSFkHsmp/d9Z247buoVe2AX5dnJZt2nI4cnd727+y5zp4gVNG5NZAp1yU88Thj+JGYdLH+WQgr4SfA==
   dependencies:
     "@tweenjs/tween.js" "^18.6.4"
     "@voxelize/aabb" "*"

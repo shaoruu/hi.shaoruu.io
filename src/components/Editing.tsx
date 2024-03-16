@@ -221,6 +221,12 @@ export function Editing() {
         const [tvx, tvy, tvz] = voxelInteract.target || [0, 0, 0];
         const block = world.getBlockAt(tvx, tvy, tvz);
         if (blocksToSkip.includes(block?.name || '')) return;
+
+        // handle entity right click
+        if (block.isEntity) {
+          console.log(block);
+          return;
+        }
       }
 
       const slot = itemSlots.getFocused();

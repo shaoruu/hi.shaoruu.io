@@ -295,14 +295,24 @@ pub fn get_registry() -> Registry {
         .build();
     registry.register_block(&fence_block);
 
-    let art_panel_base_block = Block::new("Art Panel Base")
+    let painting_block_size = 0.3;
+    let painting_block_faces = BlockFaces::six_faces()
+        .scale_x(painting_block_size)
+        .scale_y(painting_block_size)
+        .scale_z(painting_block_size)
+        .offset_x((1.0 - painting_block_size) / 2.0)
+        .offset_z((1.0 - painting_block_size) / 2.0)
+        .auto_uv_offset(true)
+        .build();
+    let painting_block_aabb = AABB::from_faces(&painting_block_faces);
+    let painting_block = Block::new("Painting")
         .id(50001)
         .is_transparent(true)
         .faces(&[])
+        .aabbs(&[painting_block_aabb])
         .is_entity(true)
         .build();
-
-    registry.register_block(&art_panel_base_block);
+    registry.register_block(&painting_block);
 
     let make_top_slab = |name: &str, id: u32| {
         Block::new(name)
