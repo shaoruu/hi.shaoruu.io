@@ -316,7 +316,7 @@ export async function makeRegistry(world: World) {
     // Display current date below the time
     ctx.font = `${currentTimeWidth * 0.06}px ConnectionSerif-d20X`; // Slightly smaller font for the date
     ctx.fillText(
-      dateString,
+      `${dateString} (local)`,
       currentTimeWidth / 2,
       textYPosition + currentTimeWidth * 0.1, // Position the date below the time
     );
