@@ -21,6 +21,7 @@ import type { GUI } from 'dat.gui';
 import type { PerspectiveCamera } from 'three';
 
 import type { PeersData } from '../containers/Providers/Voxelize';
+import type { BlockEntities } from '../core/block-entities';
 import type { Triggers } from '../core/trigger';
 import type { ChatItem } from '../types';
 
@@ -45,6 +46,7 @@ export type VoxelizeContextData = {
   debug?: Debug;
   gui?: GUI;
   triggers?: Triggers;
+  blockEntities?: BlockEntities;
 
   camera?: PerspectiveCamera;
 

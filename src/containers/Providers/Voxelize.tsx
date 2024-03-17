@@ -60,6 +60,7 @@ import {
   VoxelizeContext,
   type VoxelizeContextData,
 } from '@/src/contexts/voxelize';
+import { BlockEntities } from '@/src/core/block-entities';
 import { Trigger, Triggers } from '@/src/core/trigger';
 import type { ChatItem } from '@/src/types';
 import { isAdmin } from '@/src/utils/isAdmin';
@@ -143,6 +144,7 @@ export function VoxelizeProvider({
   const debugRef = useRef<Debug | null>(null);
   const guiRef = useRef<GUI | null>(null);
   const chatRef = useRef<Chat | null>(null);
+  const blockEntitiesRef = useRef<BlockEntities | null>(null);
   const updateHooksRef = useRef<(() => void)[] | null>(null);
 
   const [isConnecting, setIsConnecting] = useState(true);
@@ -593,6 +595,9 @@ export function VoxelizeProvider({
     entities.setClass('bot', Bot);
     world.add(entities);
 
+    const blockEntities = new BlockEntities(world);
+    blockEntitiesRef.current = blockEntities;
+
     network.register(entities);
 
     entitiesRef.current = entities;
@@ -970,6 +975,7 @@ export function VoxelizeProvider({
       triggers: triggersRef.current!,
       gui: guiRef.current!,
       itemSlots: itemSlotsRef.current!,
+      blockEntities: blockEntitiesRef.current!,
     };
   }, [isConnecting, worldName]);
 

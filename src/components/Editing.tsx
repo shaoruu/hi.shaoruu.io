@@ -23,6 +23,7 @@ export function Editing() {
     rigidControls,
     updateHooks,
     setChatItems,
+    blockEntities,
   } = useVoxelize();
 
   const { playAudio } = useAudio();
@@ -57,7 +58,8 @@ export function Editing() {
       !world ||
       !debug ||
       !itemSlots ||
-      !rigidControls
+      !rigidControls ||
+      !blockEntities
     ) {
       return;
     }
@@ -224,7 +226,7 @@ export function Editing() {
 
         // handle entity right click
         if (block.isEntity) {
-          console.log(block);
+          blockEntities.handleRightClickAt(tvx, tvy, tvz);
           return;
         }
       }
