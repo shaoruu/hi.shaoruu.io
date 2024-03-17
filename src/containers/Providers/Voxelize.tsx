@@ -279,6 +279,18 @@ export function VoxelizeProvider({
     /*                            SETUP RIGID CONTROLS                            */
     /* -------------------------------------------------------------------------- */
     const { rigidControls: rigidControlsOptions } = options;
+    const directionProbabilities = [
+      { direction: [1, 0, 0] as [number, number, number], probability: 0.35 },
+      { direction: [-1, 0, 0] as [number, number, number], probability: 0.75 },
+      { direction: [0, 0, -1] as [number, number, number], probability: 0.88 },
+      { direction: [0, 0, 1] as [number, number, number], probability: 1 },
+    ];
+
+    const randomValue = Math.random();
+    const initialDirection =
+      directionProbabilities.find(
+        ({ probability }) => randomValue < probability,
+      )?.direction || ([0, 0, 0] as [number, number, number]);
 
     const rigidControls = new RigidControls(
       camera,
@@ -286,17 +298,10 @@ export function VoxelizeProvider({
       world,
       {
         initialPosition: [0, 40, 0],
-        // random ass AB(CD) test
         initialDirection:
           worldName === 'main'
-            ? Math.random() < 1 / 4
-              ? [1, 0, 0]
-              : Math.random() < 2 / 4
-              ? [-1, 0, 0]
-              : Math.random() < 3 / 4
-              ? [0, 0, 1]
-              : [0, 0, -1]
-            : [0, 0, 0],
+            ? initialDirection
+            : ([0, 0, 0] as [number, number, number]),
         flyForce: 500,
         flyImpulse: 3,
         ...rigidControlsOptions,
