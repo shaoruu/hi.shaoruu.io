@@ -333,7 +333,6 @@ pub fn get_registry() -> Registry {
         .aabbs(&[AABB::from_faces(&small_display_block_faces)])
         .rotatable(true)
         .y_rotatable(true)
-        .is_entity(true)
         .build();
     let current_time_block = Block::new("Current Time")
         .id(50003)
@@ -342,7 +341,6 @@ pub fn get_registry() -> Registry {
         .aabbs(&[AABB::from_faces(&small_display_block_faces)])
         .rotatable(true)
         .y_rotatable(true)
-        .is_entity(true)
         .build();
     registry.register_blocks(&[year_percentage_block, current_time_block]);
 

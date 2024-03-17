@@ -1,5 +1,5 @@
 import { customShaders, type World } from '@voxelize/core';
-import { CanvasTexture, Color, NearestFilter } from 'three';
+import { CanvasTexture, Color, NearestFilter, SRGBColorSpace } from 'three';
 
 import Amethyst from '../assets/images/blocks/amethyst.png';
 import Andersite from '../assets/images/blocks/andersite_block.png';
@@ -205,13 +205,16 @@ export async function makeRegistry(world: World) {
 
     // Padding adjustments
     const padding = width * 0.05; // 5% padding
+    const border = padding * 0.5;
     const bottomTextPadding = width * 0.1; // Additional padding for text at the bottom
     const paddedWidth = width - padding * 2;
     const paddedHeight = height - padding - bottomTextPadding; // Adjusted for bottom text
 
     // Background
-    ctx.fillStyle = '#000000'; // Black background
+    ctx.fillStyle = '#240A34'; // Purple border
     ctx.fillRect(0, 0, width, height);
+    ctx.fillStyle = '#222831'; // Black background
+    ctx.fillRect(border, border, width - border * 2, height - border * 2);
 
     // Calculate year progress
     const now = new Date();
@@ -220,18 +223,64 @@ export async function makeRegistry(world: World) {
     const yearPassed =
       (now.getTime() - start.getTime()) / (end.getTime() - start.getTime());
 
-    // Progress bar background
-    ctx.fillStyle = '#121212'; // Black background for the progress bar
-    ctx.fillRect(padding, padding, paddedWidth, paddedHeight);
+    // Function to draw a rectangle with optional rounded right border radius
+    function drawRoundedRect(
+      ctx: CanvasRenderingContext2D,
+      x: number,
+      y: number,
+      width: number,
+      height: number,
+      radius: number,
+      roundedRight: boolean = true, // Added parameter to control right border radius rounding
+    ): void {
+      ctx.beginPath();
+      ctx.moveTo(x + radius, y);
+      ctx.lineTo(x + width - (roundedRight ? radius : 0), y); // Conditional radius based on roundedRight
+      if (roundedRight) {
+        ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+        ctx.lineTo(x + width, y + height - radius);
+        ctx.quadraticCurveTo(
+          x + width,
+          y + height,
+          x + width - radius,
+          y + height,
+        );
+      } else {
+        ctx.lineTo(x + width, y); // Straight line if not rounded
+        ctx.lineTo(x + width, y + height);
+        ctx.lineTo(x + width - radius, y + height); // Straight line to start left rounding
+      }
+      ctx.lineTo(x + radius, y + height);
+      ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+      ctx.lineTo(x, y + radius);
+      ctx.quadraticCurveTo(x, y, x + radius, y);
+      ctx.closePath();
+      ctx.fill();
+    }
 
-    // Progress bar
-    ctx.fillStyle = '#00FF00'; // Green bar
-    ctx.fillRect(padding, padding, paddedWidth * yearPassed, paddedHeight);
+    // Progress bar background with border radius
+    ctx.fillStyle = '#F7EEDD'; // Background color for the progress bar
+    drawRoundedRect(ctx, padding, padding, paddedWidth, paddedHeight, 4, true); // Keep right border rounded for background
 
+    // Progress bar with optional rounded right border radius
+    ctx.fillStyle = '#4CCD99'; // Green bar
+    const progressBarWidth: number = paddedWidth * yearPassed;
+    drawRoundedRect(
+      ctx,
+      padding,
+      padding,
+      progressBarWidth,
+      paddedHeight,
+      4,
+      false,
+    ); // Turn off right border rounding for progress bar
     // Data text
     ctx.font = `${width * 0.04}px ConnectionSerif-d20X`;
     ctx.fillStyle = '#FFFFFF'; // White text
-    const text = `${Math.round(yearPassed * 100)}% of the year passed`;
+    const text = `${Math.round(yearPassed * 100)}% of ${
+      // current year
+      now.getFullYear()
+    } passed`;
     ctx.textAlign = 'center'; // Align text to center horizontally
     ctx.fillText(text, width / 2, height - padding); // Center text
 
@@ -242,12 +291,9 @@ export async function makeRegistry(world: World) {
 
   yearProgressTexture.magFilter = NearestFilter;
   yearProgressTexture.minFilter = NearestFilter;
+  yearProgressTexture.colorSpace = SRGBColorSpace;
 
-  await world.applyBlockTexture(
-    'Year Percentage',
-    'pz',
-    yearProgressCanvas.toDataURL(),
-  );
+  await world.applyBlockTexture('Year Percentage', 'pz', yearProgressTexture);
 
   await world.applyBlockTexture('Current Time', all, Obsidian);
 
@@ -255,11 +301,12 @@ export async function makeRegistry(world: World) {
   const currentTimeHeight = (currentTimeWidth / 0.8) * 0.3;
   // Padding adjustments
   const currentTimePadding = currentTimeWidth * 0.05; // 5% padding
-  const currentTimePaddedWidth = currentTimeWidth - currentTimePadding * 2;
-  const currentTimePaddedHeight = currentTimeHeight - currentTimePadding * 2; // Adjusted height for time display
+  const currentTimeBorder = currentTimePadding * 0.5;
 
   const createCurrentTimeCanvas = () => {
     const canvas = document.createElement('canvas');
+    canvas.style.imageRendering = 'pixelated'; // Ensures no blur on the canvas
+
     const ctx = canvas.getContext('2d');
     if (!ctx) {
       throw new Error('Failed to get canvas context');
@@ -267,10 +314,6 @@ export async function makeRegistry(world: World) {
 
     canvas.width = currentTimeWidth;
     canvas.height = currentTimeHeight;
-
-    // Background
-    ctx.fillStyle = '#000000'; // Black background
-    ctx.fillRect(0, 0, currentTimeWidth, currentTimeHeight);
 
     return canvas;
   };
@@ -296,16 +339,19 @@ export async function makeRegistry(world: World) {
     const dateString = now.toLocaleDateString(); // Get current date in local format
 
     // Clear previous time and date display
-    ctx.fillStyle = '#000000'; // Black background to clear with
+    // Background
+    ctx.fillStyle = '#240A34'; // Purple border
+    ctx.fillRect(0, 0, currentTimeWidth, currentTimeHeight);
+    ctx.fillStyle = '#222831'; // Black background
     ctx.fillRect(
-      currentTimePadding,
-      currentTimePadding,
-      currentTimePaddedWidth,
-      currentTimePaddedHeight + currentTimeWidth * 0.1, // Adjust bottom padding based on width
+      currentTimeBorder,
+      currentTimeBorder,
+      currentTimeWidth - currentTimeBorder * 2,
+      currentTimeHeight - currentTimeBorder * 2,
     );
 
     // Display current time in a more readable format
-    ctx.font = `${currentTimeWidth * 0.15}px ConnectionSerif-d20X`; // Adjust font size for the new format
+    ctx.font = `${currentTimeWidth * 0.14}px ConnectionSerif-d20X`; // Adjust font size for the new format
     ctx.fillStyle = '#FFFFFF'; // White text for better contrast
     ctx.textAlign = 'center'; // Center text horizontally
     // Adjust position for centering the text with the new format, considering additional date display
@@ -314,11 +360,18 @@ export async function makeRegistry(world: World) {
     ctx.fillText(timeString, currentTimeWidth / 2, textYPosition);
 
     // Display current date below the time
-    ctx.font = `${currentTimeWidth * 0.06}px ConnectionSerif-d20X`; // Slightly smaller font for the date
+    ctx.font = `${currentTimeWidth * 0.055}px ConnectionSerif-d20X`; // Slightly smaller font for the date
     ctx.fillText(
-      `${dateString} (local)`,
+      dateString,
       currentTimeWidth / 2,
-      textYPosition + currentTimeWidth * 0.1, // Position the date below the time
+      textYPosition + currentTimeWidth * 0.08, // Position the date below the time
+    );
+    ctx.font = `${currentTimeWidth * 0.035}px ConnectionSerif-d20X`; // Slightly smaller font for the date
+    ctx.fillStyle = '#aaa';
+    ctx.fillText(
+      `${Intl.DateTimeFormat().resolvedOptions().timeZone}`,
+      currentTimeWidth / 2,
+      textYPosition + currentTimeWidth * 0.12, // Position the timezone slightly below the date
     );
 
     currentTimeTexture.needsUpdate = true;
@@ -332,6 +385,7 @@ export async function makeRegistry(world: World) {
 
   currentTimeTexture.minFilter = NearestFilter;
   currentTimeTexture.magFilter = NearestFilter;
+  currentTimeTexture.colorSpace = SRGBColorSpace;
 
   await world.applyBlockTexture('Current Time', 'pz', currentTimeTexture);
 
