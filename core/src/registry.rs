@@ -1,6 +1,7 @@
 use voxelize::{
     Block, BlockConditionalPart, BlockDynamicPattern, BlockFaces, BlockRotation, BlockRule,
-    BlockRuleLogic, BlockSimpleRule, Registry, Vec3, VoxelPacker, AABB, SIX_FACES_PY,
+    BlockRuleLogic, BlockSimpleRule, Registry, Vec3, VoxelPacker, AABB, SIX_FACES_PX, SIX_FACES_PY,
+    SIX_FACES_PZ,
 };
 
 const PLANT_SCALE: f32 = 0.6;
@@ -313,6 +314,28 @@ pub fn get_registry() -> Registry {
         .is_entity(true)
         .build();
     registry.register_block(&painting_block);
+
+    let year_percentage_block_dimensions = (0.8, 0.3, 0.3);
+    let year_percentage_block_faces = BlockFaces::six_faces()
+        .scale_x(year_percentage_block_dimensions.0)
+        .scale_y(year_percentage_block_dimensions.1)
+        .scale_z(year_percentage_block_dimensions.2)
+        .offset_x((1.0 - year_percentage_block_dimensions.0) / 2.0)
+        .offset_z((1.0 - year_percentage_block_dimensions.2) / 2.0)
+        .auto_uv_offset(true)
+        .independent_at(SIX_FACES_PZ)
+        .build();
+
+    let year_percentage_block = Block::new("Year Percentage")
+        .id(50002)
+        .is_transparent(true)
+        .faces(&year_percentage_block_faces)
+        .aabbs(&[AABB::from_faces(&year_percentage_block_faces)])
+        .rotatable(true)
+        .y_rotatable(true)
+        .is_entity(true)
+        .build();
+    registry.register_block(&year_percentage_block);
 
     let make_top_slab = |name: &str, id: u32| {
         Block::new(name)

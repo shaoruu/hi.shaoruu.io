@@ -1,5 +1,5 @@
 import { customShaders, type World } from '@voxelize/core';
-import { Color } from 'three';
+import { CanvasTexture, Color, NearestFilter } from 'three';
 
 import Amethyst from '../assets/images/blocks/amethyst.png';
 import Andersite from '../assets/images/blocks/andersite_block.png';
@@ -188,6 +188,72 @@ export async function makeRegistry(world: World) {
       );
     }
   }
+
+  await world.applyBlockTexture('Year Percentage', all, Obsidian);
+
+  const createYearProgressCanvas = () => {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    if (!ctx) {
+      throw new Error('Failed to get canvas context');
+    }
+    const width = 300;
+    const height = (width / 0.8) * 0.3;
+
+    canvas.width = width;
+    canvas.height = height;
+
+    // Padding adjustments
+    const padding = width * 0.05; // 5% padding
+    const bottomTextPadding = width * 0.1; // Additional padding for text at the bottom
+    const paddedWidth = width - padding * 2;
+    const paddedHeight = height - padding - bottomTextPadding; // Adjusted for bottom text
+
+    // Background
+    ctx.fillStyle = '#000000'; // Black background
+    ctx.fillRect(0, 0, width, height);
+
+    // Calculate year progress
+    const now = new Date();
+    const start = new Date(now.getFullYear(), 0, 0);
+    const end = new Date(now.getFullYear() + 1, 0, 0);
+    const yearPassed =
+      (now.getTime() - start.getTime()) / (end.getTime() - start.getTime());
+
+    // Progress bar background
+    ctx.fillStyle = '#121212'; // Black background for the progress bar
+    ctx.fillRect(padding, padding, paddedWidth, paddedHeight);
+
+    // Progress bar
+    ctx.fillStyle = '#00FF00'; // Green bar
+    ctx.fillRect(padding, padding, paddedWidth * yearPassed, paddedHeight);
+
+    // Data text
+    ctx.font = `${width * 0.04}px ConnectionSerif-d20X`;
+    ctx.fillStyle = '#FFFFFF'; // White text
+    const text = `${Math.round(yearPassed * 100)}% of the year passed`;
+    ctx.textAlign = 'center'; // Align text to center horizontally
+    ctx.fillText(text, width / 2, height - padding); // Center text
+
+    return canvas;
+  };
+  const yearProgressCanvas = createYearProgressCanvas();
+  const yearProgressTexture = new CanvasTexture(yearProgressCanvas);
+
+  yearProgressTexture.magFilter = NearestFilter;
+  yearProgressTexture.minFilter = NearestFilter;
+
+  await world.applyBlockTexture(
+    'Year Percentage',
+    'pz',
+    yearProgressCanvas.toDataURL(),
+  );
+
+  console.log(
+    world
+      .getBlockByName('Year Percentage')
+      .faces.find((face) => face.name === 'pz'),
+  );
 
   await world.applyBlockTexture('Trophy (mc.js)', 'cuppz', MCJS);
   await world.applyBlockTexture('Trophy (mine.js)', 'cuppz', MineJS);
