@@ -288,13 +288,15 @@ export function VoxelizeProvider({
         initialPosition: [0, 40, 0],
         // random ass AB(CD) test
         initialDirection:
-          Math.random() < 1 / 4
-            ? [1, 0, 0]
-            : Math.random() < 2 / 4
-            ? [-1, 0, 0]
-            : Math.random() < 3 / 4
-            ? [0, 0, 1]
-            : [0, 0, -1],
+          worldName === 'main'
+            ? Math.random() < 1 / 4
+              ? [1, 0, 0]
+              : Math.random() < 2 / 4
+              ? [-1, 0, 0]
+              : Math.random() < 3 / 4
+              ? [0, 0, 1]
+              : [0, 0, -1]
+            : [0, 0, 0],
         flyForce: 500,
         flyImpulse: 3,
         ...rigidControlsOptions,
