@@ -315,13 +315,13 @@ pub fn get_registry() -> Registry {
         .build();
     registry.register_block(&painting_block);
 
-    let year_percentage_block_dimensions = (0.8, 0.3, 0.3);
-    let year_percentage_block_faces = BlockFaces::six_faces()
-        .scale_x(year_percentage_block_dimensions.0)
-        .scale_y(year_percentage_block_dimensions.1)
-        .scale_z(year_percentage_block_dimensions.2)
-        .offset_x((1.0 - year_percentage_block_dimensions.0) / 2.0)
-        .offset_z((1.0 - year_percentage_block_dimensions.2) / 2.0)
+    let small_display_block_dimensions = (0.8, 0.3, 0.3);
+    let small_display_block_faces = BlockFaces::six_faces()
+        .scale_x(small_display_block_dimensions.0)
+        .scale_y(small_display_block_dimensions.1)
+        .scale_z(small_display_block_dimensions.2)
+        .offset_x((1.0 - small_display_block_dimensions.0) / 2.0)
+        .offset_z((1.0 - small_display_block_dimensions.2) / 2.0)
         .auto_uv_offset(true)
         .independent_at(SIX_FACES_PZ)
         .build();
@@ -329,13 +329,22 @@ pub fn get_registry() -> Registry {
     let year_percentage_block = Block::new("Year Percentage")
         .id(50002)
         .is_transparent(true)
-        .faces(&year_percentage_block_faces)
-        .aabbs(&[AABB::from_faces(&year_percentage_block_faces)])
+        .faces(&small_display_block_faces)
+        .aabbs(&[AABB::from_faces(&small_display_block_faces)])
         .rotatable(true)
         .y_rotatable(true)
         .is_entity(true)
         .build();
-    registry.register_block(&year_percentage_block);
+    let current_time_block = Block::new("Current Time")
+        .id(50003)
+        .is_transparent(true)
+        .faces(&small_display_block_faces)
+        .aabbs(&[AABB::from_faces(&small_display_block_faces)])
+        .rotatable(true)
+        .y_rotatable(true)
+        .is_entity(true)
+        .build();
+    registry.register_blocks(&[year_percentage_block, current_time_block]);
 
     let make_top_slab = |name: &str, id: u32| {
         Block::new(name)

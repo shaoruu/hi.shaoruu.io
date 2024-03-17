@@ -197,7 +197,7 @@ export async function makeRegistry(world: World) {
     if (!ctx) {
       throw new Error('Failed to get canvas context');
     }
-    const width = 300;
+    const width = 400;
     const height = (width / 0.8) * 0.3;
 
     canvas.width = width;
@@ -248,6 +248,92 @@ export async function makeRegistry(world: World) {
     'pz',
     yearProgressCanvas.toDataURL(),
   );
+
+  await world.applyBlockTexture('Current Time', all, Obsidian);
+
+  const currentTimeWidth = 400;
+  const currentTimeHeight = (currentTimeWidth / 0.8) * 0.3;
+  // Padding adjustments
+  const currentTimePadding = currentTimeWidth * 0.05; // 5% padding
+  const currentTimePaddedWidth = currentTimeWidth - currentTimePadding * 2;
+  const currentTimePaddedHeight = currentTimeHeight - currentTimePadding * 2; // Adjusted height for time display
+
+  const createCurrentTimeCanvas = () => {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    if (!ctx) {
+      throw new Error('Failed to get canvas context');
+    }
+
+    canvas.width = currentTimeWidth;
+    canvas.height = currentTimeHeight;
+
+    // Background
+    ctx.fillStyle = '#000000'; // Black background
+    ctx.fillRect(0, 0, currentTimeWidth, currentTimeHeight);
+
+    return canvas;
+  };
+
+  const currentTimeCanvas = createCurrentTimeCanvas();
+  const currentTimeTexture = new CanvasTexture(currentTimeCanvas);
+
+  // Function to update time every second with a more readable format and display the current date
+  const updateTime = () => {
+    const ctx = currentTimeCanvas.getContext('2d');
+
+    if (!ctx) return;
+
+    const now = new Date();
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    const seconds = now.getSeconds().toString().padStart(2, '0');
+    // Use a more readable time format: HH:MM:SS AM/PM
+    const amPm = now.getHours() >= 12 ? 'PM' : 'AM';
+    const formattedHours = now.getHours() % 12 || 12; // Converts 24h to 12h format and treats 0 as 12
+    const timeString = `${formattedHours
+      .toString()
+      .padStart(2, '0')}:${minutes}:${seconds} ${amPm}`;
+    const dateString = now.toLocaleDateString(); // Get current date in local format
+
+    // Clear previous time and date display
+    ctx.fillStyle = '#000000'; // Black background to clear with
+    ctx.fillRect(
+      currentTimePadding,
+      currentTimePadding,
+      currentTimePaddedWidth,
+      currentTimePaddedHeight + currentTimeWidth * 0.1, // Adjust bottom padding based on width
+    );
+
+    // Display current time in a more readable format
+    ctx.font = `${currentTimeWidth * 0.15}px ConnectionSerif-d20X`; // Adjust font size for the new format
+    ctx.fillStyle = '#FFFFFF'; // White text for better contrast
+    ctx.textAlign = 'center'; // Center text horizontally
+    // Adjust position for centering the text with the new format, considering additional date display
+    const textYPosition =
+      currentTimeHeight / 2 + currentTimePadding - currentTimeWidth * 0.05;
+    ctx.fillText(timeString, currentTimeWidth / 2, textYPosition);
+
+    // Display current date below the time
+    ctx.font = `${currentTimeWidth * 0.06}px ConnectionSerif-d20X`; // Slightly smaller font for the date
+    ctx.fillText(
+      dateString,
+      currentTimeWidth / 2,
+      textYPosition + currentTimeWidth * 0.1, // Position the date below the time
+    );
+
+    currentTimeTexture.needsUpdate = true;
+  };
+
+  // Initial time update
+  updateTime();
+
+  // Update time every second
+  setInterval(updateTime, 1000);
+
+  currentTimeTexture.minFilter = NearestFilter;
+  currentTimeTexture.magFilter = NearestFilter;
+
+  await world.applyBlockTexture('Current Time', 'pz', currentTimeTexture);
 
   console.log(
     world
