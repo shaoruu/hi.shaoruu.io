@@ -354,15 +354,17 @@ export function VoxelizeProvider({
       inputs.bind('g', rigidControls.toggleGhostMode, 'in-game');
     }
 
-    const hideDebugUI = () => {
+    const hideUI = () => {
       debug.visible = !debug.visible;
       debug.dataWrapper.style.display = debug.visible ? 'block' : 'none';
       gui.domElement.style.display = debug.visible ? 'block' : 'none';
+      crosshairDom.style.display = debug.visible ? 'block' : 'none';
+      itemSlots.element.style.display = debug.visible ? 'block' : 'none';
       triggers.toggleVisible();
     };
 
     if (isUserAdmin) {
-      inputs.bind('j', hideDebugUI, 'in-game');
+      inputs.bind('j', hideUI, 'in-game');
     }
 
     inputsRef.current = inputs;
