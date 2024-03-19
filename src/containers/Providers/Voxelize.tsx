@@ -856,7 +856,17 @@ export function VoxelizeProvider({
       const saveKey = 'voxelizeGuiSettings';
       const loadGuiData = () => {
         const savedData = localStorage.getItem(saveKey);
-        return savedData ? JSON.parse(savedData) : { alwaysSprint: true };
+        const defaultData = {
+          alwaysSprint: true,
+          flyForce: 500,
+          flyImpulse: 3,
+        };
+        return savedData
+          ? {
+              ...defaultData,
+              ...JSON.parse(savedData),
+            }
+          : defaultData;
       };
 
       const rememberedGuiData = loadGuiData();
@@ -939,7 +949,26 @@ export function VoxelizeProvider({
       });
 
       if (isUserAdmin) {
-        gui.add(rigidControls.options, 'flyForce', 100, 600, 0.1);
+        gui
+          .add(rememberedGuiData, 'flyForce', 100, 600, 0.1)
+          .onChange((value) => {
+            rigidControls.options.flyForce = value;
+            localStorage.setItem(
+              saveKey,
+              JSON.stringify({ ...rememberedGuiData, flyForce: value }),
+            );
+          });
+        rigidControls.options.flyForce = rememberedGuiData.flyForce ?? 500;
+        gui
+          .add(rememberedGuiData, 'flyImpulse', 0.01, 6, 0.01)
+          .onChange((value) => {
+            rigidControls.options.flyImpulse = value;
+            localStorage.setItem(
+              saveKey,
+              JSON.stringify({ ...rememberedGuiData, flyImpulse: value }),
+            );
+          });
+        rigidControls.options.flyImpulse = rememberedGuiData.flyImpulse ?? 500;
         gui.add(
           {
             'Spawn Bot': () => {
