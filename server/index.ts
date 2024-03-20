@@ -2,9 +2,6 @@ require('dotenv-defaults').config({
   path: `${__dirname}/../.env`,
 });
 
-import { exec } from 'child_process';
-import http from 'http';
-
 import cors from 'cors';
 import express from 'express';
 import cron from 'node-cron';
@@ -136,27 +133,3 @@ async function startServer() {
 }
 
 startServer();
-
-function checkLocalhost() {
-  http
-    .get('http://localhost:4000/info', (res) => {
-      console.log('Localhost:4000 is up and running.');
-    })
-    .on('error', (e) => {
-      console.error('Localhost:4000 is down, killing port 4000...');
-      killPort4000();
-    });
-}
-
-function killPort4000() {
-  exec('lsof -ti:4000 | xargs kill -9', (error, stdout, stderr) => {
-    if (error) {
-      console.error(`exec error: ${error}`);
-      return;
-    }
-    console.log('Port 4000 has been killed successfully.');
-  });
-}
-
-// Check localhost:4000 every 5 minutes
-setInterval(checkLocalhost, 300000);
