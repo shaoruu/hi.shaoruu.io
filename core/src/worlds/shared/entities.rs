@@ -1,8 +1,11 @@
 use nanoid::nanoid;
 use specs::Builder;
-use voxelize::{InteractorComp, PositionComp, RigidBody, RigidBodyComp, World, AABB};
+use voxelize::{
+    BrainComp, InteractorComp, PathComp, PositionComp, RigidBody, RigidBodyComp, TargetComp,
+    TargetType, Vec3, World, AABB,
+};
 
-use super::components::{BotFlag, BrainComp, PathComp, RotationComp, TargetComp, TextComp};
+use super::components::{BotFlag, RotationComp, TextComp};
 
 pub fn setup_entities(world: &mut World) {
     world.set_entity_loader("floating-text", |world, metadata| {
@@ -20,12 +23,16 @@ pub fn setup_entities(world: &mut World) {
         world
             .create_entity(&nanoid!(), "bot")
             .with(BotFlag)
-            .with(metadata.get::<TargetComp>("target").unwrap_or_default())
+            .with(
+                metadata
+                    .get::<TargetComp>("target")
+                    .unwrap_or_else(|| TargetComp(TargetType::Player, None)),
+            )
             .with(metadata.get::<PositionComp>("position").unwrap_or_default())
             .with(
                 metadata
                     .get::<PathComp>("path")
-                    .unwrap_or_else(|| PathComp::new(24)),
+                    .unwrap_or_else(|| PathComp::new(12, 15.0)),
             )
             .with(metadata.get::<RotationComp>("rotation").unwrap_or_default())
             .with(RigidBodyComp::new(&body))

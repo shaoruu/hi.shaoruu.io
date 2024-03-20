@@ -9,7 +9,7 @@ use voxelize::{
 use self::{soiling::SoilingStage, tree::TreeStage};
 
 use super::shared::{
-    client::setup_client, components::setup_components, entities::setup_entities, kdtree,
+    client::setup_client, components::setup_components, entities::setup_entities,
     methods::setup_methods, stage::LimitedStage, systems::setup_dispatcher,
 };
 
@@ -288,8 +288,6 @@ pub fn setup_terrain_world(registry: &Registry) -> World {
 
         pipeline.add_stage(tree_stage);
     }
-
-    world.ecs_mut().insert(kdtree::KdTree::new());
 
     setup_components(&mut world);
     setup_entities(&mut world);

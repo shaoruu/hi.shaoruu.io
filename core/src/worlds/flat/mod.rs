@@ -5,7 +5,7 @@ use voxelize::{FlatlandStage, Registry, World, WorldConfig};
 use self::stage::GridLandStage;
 
 use super::shared::{
-    client::setup_client, components::setup_components, entities::setup_entities, kdtree,
+    client::setup_client, components::setup_components, entities::setup_entities,
     methods::setup_methods, systems::setup_dispatcher,
 };
 
@@ -22,8 +22,6 @@ pub fn setup_flat_world(registry: &Registry) -> World {
         .build();
 
     let mut world = World::new("flat", &config);
-
-    world.ecs_mut().insert(kdtree::KdTree::new());
 
     setup_components(&mut world);
     setup_entities(&mut world);

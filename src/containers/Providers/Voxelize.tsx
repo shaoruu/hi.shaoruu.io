@@ -31,6 +31,7 @@ import {
   artFunctions,
   type Coords3,
   type RigidControlsOptions,
+  type TargetType,
   type WorldOptions,
 } from '@voxelize/core';
 import { GUI } from 'dat.gui';
@@ -167,6 +168,9 @@ export function VoxelizeProvider({
     const world = new World({
       textureUnitDimension: 16,
       maxUpdatesPerUpdate: 1000,
+      // cloudsOptions: {
+      //   alpha: 0,
+      // },
       ...worldOptions,
     });
 
@@ -354,17 +358,22 @@ export function VoxelizeProvider({
       inputs.bind('g', rigidControls.toggleGhostMode, 'in-game');
     }
 
-    const hideUI = () => {
+    const toggleUI = () => {
       debug.visible = !debug.visible;
       debug.dataWrapper.style.display = debug.visible ? 'block' : 'none';
       gui.domElement.style.display = debug.visible ? 'block' : 'none';
       crosshairDom.style.display = debug.visible ? 'block' : 'none';
       itemSlots.element.style.display = debug.visible ? 'block' : 'none';
       triggers.toggleVisible();
+
+      const tooltip = document.getElementById('tooltip');
+      if (tooltip) {
+        tooltip.style.display = debug.visible ? 'block' : 'none';
+      }
     };
 
     if (isUserAdmin) {
-      inputs.bind('j', hideUI, 'in-game');
+      inputs.bind('j', toggleUI, 'in-game');
     }
 
     inputsRef.current = inputs;
@@ -504,7 +513,7 @@ export function VoxelizeProvider({
     type BotData = {
       position: Coords3;
       rotation: [number, number, number, number];
-      target: Coords3;
+      target: [TargetType, Coords3];
       path: {
         maxNodes: number;
         path: Coords3[];
@@ -533,8 +542,8 @@ export function VoxelizeProvider({
         });
         this.character.username = "$#B4D4FF$Ian's Bot";
 
-        // shadows.add(this.character);
-        // lightShined.add(this.character);
+        shadows.add(this.character);
+        lightShined.add(this.character);
 
         this.character.head.paint('all', new THREE.Color('#F99417'));
         this.character.head.paint('front', new THREE.Color('#F4CE14'));
@@ -542,6 +551,10 @@ export function VoxelizeProvider({
         this.character.scale.set(0.5, 0.5, 0.5);
         this.character.position.y += this.character.totalHeight / 4;
         this.add(this.character);
+
+        if (!isAdmin()) {
+          this.path.visible = false;
+        }
 
         botPaths.add(this.path);
 
@@ -574,7 +587,7 @@ export function VoxelizeProvider({
 
         const origin = this.character.position;
 
-        const [tx, ty, tz] = target || [0, 0, 0];
+        const [tx, ty, tz] = target[1];
         const delta = new THREE.Vector3(tx, ty, tz).sub(origin);
         const direction = delta.clone().normalize();
 
@@ -860,6 +873,7 @@ export function VoxelizeProvider({
           alwaysSprint: true,
           flyForce: 500,
           flyImpulse: 3,
+          showBotPaths: true,
         };
         return savedData
           ? {
@@ -878,6 +892,18 @@ export function VoxelizeProvider({
           JSON.stringify({ ...rememberedGuiData, alwaysSprint: value }),
         );
       });
+
+      if (isUserAdmin) {
+        gui.add(rememberedGuiData, 'showBotPaths').onChange((value) => {
+          localStorage.setItem(
+            saveKey,
+            JSON.stringify({ ...rememberedGuiData, showBotPaths: value }),
+          );
+          botPaths.visible = value;
+        });
+
+        botPaths.visible = rememberedGuiData.showBotPaths;
+      }
 
       rigidControls.options.alwaysSprint = rememberedGuiData.alwaysSprint;
 
@@ -950,7 +976,7 @@ export function VoxelizeProvider({
 
       if (isUserAdmin) {
         gui
-          .add(rememberedGuiData, 'flyForce', 100, 600, 0.1)
+          .add(rememberedGuiData, 'flyForce', 10, 600, 0.1)
           .onChange((value) => {
             rigidControls.options.flyForce = value;
             localStorage.setItem(

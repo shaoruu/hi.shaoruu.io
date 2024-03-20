@@ -86,9 +86,11 @@ export function Inventory() {
     const sortedBlocks = [...Array.from(world.registry.blocksByName)]
       .sort((a, b) => a[1].id - b[1].id)
       .filter(
-        ([name]) =>
+        ([name, block]) =>
           name !== 'air' &&
-          (isAdmin() ? true : name.toLowerCase() !== 'adminium'),
+          (isAdmin()
+            ? true
+            : name.toLowerCase() !== 'adminium' && !block.isEntity),
       );
 
     const colCount = itemSlots.options.horizontalCount;

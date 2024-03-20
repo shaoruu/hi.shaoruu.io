@@ -176,26 +176,26 @@ pub fn get_registry() -> Registry {
             },
             BlockConditionalPart {
                 rule: BlockRule::Combination {
-                    logic: BlockRuleLogic::Or,
+                    logic: BlockRuleLogic::And,
                     rules: vec![
-                        BlockRule::Simple(BlockSimpleRule {
-                            offset: Vec3(1, 1, 0),
-                            id: Some(fence_id),
-                            rotation: None,
-                            stage: None,
-                        }),
-                        BlockRule::Simple(BlockSimpleRule {
-                            offset: Vec3(1, 0, 0),
-                            id: Some(fence_id),
-                            rotation: None,
-                            stage: None,
-                        }),
-                        BlockRule::Simple(BlockSimpleRule {
-                            offset: Vec3(1, -1, 0),
-                            id: Some(fence_id),
-                            rotation: None,
-                            stage: None,
-                        }),
+                        BlockRule::Combination {
+                            logic: BlockRuleLogic::Not,
+                            rules: vec![BlockRule::Simple(BlockSimpleRule {
+                                offset: Vec3(1, 0, 0),
+                                id: Some(0),
+                                rotation: None,
+                                stage: None,
+                            })],
+                        },
+                        BlockRule::Combination {
+                            logic: BlockRuleLogic::Not,
+                            rules: vec![BlockRule::Simple(BlockSimpleRule {
+                                offset: Vec3(1, 0, 0),
+                                id: Some(30000),
+                                rotation: None,
+                                stage: None,
+                            })],
+                        },
                     ],
                 },
                 aabbs: vec![fence_pos_100_aabb],
@@ -204,26 +204,26 @@ pub fn get_registry() -> Registry {
             },
             BlockConditionalPart {
                 rule: BlockRule::Combination {
-                    logic: BlockRuleLogic::Or,
+                    logic: BlockRuleLogic::And,
                     rules: vec![
-                        BlockRule::Simple(BlockSimpleRule {
-                            offset: Vec3(-1, 1, 0),
-                            id: Some(fence_id),
-                            rotation: None,
-                            stage: None,
-                        }),
-                        BlockRule::Simple(BlockSimpleRule {
-                            offset: Vec3(-1, 0, 0),
-                            id: Some(fence_id),
-                            rotation: None,
-                            stage: None,
-                        }),
-                        BlockRule::Simple(BlockSimpleRule {
-                            offset: Vec3(-1, -1, 0),
-                            id: Some(fence_id),
-                            rotation: None,
-                            stage: None,
-                        }),
+                        BlockRule::Combination {
+                            logic: BlockRuleLogic::Not,
+                            rules: vec![BlockRule::Simple(BlockSimpleRule {
+                                offset: Vec3(-1, 0, 0),
+                                id: Some(0),
+                                rotation: None,
+                                stage: None,
+                            })],
+                        },
+                        BlockRule::Combination {
+                            logic: BlockRuleLogic::Not,
+                            rules: vec![BlockRule::Simple(BlockSimpleRule {
+                                offset: Vec3(-1, 0, 0),
+                                id: Some(30000),
+                                rotation: None,
+                                stage: None,
+                            })],
+                        },
                     ],
                 },
                 aabbs: vec![fence_neg_100_aabb],
@@ -232,26 +232,26 @@ pub fn get_registry() -> Registry {
             },
             BlockConditionalPart {
                 rule: BlockRule::Combination {
-                    logic: BlockRuleLogic::Or,
+                    logic: BlockRuleLogic::And,
                     rules: vec![
-                        BlockRule::Simple(BlockSimpleRule {
-                            offset: Vec3(0, 1, 1),
-                            id: Some(fence_id),
-                            rotation: None,
-                            stage: None,
-                        }),
-                        BlockRule::Simple(BlockSimpleRule {
-                            offset: Vec3(0, 0, 1),
-                            id: Some(fence_id),
-                            rotation: None,
-                            stage: None,
-                        }),
-                        BlockRule::Simple(BlockSimpleRule {
-                            offset: Vec3(0, -1, 1),
-                            id: Some(fence_id),
-                            rotation: None,
-                            stage: None,
-                        }),
+                        BlockRule::Combination {
+                            logic: BlockRuleLogic::Not,
+                            rules: vec![BlockRule::Simple(BlockSimpleRule {
+                                offset: Vec3(0, 0, 1),
+                                id: Some(0),
+                                rotation: None,
+                                stage: None,
+                            })],
+                        },
+                        BlockRule::Combination {
+                            logic: BlockRuleLogic::Not,
+                            rules: vec![BlockRule::Simple(BlockSimpleRule {
+                                offset: Vec3(0, 0, 1),
+                                id: Some(30000),
+                                rotation: None,
+                                stage: None,
+                            })],
+                        },
                     ],
                 },
                 aabbs: vec![fence_pos_001_aabb],
@@ -260,26 +260,26 @@ pub fn get_registry() -> Registry {
             },
             BlockConditionalPart {
                 rule: BlockRule::Combination {
-                    logic: BlockRuleLogic::Or,
+                    logic: BlockRuleLogic::And,
                     rules: vec![
-                        BlockRule::Simple(BlockSimpleRule {
-                            offset: Vec3(0, 1, -1),
-                            id: Some(fence_id),
-                            rotation: None,
-                            stage: None,
-                        }),
-                        BlockRule::Simple(BlockSimpleRule {
-                            offset: Vec3(0, 0, -1),
-                            id: Some(fence_id),
-                            rotation: None,
-                            stage: None,
-                        }),
-                        BlockRule::Simple(BlockSimpleRule {
-                            offset: Vec3(0, -1, -1),
-                            id: Some(fence_id),
-                            rotation: None,
-                            stage: None,
-                        }),
+                        BlockRule::Combination {
+                            logic: BlockRuleLogic::Not,
+                            rules: vec![BlockRule::Simple(BlockSimpleRule {
+                                offset: Vec3(0, 0, -1),
+                                id: Some(0),
+                                rotation: None,
+                                stage: None,
+                            })],
+                        },
+                        BlockRule::Combination {
+                            logic: BlockRuleLogic::Not,
+                            rules: vec![BlockRule::Simple(BlockSimpleRule {
+                                offset: Vec3(0, 0, -1),
+                                id: Some(30000),
+                                rotation: None,
+                                stage: None,
+                            })],
+                        },
                     ],
                 },
                 aabbs: vec![fence_neg_001_aabb],
@@ -349,6 +349,7 @@ pub fn get_registry() -> Registry {
             .id(id)
             .faces(&slab_top_faces)
             .aabbs(&slab_top_aabb)
+            .rotatable(true)
             .is_transparent(true)
             .is_py_transparent(false)
             .build()
@@ -359,6 +360,7 @@ pub fn get_registry() -> Registry {
             .id(id)
             .faces(&slab_bottom_faces)
             .aabbs(&slab_bottom_aabb)
+            .rotatable(true)
             .is_transparent(true)
             .is_ny_transparent(false)
             .build()
@@ -545,6 +547,8 @@ pub fn get_registry() -> Registry {
     ]);
 
     registry.register_blocks(&[
+        make_top_slab("Oak Planks Slab Top", 33000),
+        make_bottom_slab("Oak Planks Slab Bottom", 33001),
         make_top_slab("Dirt Slab Top", 100),
         make_bottom_slab("Dirt Slab Bottom", 101),
         make_top_slab("Stone Slab Top", 102),

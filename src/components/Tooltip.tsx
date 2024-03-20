@@ -41,7 +41,8 @@ export function Tooltip() {
 
   return (
     <p
-      className="absolute top-[10px] left-1/2 transform -translate-x-1/2 text-white text-sm font-bold pointer-events-none bg-overlay border-text-primary border-solid border-[2px] px-2 py-1.5 rounded"
+      id="tooltip"
+      className="fixed top-[10px] left-1/2 transform -translate-x-1/2 text-white text-sm font-bold pointer-events-none bg-overlay border-text-primary border-solid border-[2px] px-2 py-1.5 rounded"
       ref={tooltipDomRef}
     ></p>
   );
