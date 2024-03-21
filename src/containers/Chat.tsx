@@ -198,6 +198,45 @@ export function Chat() {
         placeTextAt(text, [x, y, z]);
       });
 
+      chat.addCommand('change-text', (rest) => {
+        const newText = rest.trim();
+
+        if (!newText) {
+          console.warn('Usage: /change-text <new text>');
+          return;
+        }
+
+        const { potential } = voxelInteract;
+
+        if (!potential) {
+          console.warn('No target, cannot change text');
+          return;
+        }
+
+        const [x, y, z] = potential.voxel;
+
+        let found = false;
+
+        entities.map.forEach((entity, id) => {
+          // Check if any entity is already at this position
+          if (
+            Math.floor(entity.position.x) === x &&
+            Math.floor(entity.position.y) === y &&
+            Math.floor(entity.position.z) === z
+          ) {
+            method.call('remove-floating-text', { id });
+            found = true;
+          }
+        });
+
+        if (found) {
+          placeTextAt(newText, [x + 0.5, y + 0.5, z + 0.5]);
+          console.log(`Text at [${x}, ${y}, ${z}] changed to "${newText}"`);
+        } else {
+          console.warn('No text found at the target location to change');
+        }
+      });
+
       chat.addCommand('potential', () => {
         const { potential } = voxelInteract;
         console.log(potential);
