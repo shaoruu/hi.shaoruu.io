@@ -12,6 +12,7 @@ module.exports = {
       error_file: './logs/core-app-error.log', // Error log
       merge_logs: true, // Merge logs if you want a single file for both out and error logs
       log_date_format: 'YYYY-MM-DD HH:mm Z', // Log date format
+      cron_restart: '0 */3 * * *', // Restart every 3 hours
     },
   ],
 };
