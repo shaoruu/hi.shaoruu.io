@@ -2,6 +2,8 @@ mod stage;
 
 use voxelize::{FlatlandStage, Registry, World, WorldConfig};
 
+use crate::constants::get_preload_radius;
+
 use self::stage::GridLandStage;
 
 use super::shared::{
@@ -12,7 +14,7 @@ use super::shared::{
 pub fn setup_flat_world(registry: &Registry) -> World {
     let config = WorldConfig::new()
         .preload(true)
-        .preload_radius(2)
+        .preload_radius(get_preload_radius())
         .min_chunk([-6, -6])
         .max_chunk([5, 5])
         .time_per_day(2400)

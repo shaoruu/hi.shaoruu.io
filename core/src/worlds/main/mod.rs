@@ -1,5 +1,7 @@
 use voxelize::{Registry, World, WorldConfig};
 
+use crate::constants::get_preload_radius;
+
 use super::shared::{
     client::setup_client, components::setup_components, entities::setup_entities,
     methods::setup_methods, stage::LimitedStage, systems::setup_dispatcher,
@@ -8,7 +10,7 @@ use super::shared::{
 pub fn setup_main_world(registry: &Registry) -> World {
     let config = WorldConfig::new()
         .preload(true)
-        .preload_radius(2)
+        .preload_radius(get_preload_radius())
         .min_chunk([-50, -50])
         .max_chunk([50, 50])
         .saving(true)

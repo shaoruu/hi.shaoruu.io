@@ -6,6 +6,8 @@ use voxelize::{
     World, WorldConfig,
 };
 
+use crate::constants::get_preload_radius;
+
 use self::{soiling::SoilingStage, tree::TreeStage};
 
 use super::shared::{
@@ -31,7 +33,7 @@ pub fn setup_terrain_world(registry: &Registry) -> World {
                 .build(),
         )
         .preload(true)
-        .preload_radius(2)
+        .preload_radius(get_preload_radius())
         .max_chunk([31, 31])
         .min_chunk([-32, -32])
         .default_time(1200.0)
