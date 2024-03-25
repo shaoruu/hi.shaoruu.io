@@ -26,7 +26,7 @@ pub fn setup_entities(world: &mut World) {
             .with(
                 metadata
                     .get::<TargetComp>("target")
-                    .unwrap_or_else(|| TargetComp(TargetType::Player, None)),
+                    .unwrap_or_else(|| TargetComp(TargetType::Players, None)),
             )
             .with(metadata.get::<PositionComp>("position").unwrap_or_default())
             .with(
